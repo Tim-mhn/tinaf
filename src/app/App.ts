@@ -4,10 +4,11 @@ import {
   component,
   componentWithProps,
 } from '../framework/v3/component';
-import { button, div, h1, p, span } from '../framework/v3/dom-element';
+import { button, div, h1, p, span } from '../framework/v3/dom/dom-element';
 import { Component } from '../framework/v3/types';
 import { Header } from './Header';
 import { Home } from './Home';
+import { LoginForm } from './LoginForm';
 
 const ToggleMessage = component(() => {
   const [show, toggle] = bool(false);
@@ -62,7 +63,6 @@ const CounterWrapper = component(() => {
   const count = reactive(1);
 
   const increment = () => {
-    console.count('increment called');
     count.update(count.value + 1);
   };
 
@@ -80,6 +80,9 @@ const CounterWrapper = component(() => {
     ]);
 });
 
+const Container = component(({ children }: { children: Component[] }) => {
+  return () => div(children, { class: 'flex flex-col p-8 gap-8' });
+});
 export const App = component(() => {
   const text = reactive('Hello there');
 
@@ -87,11 +90,16 @@ export const App = component(() => {
     div(
       [
         Header,
-        Home,
-        Title({ text: text.value }),
-        TitleBis({ text: text.value }),
-        CounterWrapper,
+        Container({
+          children: [
+            Home,
+            LoginForm,
+            Title({ text: text.value }),
+            TitleBis({ text: text.value }),
+            CounterWrapper,
+          ],
+        }),
       ],
-      { class: 'flex flex-col gap-4' }
+      { class: 'flex flex-col gap-4 ' }
     );
 });

@@ -1,5 +1,5 @@
 import { component, componentWithProps } from '../framework/v3/component';
-import { div } from '../framework/v3/dom-element';
+import { div } from '../framework/v3/dom/dom-element';
 import { Component, DomElement } from '../framework/v3/types';
 
 /**

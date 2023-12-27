@@ -1,5 +1,5 @@
 import { component } from '../framework/v3/component';
-import { div, h1, h2 } from '../framework/v3/dom-element';
+import { div, h1, h2 } from '../framework/v3/dom/dom-element';
 import { Card } from './Card';
 
 const Title = () => h1('This is a title', { class: 'text-lg font-bold' });
@@ -23,6 +23,6 @@ export const Home = component(() => {
 
   return () =>
     div(cards, {
-      class: 'p-4 flex flex-col lg:grid lg:grid-cols-3  gap-4',
+      class: 'flex flex-col lg:grid lg:grid-cols-3  gap-4',
     });
 });

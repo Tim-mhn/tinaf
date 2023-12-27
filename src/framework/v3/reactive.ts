@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 export class Reactive<T> {
   private _value: T;
@@ -57,10 +57,15 @@ export function computed<T>(getterFn: () => T) {
   return new Computed(getterFn);
 }
 
-/**
- *
- * const count = reactive(1)
- *
- * const reachedLimit = computed(() => count.value > 10)
- *
- */
+export type MaybeReactive<T> = Reactive<T> | T;
+
+export function toValue<T>(maybeRx: MaybeReactive<T>): T {
+  if (isReactive(maybeRx)) return maybeRx.value;
+  return maybeRx;
+}
+
+export function isReactive<T>(
+  maybeRx: MaybeReactive<T>
+): maybeRx is Reactive<T> {
+  return maybeRx && typeof maybeRx === 'object' && 'value' in maybeRx;
+}

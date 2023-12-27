@@ -1,5 +1,5 @@
 import { component } from '../framework/v3/component';
-import { div } from '../framework/v3/dom-element';
+import { div } from '../framework/v3/dom/dom-element';
 
 export const Header = component(() => {
   return () =>
