@@ -1,0 +1,6 @@
+{
+  "cSpell.words": ["Renderable"],
+  // "tailwindCSS.experimental.classRegex": ["tw`([^`]*)"],
+  "tailwindCSS.experimental.classRegex": ["class: '(.*)"],
+
+}
