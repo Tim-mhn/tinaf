@@ -1,6 +1,10 @@
 import { Subject } from 'rxjs';
+import { MaybeReactive } from './types';
 
-export class Reactive<T> {
+export interface ReactiveValue<T> {
+  value: T;
+}
+export class Reactive<T> implements ReactiveValue<T> {
   private _value: T;
   constructor(initialValue: T) {
     this._value = initialValue;
@@ -45,7 +49,7 @@ export function bool(initialValue: boolean): [Reactive<boolean>, () => void] {
   return [rx, toggle];
 }
 
-class Computed<T> {
+class Computed<T> implements ReactiveValue<T> {
   constructor(private getterFn: () => T) {}
 
   get value() {
@@ -55,17 +59,4 @@ class Computed<T> {
 
 export function computed<T>(getterFn: () => T) {
   return new Computed(getterFn);
-}
-
-export type MaybeReactive<T> = Reactive<T> | T;
-
-export function toValue<T>(maybeRx: MaybeReactive<T>): T {
-  if (isReactive(maybeRx)) return maybeRx.value;
-  return maybeRx;
-}
-
-export function isReactive<T>(
-  maybeRx: MaybeReactive<T>
-): maybeRx is Reactive<T> {
-  return maybeRx && typeof maybeRx === 'object' && 'value' in maybeRx;
 }

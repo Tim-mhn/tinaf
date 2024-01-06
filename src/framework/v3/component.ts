@@ -1,9 +1,9 @@
-import { div } from './dom/dom-element';
+import { div, span } from './dom/dom-element';
 import { clearReactives, getReactives } from './reactive';
 import { Component, DynamicComponent } from './types';
 export type ComponentFnInput = () => ReturnType<DynamicComponent>['renderFn'];
 
-export function _component(cmp: ComponentFnInput): Component {
+export function _component(cmp: ComponentFnInput): DynamicComponent {
   function cmpAndStoreReactives() {
     clearReactives();
     const renderFn = cmp();
@@ -16,16 +16,8 @@ export function _component(cmp: ComponentFnInput): Component {
 
 export function componentWithProps<Props extends object>(
   propsToOutput: (props: Props) => ReturnType<ComponentFnInput>
-): (props: Props) => Component {
+): (props: Props) => DynamicComponent {
   return (props: Props) => _component(() => propsToOutput(props));
-}
-
-export function componentWithPropsBis<Props extends object>(
-  propsToOutput: (props: Props) => ReturnType<ComponentFnInput>
-): (props: Props) => Component {
-  return function (props: Props) {
-    return _component(() => propsToOutput(props));
-  };
 }
 
 type WithPropsComponentFn<Props extends object> = (
@@ -35,9 +27,9 @@ type WithPropsComponentFn<Props extends object> = (
 type Input = WithPropsComponentFn<any> | ComponentFnInput;
 type Output<T extends WithPropsComponentFn<any> | ComponentFnInput> =
   T extends ComponentFnInput
-    ? Component
-    : T extends WithPropsComponentFn<infer P>
-    ? (p: P) => Component
+    ? DynamicComponent
+    : T extends WithPropsComponentFn<infer Props>
+    ? (p: Props) => DynamicComponent
     : never;
 
 export function component<Fn extends Input>(fn: Fn): Output<Fn> {
@@ -48,3 +40,5 @@ export function component<Fn extends Input>(fn: Fn): Output<Fn> {
     return componentWithProps(<any>fn)(<any>p);
   } as any;
 }
+
+// ThisIsNotAFramework -> TINAF

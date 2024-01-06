@@ -1,9 +1,8 @@
 import { merge } from 'rxjs';
-import { clearReactives, getReactives } from './reactive';
-import { Component, DomElement, DynamicComponent } from './types';
+import { clearReactives } from './reactive';
+import { DomElement, DynamicComponent } from './types';
 
 export function render(cmp: DynamicComponent, parent?: DomElement) {
-  // console.info(`Rendering ${cmp.name}`);
   const { reactives, renderFn } = cmp();
 
   const output = renderFn();

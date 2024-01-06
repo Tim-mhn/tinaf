@@ -4,7 +4,7 @@ import { objectEntries, objectKeys } from '../object';
 import { MaybeReactive, isReactive, toValue } from '../reactive';
 
 type InputProps = {
-  value: MaybeReactive<string>;
+  value: MaybeReactive<string, false>;
   placeholder?: MaybeReactive<string>;
   disabled?: MaybeReactive<boolean>;
   type?: HTMLInputElement['type'];
