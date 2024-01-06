@@ -1,5 +1,7 @@
 import { component } from '../component';
+import { createCssRule } from '../css';
 import { MaybeReactiveProps, toValue } from '../reactive';
+import { randomId } from '../utils/random';
 import { createElement } from './dom-element';
 
 type ButtonExtraOptions = {
@@ -20,6 +22,7 @@ export const button = (
     const { type, disabled, ...otherOptions } = v;
 
     const btn = _button(childOrChildren, otherOptions);
+
     if (type) btn.type = type;
     if (disabled !== undefined) btn.disabled = disabled;
 

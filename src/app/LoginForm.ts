@@ -76,11 +76,20 @@ export const LoginForm = component(() => {
                   'border border-slate-300 rounded-sm p-2 focus:border-slate-600 hover:border-slate-500',
               }
             ),
-            button('can be disabled', { disabled: loginForm.invalid }),
+            button('can be disabled', {
+              disabled: loginForm.invalid,
+              styles: {
+                disabled: {
+                  background: 'red',
+                  border: '1px solid ',
+                },
+              },
+            }),
             Button({
               children: 'Submit',
               options: {
                 type: 'submit',
+                disabled: loginForm.invalid,
               },
             }),
             Button({

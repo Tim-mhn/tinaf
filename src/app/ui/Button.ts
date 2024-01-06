@@ -13,7 +13,7 @@ export const Button = component(
       button(children, {
         ...options,
         class:
-          'border rounded-md text-white border-blue-900 p-2 bg-blue-800 hover:bg-blue-900 rounded-sm',
+          'border rounded-md text-white border-blue-900 p-2 bg-blue-800 hover:bg-blue-900 rounded-sm ',
       });
   }
 );

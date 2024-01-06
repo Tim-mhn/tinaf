@@ -1,6 +1,8 @@
+import { createCssRule } from '../css';
 import { objectEntries } from '../object';
 import { render } from '../render';
 import { Component, DomElement } from '../types';
+import { randomId } from '../utils/random';
 
 type TagName = keyof HTMLElementTagNameMap;
 type Listener = Exclude<
@@ -17,7 +19,10 @@ export type EventHandlers = {
 
 type ChildElement = string | number | DomElement | Component | false;
 
-type ElementOptions = EventHandlers & { class?: string | string[] };
+type ElementOptions = EventHandlers & {
+  class?: string | string[];
+  styles?: CustomStyles;
+};
 
 export const createElement = <T extends TagName>(tagName: T) => {
   function element(
@@ -26,19 +31,28 @@ export const createElement = <T extends TagName>(tagName: T) => {
   ): HTMLElementTagNameMap[T] {
     const parent = document.createElement(tagName);
 
+    const { xId } = setIdentifierToElement(parent);
+
     addChildrenToElement(parent, childOrChildren);
 
-    const { class: className, ...handlers } = options;
+    const { class: className, styles, ...handlers } = options;
 
     addClassesToElement(parent, options.class);
 
     addEventListenersToElement(parent, handlers);
+    addCustomStylesToElement(xId, styles);
 
     return parent;
   }
 
   return element;
 };
+
+function setIdentifierToElement(element: HTMLElement) {
+  const xId = randomId();
+  element.setAttribute('x-id', xId);
+  return { xId };
+}
 
 function addEventListenersToElement(
   element: HTMLElement,
@@ -103,6 +117,20 @@ export function formatClassesToArray(classOrClasses: string | string[]) {
     return classes;
   }
   return classOrClasses;
+}
+
+export type CustomStyles = { disabled: Record<string, string> };
+function addCustomStylesToElement(xId: string, styles?: CustomStyles) {
+  if (styles)
+    createCssRule(
+      {
+        attribute: 'x-id',
+        attributeValue: xId,
+        elementTag: 'button',
+        pseudoSelector: 'disabled',
+      },
+      styles.disabled
+    );
 }
 
 export const h1 = createElement('h1');
