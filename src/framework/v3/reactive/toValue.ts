@@ -6,6 +6,16 @@ import {
   MaybeReactive,
 } from './types';
 
+export function isSourceReactive<T>(
+  maybeRx: MaybeDeepReactive<T> | unknown
+): maybeRx is Reactive<T> {
+  return (
+    !!maybeRx &&
+    typeof maybeRx === 'object' &&
+    isReactive<T> &&
+    'update' in maybeRx
+  );
+}
 export function isReactive<T>(
   maybeRx: MaybeDeepReactive<T> | unknown
 ): maybeRx is ReactiveValue<T> {

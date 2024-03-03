@@ -17,7 +17,16 @@ export type MaybeDeepReactive<T> = T extends object
 
 type rTov<T> = T extends MaybeReactive<infer U> ? U : never;
 
-export type MaybeDeepReactiveToValue<T> = T extends MaybeReactiveProps<infer V>
+type IsPrimitive<T> = T extends string
+  ? true
+  : T extends boolean
+  ? true
+  : T extends number
+  ? true
+  : false;
+export type MaybeDeepReactiveToValue<T> = IsPrimitive<T> extends true
+  ? T
+  : T extends MaybeReactiveProps<infer V>
   ? rTov<V>
   : T extends MaybeReactive<infer U>
   ? U

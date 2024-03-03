@@ -2,11 +2,25 @@ import { component } from '../framework/v3/component';
 import { button, div, h2, span } from '../framework/v3/dom/dom-element';
 import { form } from '../framework/v3/dom/form';
 import { input } from '../framework/v3/dom/input';
+import { select } from '../framework/v3/dom/select';
 import { reactiveForm } from '../framework/v3/form';
 import { bool, reactive } from '../framework/v3/reactive';
 import { Button } from './ui/Button';
 
 const FormTitle = h2('Testing a form', { class: 'text-lg font-medium' });
+
+const MySelect = component(() => {
+  const choice = reactive('apple');
+
+  return () =>
+    div([
+      select({
+        value: choice,
+        options: ['banana', 'apple', 'apricot'],
+      }),
+      div(`Choice value == ${choice.value}`),
+    ]);
+});
 
 /***
  *
@@ -76,6 +90,7 @@ export const LoginForm = component(() => {
                   'border border-slate-300 rounded-sm p-2 focus:border-slate-600 hover:border-slate-500',
               }
             ),
+            MySelect,
             button('can be disabled', {
               disabled: loginForm.invalid,
               styles: {
@@ -105,7 +120,7 @@ export const LoginForm = component(() => {
             class: 'flex gap-2',
             submit: (e) => {
               e?.preventDefault();
-              console.log({ name: name.value });
+              console.log({ name: name.value, email: email.value });
             },
           }
         ),

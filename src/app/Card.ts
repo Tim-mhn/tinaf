@@ -10,9 +10,9 @@ import { Component, DomElement } from '../framework/v3/types';
  */
 
 export const Card = componentWithProps<{
-  title: Component | DomElement;
-  subtitle: Component | DomElement;
-  child: Component | DomElement;
+  title: Component;
+  subtitle: Component;
+  child: Component;
 }>(({ title, subtitle, child }) => {
   return () =>
     div(
