@@ -45,8 +45,7 @@ export function render(component: Component, parent: HTMLElement): HTMLElement {
 
     if (hasSources(sources)) {
       watchAllSources(sources).subscribe(() => {
-        console.debug('Rerendering node :', node);
-        console.debug('Parent = ', parent);
+        console.count('Rerendering node');
         debugger;
         const index = [...parent.childNodes].findIndex((n) => n === node);
         parent.removeChild(node as HTMLElement);
@@ -66,7 +65,7 @@ export function render(component: Component, parent: HTMLElement): HTMLElement {
 
   if (hasSources(sources)) {
     watchAllSources(sources).subscribe(() => {
-      console.debug('Rerendering component :', html);
+      console.count('Rerendering component :');
       debugger;
       const index = [...parent.childNodes].findIndex((n) => n === html);
       parent.removeChild(html);
