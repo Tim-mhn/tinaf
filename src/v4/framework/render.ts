@@ -1,85 +1,105 @@
-import { concatMap } from 'rxjs';
-import { div } from './dom/div';
+import { Observable, combineLatest, skip, startWith } from 'rxjs';
 import { Reactive, ReactiveValue } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
-import { Component } from './types';
-import { component, component } from './component';
+import { isReactive, toValue } from './reactive/toValue';
 
-function isReactive<T extends string | number | boolean>(
-  component: MaybeReactive<T>
-): component is Reactive<T> {
-  return typeof component !== 'number' && typeof component !== 'string';
+export interface Component {
+  renderFn: () => Component | HTMLElement;
+  sources?: ReactiveValue<any>[];
+  __isComponent: Readonly<true>;
 }
 
-function toValue<T extends string | number | boolean>(
-  maybeReactive: MaybeReactive<T>
-): T {
-  return isReactive(maybeReactive) ? maybeReactive.value : (maybeReactive as T);
+export function isHtml(node: Component | HTMLElement): node is HTMLElement {
+  return !('__isComponent' in node);
 }
 
-function getComponentHtmlContent(component: Component) {
-  if (typeof component === 'function')
-    return {
-      content: component(),
-    };
-
-  return isReactive(component)
-    ? {
-        content: component.value.toString(),
-      }
-    : {
-        content: component.toString(),
-      };
-}
-function renderOnce(component: Component, parent: HTMLElement) {
-  const { content } = getComponentHtmlContent(component);
-  parent.append(content);
+export function isComponent(
+  node: Component | MaybeReactive<any>
+): node is Component {
+  try {
+    return node && typeof node === 'object' && '__isComponent' in node;
+  } catch (err) {
+    throw new Error(`Cannot use 'in' in isComponent for node: ${node}`);
+  }
 }
 
-function rerenderOnChanges<T extends string | number | boolean>(
-  rx: Reactive<T>,
-  parent: HTMLElement
-) {
-  let nodeContent = toValue(rx).toString();
-  rx.valueChanges$.subscribe((newValue) => {
-    console.count('rerendering');
-    const childNode = [...parent.childNodes].find(
-      (n) => n.textContent === nodeContent
-    );
-    if (!childNode)
-      throw new Error(
-        `Could not find child node with textContent ${nodeContent}`
-      );
-
-    nodeContent = newValue.toString();
-
-    parent.removeChild(childNode);
-    parent.append(nodeContent);
-  });
-}
-export function render(
-  componentOutput: ReturnType<typeof component>,
-  parent: HTMLElement
-) {
-  renderOnce(component, parent);
-
-  const isReactiveValue =
-    typeof component !== 'function' && isReactive(component);
-
-  if (isReactiveValue) rerenderOnChanges(component, parent);
+function hasSources(
+  sources?: ReactiveValue<any>[]
+): sources is ReactiveValue<any>[] {
+  return !!sources && sources.length > 0;
 }
 
-export function renderApp(
-  id: string,
-  componentFn: ReturnType<typeof component>
-) {
+function watchAllSources(sources: ReactiveValue<any>[]) {
+  return combineLatest(
+    sources.map((s) => s.valueChanges$.pipe(startWith('')))
+  ).pipe(skip(1));
+}
+
+export function render(component: Component, parent: HTMLElement): HTMLElement {
+  const { renderFn, sources } = component;
+
+  let node = renderFn();
+
+  if (isHtml(node)) {
+    parent.append(node);
+
+    if (hasSources(sources)) {
+      watchAllSources(sources).subscribe(() => {
+        console.debug('Rerendering node :', node);
+        console.debug('Parent = ', parent);
+        debugger;
+        const index = [...parent.childNodes].findIndex((n) => n === node);
+        parent.removeChild(node as HTMLElement);
+        debugger;
+
+        node = renderFn() as HTMLElement;
+        debugger;
+
+        parent.insertBefore(node, [...parent.childNodes][index]);
+        debugger;
+      });
+    }
+    return node;
+  }
+
+  let html = render(node, parent);
+
+  if (hasSources(sources)) {
+    watchAllSources(sources).subscribe(() => {
+      console.debug('Rerendering component :', html);
+      debugger;
+      const index = [...parent.childNodes].findIndex((n) => n === html);
+      parent.removeChild(html);
+      debugger;
+      html = render(node as Component, parent);
+      debugger;
+      parent.insertBefore(html, [...parent.childNodes][index]);
+      debugger;
+    });
+  }
+
+  return html;
+}
+
+export function renderApp(id: string, component: Component) {
   window.addEventListener('load', () => {
     const container = document.getElementById(id) as HTMLElement;
 
-    render(componentFn(), container);
+    render(component, container);
   });
 }
 
-export function ifTrue(condition: MaybeReactive<boolean>) {
-  return toValue(condition);
-}
+export const show = (cmp: Component) => {
+  return {
+    when: (when: MaybeReactive<boolean>) => {
+      return {
+        else: (fallback: Component): Component => ({
+          renderFn: () =>
+            toValue(when) ? cmp.renderFn() : fallback.renderFn(),
+          sources: isReactive(when) ? [when] : [],
+          __isComponent: true,
+        }),
+      };
+    },
+  };
+};

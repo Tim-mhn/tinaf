@@ -1,18 +1,8 @@
-import { ReactiveValue } from './reactive/reactive';
-import { Component } from './render-2';
+import { Component } from './render';
 
-/**
- *
- * const App = component(() => {
- *  const title = reactive('title')
- *
- *
- *   return div([
- *       div(title),
- *       div('content'),
- *       div('footer')
- *    ])
- * })
- *
- *
- */
+export function component(fn: () => HTMLElement | Component): Component {
+  return {
+    renderFn: fn,
+    __isComponent: true,
+  };
+}

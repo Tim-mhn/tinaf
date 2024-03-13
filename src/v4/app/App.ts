@@ -1,47 +1,29 @@
-import { div } from '../framework/dom/div';
-import { Component } from '../framework/types';
-import { bool, computed, reactive } from '../framework/reactive/reactive';
-import { MaybeReactive } from '../framework/reactive/types';
-import { ifTrue } from '../framework/render';
 import { component } from '../framework/component';
+import { button, div, span } from '../framework/dom/div';
+import { bool, reactive } from '../framework/reactive/reactive';
+import { show } from '../framework/render';
 
-const Header = component(() => {
-  return () => div('header');
+const ShowHide = component(() => {
+  const [visible, toggleVisible] = bool(true);
+  setInterval(() => toggleVisible(), 2000);
+  return show(div('visible')).when(visible).else(div('invisible'));
 });
 
-const Card = ({
-  title,
-  subtitle,
-}: {
-  title: MaybeReactive<string>;
-  subtitle: MaybeReactive<string>;
-}) => {
-  return div([div(title), div(subtitle)]);
-};
+const Button = component(() => {
+  return button('Click');
+});
 
-const ToggleVisible = component(() => {
-  const [visible, toggleVisible] = bool(true);
-
-  setInterval(() => toggleVisible(), 1000);
-
-  return () => (ifTrue(visible) ? div('visible') : div('invisible'));
+const Header = component(() => {
+  const title = reactive('Header');
+  setInterval(() => title.update('Header @' + Date.now()), 2000);
+  return span(title);
 });
 
 export const App = component(() => {
-  const title = reactive('title');
-
-  const subtitle = computed(() => `SUB ${title.value}`, [title]);
-
-  setTimeout(() => {
-    console.log('updating title');
-    title.update('title @' + Date.now());
-  }, 2000);
-
-  return () =>
-    div([
-      Header(),
-      // Card({ title, subtitle }),
-      ToggleVisible(),
-      div('footer'),
-    ]);
+  const hello = reactive('hello');
+  const world = reactive('world');
+  return div(Header, ShowHide, hello, world, Button).on({
+    click: console.log,
+    mouseover: () => console.log('hovering !'),
+  });
 });
