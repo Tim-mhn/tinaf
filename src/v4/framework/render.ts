@@ -1,15 +1,18 @@
 import { Observable, combineLatest, skip, startWith } from 'rxjs';
-import { Reactive, ReactiveValue } from './reactive/reactive';
+import { Reactive, ReactiveValue, reactive } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
 import { isReactive, toValue } from './reactive/toValue';
 
+export type RenderFn = () => Component | HTMLElement | null;
 export interface Component {
-  renderFn: () => Component | HTMLElement;
+  renderFn: RenderFn;
   sources?: ReactiveValue<any>[];
   __isComponent: Readonly<true>;
 }
 
-export function isHtml(node: Component | HTMLElement): node is HTMLElement {
+export function isHtmlOrComment(
+  node: Component | HTMLElement | Comment
+): node is HTMLElement | Comment {
   return !('__isComponent' in node);
 }
 
@@ -35,27 +38,40 @@ function watchAllSources(sources: ReactiveValue<any>[]) {
   ).pipe(skip(1));
 }
 
-export function render(component: Component, parent: HTMLElement): HTMLElement {
+/**
+ * Renders a placeholder comment if the renderFn returns null
+ * @param renderFn
+ * @returns
+ */
+function safeRender(renderFn: RenderFn): Component | HTMLElement | Comment {
+  const node = renderFn();
+  if (node) return node;
+
+  const commentText = `placeholder--${crypto.randomUUID()}`;
+  const comment = document.createComment(commentText);
+  return comment;
+}
+
+export function render(
+  component: Component,
+  parent: HTMLElement
+): HTMLElement | Comment {
   const { renderFn, sources } = component;
 
-  let node = renderFn();
+  let node = safeRender(renderFn);
 
-  if (isHtml(node)) {
+  if (isHtmlOrComment(node)) {
     parent.append(node);
 
     if (hasSources(sources)) {
       watchAllSources(sources).subscribe(() => {
         console.count('Rerendering node');
-        debugger;
         const index = [...parent.childNodes].findIndex((n) => n === node);
         parent.removeChild(node as HTMLElement);
-        debugger;
 
-        node = renderFn() as HTMLElement;
-        debugger;
+        node = safeRender(renderFn) as HTMLElement | Comment;
 
         parent.insertBefore(node, [...parent.childNodes][index]);
-        debugger;
       });
     }
     return node;
@@ -66,14 +82,10 @@ export function render(component: Component, parent: HTMLElement): HTMLElement {
   if (hasSources(sources)) {
     watchAllSources(sources).subscribe(() => {
       console.count('Rerendering component :');
-      debugger;
       const index = [...parent.childNodes].findIndex((n) => n === html);
       parent.removeChild(html);
-      debugger;
       html = render(node as Component, parent);
-      debugger;
       parent.insertBefore(html, [...parent.childNodes][index]);
-      debugger;
     });
   }
 
@@ -91,14 +103,21 @@ export function renderApp(id: string, component: Component) {
 export const show = (cmp: Component) => {
   return {
     when: (when: MaybeReactive<boolean>) => {
+      const sources = isReactive(when) ? [when] : [];
+      // const else =
+
+      const elseFn = (fallback: Component): Component => ({
+        renderFn: () => (toValue(when) ? cmp.renderFn() : fallback.renderFn()),
+        sources,
+        __isComponent: true,
+      });
+
       return {
-        else: (fallback: Component): Component => ({
-          renderFn: () =>
-            toValue(when) ? cmp.renderFn() : fallback.renderFn(),
-          sources: isReactive(when) ? [when] : [],
-          __isComponent: true,
-        }),
-      };
+        else: elseFn,
+        renderFn: () => (toValue(when) ? cmp.renderFn() : null),
+        __isComponent: true,
+        sources,
+      } satisfies Component & { else: typeof elseFn };
     },
   };
 };
