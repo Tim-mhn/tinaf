@@ -1,4 +1,4 @@
-import { objectKeys } from '../object';
+import { objectKeys } from '../../../v4/framework/utils/object';
 
 function buildCssRuleString(
   {

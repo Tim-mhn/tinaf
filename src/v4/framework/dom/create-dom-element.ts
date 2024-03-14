@@ -1,12 +1,11 @@
-import { objectEntries } from '../../../framework/v3/object';
-import { ReactiveValue } from '../reactive/reactive';
+import { objectEntries } from '../utils/object';
 import { isReactive, toValue } from '../reactive/toValue';
 import { MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
-import { watchAllSources } from '../reactive/watch';
 import { Component, isComponent, render } from '../render';
 import { MaybeArray, toArray } from '../utils/array';
-import { formatClassesToArray } from './classes';
+import { addClassToElement } from './classes';
+import { AddStylesArgs, addStylesToElement } from './styles';
 
 type TagName = keyof HTMLElementTagNameMap;
 
@@ -23,19 +22,24 @@ export type EventHandlers = {
   [K in Listener]?: EventHandler;
 };
 
-type AddClassesArgs = MaybeArray<MaybeReactive<string>>;
+export type AddClassesArgs = MaybeArray<MaybeReactive<string>>;
 
-const _createDomElement = <T extends TagName>({
-  type,
-  children,
-  handlers,
-  classes,
-}: {
+type CreateDomElementProps<T extends TagName> = {
   type: T;
   children: (Component | MaybeReactive<PrimitiveType>)[];
   handlers?: EventHandlers;
   classes?: AddClassesArgs;
-}): Component & { on: typeof on; addClass: typeof addClass } => {
+  styles?: AddStylesArgs;
+};
+
+const _createDomElement = <T extends TagName>(
+  props: CreateDomElementProps<T>
+): Component & {
+  on: typeof on;
+  addClass: typeof addClass;
+  addStyles: typeof addStyles;
+} => {
+  const { children, classes, type, handlers, styles } = props;
   const reactiveChildren = getReactiveElements(children);
 
   const renderFn = () => {
@@ -53,6 +57,7 @@ const _createDomElement = <T extends TagName>({
 
     if (classes) addClassToElement(htmlElement, classes);
     if (handlers) addEventListenersToElement(htmlElement, handlers);
+    if (styles) addStylesToElement(htmlElement, styles);
     return htmlElement;
   };
 
@@ -63,20 +68,22 @@ const _createDomElement = <T extends TagName>({
     };
 
     return _createDomElement({
-      type,
-      children,
-      classes,
+      ...props,
       handlers: allHandlers,
     });
   };
 
   const addClass = (newClasses: AddClassesArgs) => {
-    // merge previous classes ??
     return _createDomElement({
-      type,
-      children,
+      ...props,
       classes: newClasses,
-      handlers,
+    });
+  };
+
+  const addStyles = (newStyles: AddStylesArgs) => {
+    return _createDomElement({
+      ...props,
+      styles: newStyles,
     });
   };
 
@@ -85,10 +92,11 @@ const _createDomElement = <T extends TagName>({
     renderFn,
     on,
     addClass,
+    addStyles,
     sources: reactiveChildren,
   };
 };
-const createDomElement =
+export const createDomElement =
   <T extends TagName>(type: T) =>
   (...children: (Component | MaybeReactive<PrimitiveType>)[]) => {
     return _createDomElement({
@@ -106,31 +114,3 @@ const addEventListenersToElement = (
     element.addEventListener(event, handler);
   });
 };
-
-function getFormattedClasses(classes: AddClassesArgs) {
-  const classesArr = toArray(classes);
-  const reactiveClasses = getReactiveElements(classesArr);
-
-  const stringClasses = classesArr.map(toValue);
-  let formattedClasses = formatClassesToArray(stringClasses);
-  return formattedClasses;
-}
-
-function addClassToElement(element: HTMLElement, classes: AddClassesArgs) {
-  const classesArr = toArray(classes);
-  const reactiveClasses = getReactiveElements(classesArr);
-
-  let formattedClasses = getFormattedClasses(classes);
-  element.classList.add(...formattedClasses);
-
-  watchAllSources(reactiveClasses).subscribe(() => {
-    element.className = '';
-    const newFormattedClasses = getFormattedClasses(classes);
-    element.classList.add(...newFormattedClasses);
-  });
-}
-
-export const div = createDomElement('div');
-export const span = createDomElement('span');
-export const p = createDomElement('p');
-export const button = createDomElement('button');

@@ -1,5 +1,5 @@
 import { component, componentWithProps } from '../framework/component';
-import { button, div, span } from '../framework/dom/div';
+import { button, div, span } from '../framework/dom/dom';
 import { bool, computed, reactive } from '../framework/reactive/reactive';
 import { show } from '../framework/render';
 
@@ -7,6 +7,27 @@ const ShowWhenElse = component(() => {
   const [visible, toggleVisible] = bool(true);
   // setInterval(() => toggleVisible(), 2000);
   return div(show(div('visible')).when(visible).else(div('invisible')));
+});
+
+const AddStylesReactiveExample = component(() => {
+  const [isBlue, toggleTextColor] = bool(true);
+
+  const textColor = computed(() => (isBlue.value ? 'blue' : 'black'), [isBlue]);
+
+  return div(
+    div('This text may be blue or black').addStyles({
+      text: '20px',
+      color: textColor,
+    }),
+    button('Toggle text color').on({
+      click: toggleTextColor,
+    })
+  ).addClass('flex gap-4');
+});
+const AddStylesSimpleExample = div('hello I have custom style').addStyles({
+  background: 'red',
+  text: '20px',
+  color: 'white',
 });
 
 const ToggleClasses = component(() => {
@@ -73,6 +94,8 @@ export const App = component(() => {
     hello,
     world,
     Button,
+    AddStylesSimpleExample,
+    AddStylesReactiveExample,
     Card({ title: hello, subtitle: world })
   )
     .on({

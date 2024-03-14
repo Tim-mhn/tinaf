@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { objectKeys } from '../object';
+import { objectKeys } from '../../../v4/framework/utils/object';
 import { createCssRule } from '.';
 
 describe('createCssRule', () => {

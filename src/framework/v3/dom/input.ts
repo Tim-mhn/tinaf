@@ -1,6 +1,6 @@
 import { component } from '../component';
 import { createElement } from './dom-element';
-import { objectEntries, objectKeys } from '../object';
+import { objectEntries, objectKeys } from '../../../v4/framework/utils/object';
 import { MaybeReactive, isReactive, toValue } from '../reactive';
 
 type InputProps = {

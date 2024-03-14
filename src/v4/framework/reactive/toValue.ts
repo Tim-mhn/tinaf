@@ -1,4 +1,4 @@
-import { objectKeys } from '../../../framework/v3/object';
+import { objectKeys } from '../utils/object';
 import { Reactive, ReactiveValue } from './reactive';
 import {
   MaybeDeepReactive,

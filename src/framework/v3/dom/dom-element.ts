@@ -1,5 +1,5 @@
 import { createCssRule } from '../css';
-import { objectEntries } from '../object';
+import { objectEntries } from '../../../v4/framework/utils/object';
 import { render } from '../render';
 import { Component, DomElement } from '../types';
 import { randomId } from '../utils/random';

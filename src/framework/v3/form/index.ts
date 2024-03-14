@@ -1,4 +1,4 @@
-import { objectEntries, objectKeys } from '../object';
+import { objectEntries, objectKeys } from '../../../v4/framework/utils/object';
 import { Reactive, computed, reactive } from '../reactive';
 
 type ValidatorFn<T> = (value: T) => boolean;
