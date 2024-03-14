@@ -49,7 +49,7 @@ const double = computed(() => count.value * 2, [count])
 
 ### Component
 
-Let's create a component using reactive values
+Let's create a component that uses a reactive value
 
 ```
 import { component } from "tinaf/component";
