@@ -2,6 +2,7 @@ import { Observable, combineLatest, skip, startWith } from 'rxjs';
 import { Reactive, ReactiveValue, reactive } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
 import { isReactive, toValue } from './reactive/toValue';
+import { watchAllSources } from './reactive/watch';
 
 export type RenderFn = () => Component | HTMLElement | null;
 export interface Component {
@@ -32,12 +33,6 @@ function hasSources(
   return !!sources && sources.length > 0;
 }
 
-function watchAllSources(sources: ReactiveValue<any>[]) {
-  return combineLatest(
-    sources.map((s) => s.valueChanges$.pipe(startWith('')))
-  ).pipe(skip(1));
-}
-
 /**
  * Renders a placeholder comment if the renderFn returns null
  * @param renderFn
@@ -65,7 +60,6 @@ export function render(
 
     if (hasSources(sources)) {
       watchAllSources(sources).subscribe(() => {
-        console.count('Rerendering node');
         const index = [...parent.childNodes].findIndex((n) => n === node);
         parent.removeChild(node as HTMLElement);
 
@@ -81,7 +75,6 @@ export function render(
 
   if (hasSources(sources)) {
     watchAllSources(sources).subscribe(() => {
-      console.count('Rerendering component :');
       const index = [...parent.childNodes].findIndex((n) => n === html);
       parent.removeChild(html);
       html = render(node as Component, parent);
@@ -104,7 +97,6 @@ export const show = (cmp: Component) => {
   return {
     when: (when: MaybeReactive<boolean>) => {
       const sources = isReactive(when) ? [when] : [];
-      // const else =
 
       const elseFn = (fallback: Component): Component => ({
         renderFn: () => (toValue(when) ? cmp.renderFn() : fallback.renderFn()),

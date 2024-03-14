@@ -9,10 +9,27 @@ const ShowWhenElse = component(() => {
   return div(show(div('visible')).when(visible).else(div('invisible')));
 });
 
+const ToggleClasses = component(() => {
+  const [active, toggleActive] = bool(true);
+
+  const bgClass = computed(
+    () => (active.value ? 'bg-green-500' : 'bg-slate-500'),
+    [active]
+  );
+
+  return div(
+    button('Toggle class').on({
+      click: toggleActive,
+    }),
+    div('Look at my background').addClass([
+      bgClass,
+      'border-red-800 border-4 p-1 rounded-sm',
+    ])
+  ).addClass('flex gap-4');
+});
+
 const ShowWhen = component(() => {
   const [visible, toggleVisible] = bool(true);
-
-  const visibleString = computed(() => `${visible.value}`, [visible]);
 
   const toggleVisibleButton = button('toggle visibility')
     .on({
@@ -21,7 +38,7 @@ const ShowWhen = component(() => {
     .addClass('border border-blue-300 p-1 rounded-sm hover:bg-blue-100');
 
   return div(
-    // span(visibleString),
+    span(visible),
     show(div('hello i"m visible').addClass('custom-div')).when(visible),
     toggleVisibleButton
   ).addClass('flex flex-row gap-4 border border-blue-300 p-1');
@@ -50,6 +67,7 @@ export const App = component(() => {
   setTimeout(() => world.update('world 2'), 5000);
   return div(
     Header,
+    ToggleClasses,
     ShowWhenElse,
     ShowWhen,
     hello,
