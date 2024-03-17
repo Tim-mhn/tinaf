@@ -30,8 +30,18 @@ export function reactive<T>(initialValue: T) {
   return rx;
 }
 
+export class BooleanReactive extends Reactive<boolean> {
+  constructor(initialValue: boolean) {
+    super(initialValue);
+  }
+
+  not() {
+    return computed(() => !this.value, [this]);
+  }
+}
+
 export function bool(initialValue: boolean): [Reactive<boolean>, () => void] {
-  const rx = reactive(initialValue);
+  const rx = new BooleanReactive(initialValue);
 
   const toggle = () => rx.update(!rx.value);
 

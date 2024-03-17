@@ -1,7 +1,7 @@
-import { component, componentWithProps } from 'tinaf/component';
-import { button, div, span } from 'tinaf/dom';
-import { bool, computed, reactive } from 'tinaf/reactive';
-import { show } from 'tinaf/show';
+import { component, componentWithProps } from '../core/src/component';
+import { button, div, span } from '../core/src/dom/dom';
+import { bool, computed, reactive } from '../core/src/reactive';
+import { show } from '../core/src/show';
 
 const ShowWhenElse = component(() => {
   const [visible, toggleVisible] = bool(true);
@@ -29,6 +29,24 @@ const AddStylesSimpleExample = div('hello I have custom style').addStyles({
   text: '20px',
   color: 'white',
 });
+
+/**
+ *
+ * Dynamic conditional classes
+ *
+ *
+ * boolean reactive
+ *
+ * const condition = reactive(true);
+ *
+ * const opposite = condition.opposite() ; // computed(() => !condition.value, [condition])
+ *
+ * const myDiv = div().addClass({
+ *    'bg-primary text-primary': condition,
+ *    'bg-seocndary text-secondary' :!condition
+ * })
+ *
+ */
 
 const ToggleClasses = component(() => {
   const [active, toggleActive] = bool(true);
