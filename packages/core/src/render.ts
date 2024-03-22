@@ -1,9 +1,9 @@
-import { Observable, combineLatest, skip, startWith } from 'rxjs';
-import { Reactive, ReactiveValue, reactive } from './reactive/reactive';
+import { ReactiveValue } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
-import { isReactive, toValue } from './reactive/toValue';
 import { watchAllSources } from './reactive/watch';
-import { renderForLoop } from './component/for-loop';
+import { forLoopRender } from './component/for-loop';
+import { isReactive, toValue } from './reactive';
+import { watchList } from './reactive/watch-list';
 
 export type RenderFn = () => SimpleComponent | HTMLElement | null;
 
@@ -132,6 +132,43 @@ export function render(
   }
 
   return html;
+}
+
+function renderForLoop<T>(
+  component: ReturnType<typeof forLoopRender<T>>,
+  parent: HTMLElement
+) {
+  const { componentFn, items } = component;
+
+  const children = toValue(items).map((i) =>
+    safeRenderHtml(componentFn(i).renderFn)
+  );
+  parent.append(...children);
+
+  if (!isReactive(items)) return parent;
+
+  watchList(items).subscribe((changes) => {
+    const childrenToRemove = changes
+      .filter(({ change }) => change === 'removed')
+      .map(({ index, value }) => {
+        console.debug('Removing child ', value);
+        return parent.childNodes[index];
+      });
+
+    childrenToRemove.forEach((child) => parent.removeChild(child));
+
+    const childrenToAdd = changes
+      .filter(({ change }) => change === 'added')
+      .sort((a, b) => b.index - a.index);
+
+    childrenToAdd.forEach(({ value, index }) => {
+      const child = safeRenderHtml(componentFn(value).renderFn);
+      console.debug('Adding child ', value);
+      parent.insertBefore(child, [...parent.childNodes][index]);
+    });
+  });
+
+  return parent;
 }
 
 export function renderApp(id: string, component: Component) {

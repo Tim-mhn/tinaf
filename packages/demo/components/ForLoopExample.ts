@@ -4,7 +4,7 @@ import {
   componentWithProps,
 } from '../../core/src/component/component';
 import { button, div, span } from '../../core/src/dom/dom';
-import { forLoopRenderV2 } from '../../core/src/component/for-loop';
+import { forLoopRender } from '../../core/src/component/for-loop';
 
 const randomInt = (min: number, max: number) =>
   min + Math.floor(Math.random() * (max - min));
@@ -54,7 +54,7 @@ export const ForLoopV2ComplexExample = component(() => {
 
   return div(
     div(
-      forLoopRenderV2(products, (product) => ProductCard({ product }))
+      forLoopRender(products, (product) => ProductCard({ product }))
     ).addClass('grid grid-cols-4 gap-4'),
     button('Fetch more').on({
       click: fetchMore,

@@ -2,7 +2,7 @@ import { component, componentWithProps } from '../core/src/component/component';
 import { button, div, span } from '../core/src/dom/dom';
 import { bool, computed, not, reactive } from '../core/src/reactive';
 import { show } from '../core/src/component/show';
-import { forLoopRenderV2 } from '../core/src/component/for-loop';
+import { forLoopRender } from '../core/src/component/for-loop';
 import { ForLoopV2ComplexExample } from './components/ForLoopExample';
 
 const Counter = component(() => {
@@ -123,7 +123,7 @@ const RenderForLoopV2Example = component(() => {
       })
     ).addClass('flex gap-8 border-b'),
     div(
-      forLoopRenderV2(todos, (todo) =>
+      forLoopRender(todos, (todo) =>
         div(
           div(todo).addClass('bg-blue-300 text-blue-800'),
           button('X').on({
