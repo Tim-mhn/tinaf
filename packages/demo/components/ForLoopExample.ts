@@ -5,6 +5,7 @@ import {
 } from '../../core/src/component/component';
 import { button, div, span } from '../../core/src/dom/dom';
 import { forLoopRender } from '../../core/src/component/for-loop';
+import { Button } from './Button';
 
 const randomInt = (min: number, max: number) =>
   min + Math.floor(Math.random() * (max - min));
@@ -37,9 +38,9 @@ const ProductCard = componentWithProps<{ product: Product }>(({ product }) => {
     div(toValue(product).title),
     div(toValue(product).description),
     div(
-      button('-').on({ click: decrement }),
+      Button({ disabled: false, onClick: decrement, child: '-' }),
       span(itemCount),
-      button('+').on({ click: increment })
+      Button({ child: '+', disabled: false, onClick: increment })
     ).addClass('flex space-around')
   ).addClass('flex flex-col w-fit p-1 gap-1 bg-blue-300 rounded-sm');
 });

@@ -4,8 +4,13 @@ import { watchAllSources } from './reactive/watch';
 import { forLoopRender } from './component/for-loop';
 import { isReactive, toValue } from './reactive';
 import { watchList } from './reactive/watch-list';
+import { PrimitiveType, isPrimitive } from './utils/primitive';
 
-export type RenderFn = () => SimpleComponent | HTMLElement | null;
+export type RenderFn = () =>
+  | SimpleComponent
+  | HTMLElement
+  | null
+  | PrimitiveType;
 
 export type SimpleComponent = {
   renderFn: RenderFn;
@@ -79,6 +84,8 @@ function safeRenderHtmlOrComponent(
   const node = renderFn();
 
   if (!node) return buildPlaceholderComment();
+
+  if (isPrimitive(node)) return document.createTextNode(node.toString());
 
   return node;
 }

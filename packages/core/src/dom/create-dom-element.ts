@@ -6,10 +6,10 @@ import { Component, render, SimpleComponent, isComponent } from '../render';
 import { MaybeArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
+import { PrimitiveType } from '../utils/primitive';
 
 type TagName = keyof HTMLElementTagNameMap;
 
-type PrimitiveType = string | boolean | number;
 type Listener = Exclude<
   {
     [K in keyof HTMLElement]: K extends `on${infer E}` ? E : never;

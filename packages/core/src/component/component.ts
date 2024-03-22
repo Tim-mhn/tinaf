@@ -2,7 +2,7 @@ import { MaybeReactiveProps } from '../reactive/types';
 import { Component, SimpleComponent } from '../render';
 
 export function component(
-  fn: () => HTMLElement | SimpleComponent
+  fn: () => HTMLElement | SimpleComponent | string
 ): SimpleComponent {
   return {
     renderFn: fn,
@@ -19,13 +19,13 @@ export const componentWithProps =
     fn: (
       p: MaybeReactiveProps<Props> &
         Actions &
-        Record<Children[number], SimpleComponent>
-    ) => HTMLElement | SimpleComponent
+        Record<Children[number], SimpleComponent | string>
+    ) => HTMLElement | SimpleComponent | string
   ) =>
   (
     props: MaybeReactiveProps<Props> &
       Actions &
-      Record<Children[number], SimpleComponent>
+      Record<Children[number], SimpleComponent | string>
   ) =>
     component(() => fn(props));
 
