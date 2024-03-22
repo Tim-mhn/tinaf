@@ -1,6 +1,7 @@
 import { Observable, Subject, combineLatest, map, skip, startWith } from 'rxjs';
-import { MaybeReactive } from './types';
-
+import { MaybeDeepReactive, MaybeReactive, MaybeReactiveProps } from './types';
+import { isReactive, toValue } from './toValue';
+import { objectKeys } from '../utils/object';
 export interface ReactiveValue<T> {
   value: T;
   valueChanges$: Observable<T>;
@@ -30,24 +31,6 @@ export function reactive<T>(initialValue: T) {
   return rx;
 }
 
-export class BooleanReactive extends Reactive<boolean> {
-  constructor(initialValue: boolean) {
-    super(initialValue);
-  }
-
-  not() {
-    return computed(() => !this.value, [this]);
-  }
-}
-
-export function bool(initialValue: boolean): [Reactive<boolean>, () => void] {
-  const rx = new BooleanReactive(initialValue);
-
-  const toggle = () => rx.update(!rx.value);
-
-  return [rx, toggle];
-}
-
 class Computed<T> implements ReactiveValue<T> {
   valueChanges$: Observable<T>;
 
@@ -71,4 +54,39 @@ class Computed<T> implements ReactiveValue<T> {
 
 export function computed<T>(getterFn: () => T, sources: ReactiveValue<any>[]) {
   return new Computed(getterFn, sources);
+}
+
+export function maybeComputed<T>(
+  getterFn: () => T,
+  sources: MaybeReactive<any>[]
+) {
+  const reactiveSources = sources.filter(isReactive);
+  if (reactiveSources.length === 0) return getterFn();
+
+  return computed(getterFn, reactiveSources);
+}
+
+export function toReactiveProps<T extends object>(
+  obj: MaybeReactive<T> | MaybeReactiveProps<T>
+) {
+  if (!isReactive(obj)) return obj;
+
+  // FIXME: type assertion should not be needed
+  return objectKeys(toValue(obj as MaybeDeepReactive<T>)).reduce(
+    (prev, key) => {
+      const reactiveProp = computed(
+        () => toValue(obj as MaybeDeepReactive<T>)[key],
+        [obj]
+      );
+      return {
+        ...prev,
+        [key]: reactiveProp,
+      };
+    },
+    {} as Partial<{
+      [K in keyof T]: MaybeReactive<T[K]>;
+    }>
+  ) as {
+    [K in keyof T]: MaybeReactive<T[K]>;
+  };
 }

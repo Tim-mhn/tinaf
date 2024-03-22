@@ -30,7 +30,7 @@ export function toValue<T>(
   if (maybeRx && typeof maybeRx === 'object') {
     let tmp: Partial<T> = {};
 
-    // todo: some nasty 'as any' over here :----/
+    // FIXME: avoid the nasty 'as any' over here :----/
 
     objectKeys(maybeRx).forEach((key) => {
       const v = maybeRx[key];

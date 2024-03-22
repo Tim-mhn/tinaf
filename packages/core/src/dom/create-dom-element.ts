@@ -1,8 +1,15 @@
 import { objectEntries } from '../utils/object';
-import { isReactive, toValue } from '../reactive/toValue';
+import { toValue } from '../reactive/toValue';
 import { MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
-import { Component, isComponent, render } from '../render';
+import {
+  Component,
+  isSimpleComponent,
+  isForLoopComponent,
+  render,
+  SimpleComponent,
+  isComponent,
+} from '../render';
 import { MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
@@ -22,7 +29,9 @@ export type EventHandlers = {
   [K in Listener]?: EventHandler;
 };
 
-export type AddClassesArgs = MaybeArray<MaybeReactive<string>>;
+export type AddClassesArgs =
+  | MaybeArray<MaybeReactive<string>>
+  | Record<string, MaybeReactive<boolean>>;
 
 type CreateDomElementProps<T extends TagName> = {
   type: T;
@@ -34,7 +43,7 @@ type CreateDomElementProps<T extends TagName> = {
 
 const _createDomElement = <T extends TagName>(
   props: CreateDomElementProps<T>
-): Component & {
+): SimpleComponent & {
   on: typeof on;
   addClass: typeof addClass;
   addStyles: typeof addStyles;
@@ -88,7 +97,7 @@ const _createDomElement = <T extends TagName>(
   };
 
   return {
-    __isComponent: true,
+    __type: 'component',
     renderFn,
     on,
     addClass,

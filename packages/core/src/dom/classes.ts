@@ -1,8 +1,11 @@
-import { toValue } from '../reactive/toValue';
+import { isReactive, toValue } from '../reactive/toValue';
 import { getReactiveElements } from '../reactive/utils';
 import { watchAllSources } from '../reactive/watch';
-import { toArray } from '../utils/array';
+import { MaybeArray, toArray } from '../utils/array';
 import { AddClassesArgs } from './create-dom-element';
+import { type MaybeReactive } from '../reactive/types';
+import { objectEntries } from '../utils/object';
+import { computed } from '../reactive';
 
 export function formatClassesToArray(classOrClasses: string | string[]) {
   const allClassesAsString =
@@ -16,7 +19,7 @@ export function formatClassesToArray(classOrClasses: string | string[]) {
   return classes;
 }
 
-function getFormattedClasses(classes: AddClassesArgs) {
+function getFormattedClasses(classes: MaybeArray<MaybeReactive<string>>) {
   const classesArr = toArray(classes);
 
   const stringClasses = classesArr.map(toValue);
@@ -24,9 +27,60 @@ function getFormattedClasses(classes: AddClassesArgs) {
   return formattedClasses;
 }
 
+/**
+ *
+ *
+ * Pass (dynamic) classes. Multiple options
+ *
+ * Pass a single string: 'bg-primary'
+ * Pass an array of string: ['bg-primary', 'text-primary']
+ * Pass a single reactive string
+ * Pass an array of strings and reactive strings: ['bg-primary', myClass, myOtherClass]
+ * Pass an object where keys are classes and values are reactive booleans
+ * {
+ *   'bg-primary text-primary': isPrimary,
+ *   'bg-dark text-white':; isPrimary.not()
+ * }
+ * @param element
+ * @param classes
+ */
+
+function isClassesRecord(
+  classes: AddClassesArgs
+): classes is Record<string, MaybeReactive<boolean>> {
+  return !(
+    Array.isArray(classes) ||
+    isReactive(classes) ||
+    typeof classes === 'string'
+  );
+}
+
 export function addClassToElement(
   element: HTMLElement,
   classes: AddClassesArgs
+) {
+  const reactiveClassesArray = isClassesRecord(classes)
+    ? transformRecordIntoReactiveClassesArray(classes)
+    : classes;
+
+  addDynamicClassesToElement(element, reactiveClassesArray);
+}
+
+function transformRecordIntoReactiveClassesArray(
+  classes: Record<string, MaybeReactive<boolean>>
+) {
+  return objectEntries(classes).map((entry) => {
+    const [className, condition] = entry;
+
+    if (!isReactive(condition)) return toValue(condition) ? className : '';
+
+    return computed(() => (condition.value ? className : ''), [condition]);
+  });
+}
+
+function addDynamicClassesToElement(
+  element: HTMLElement,
+  classes: MaybeArray<MaybeReactive<string>>
 ) {
   const classesArr = toArray(classes);
   const reactiveClasses = getReactiveElements(classesArr);

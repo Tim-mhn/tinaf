@@ -3,28 +3,49 @@ import { Reactive, ReactiveValue, reactive } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
 import { isReactive, toValue } from './reactive/toValue';
 import { watchAllSources } from './reactive/watch';
+import { renderForLoop } from './component/for-loop';
 
-export type RenderFn = () => Component | HTMLElement | null;
-export interface Component {
+export type RenderFn = () => SimpleComponent | HTMLElement | null;
+
+export type SimpleComponent = {
   renderFn: RenderFn;
+  __type: 'component';
   sources?: ReactiveValue<any>[];
-  __isComponent: Readonly<true>;
-}
+};
+
+export type ForLoopComponent<T> = {
+  __type: 'for-loop';
+  items: MaybeReactive<T[]>;
+  componentFn: (item: T) => SimpleComponent;
+};
+
+export type Component<T = any> = SimpleComponent | ForLoopComponent<T>;
 
 export function isHtmlOrComment(
   node: Component | HTMLElement | Comment
 ): node is HTMLElement | Comment {
-  return !('__isComponent' in node);
+  return !('__type' in node);
 }
 
 export function isComponent(
-  node: Component | MaybeReactive<any>
+  node: Component | HTMLElement | Comment | MaybeReactive<any>
 ): node is Component {
+  return node && typeof node === 'object' && '__type' in node;
+}
+export function isSimpleComponent(
+  node: Component | MaybeReactive<any>
+): node is SimpleComponent {
   try {
-    return node && typeof node === 'object' && '__isComponent' in node;
+    return isComponent(node) && node['__type'] === 'component';
   } catch (err) {
-    throw new Error(`Cannot use 'in' in isComponent for node: ${node}`);
+    throw new Error(`Cannot use 'in' in isSimpleComponent for node: ${node}`);
   }
+}
+
+export function isForLoopComponent(
+  node: Component | HTMLElement | Comment | MaybeReactive<any>
+): node is ForLoopComponent<any> {
+  return isComponent(node) && node['__type'] === 'for-loop';
 }
 
 function hasSources(
@@ -34,14 +55,35 @@ function hasSources(
 }
 
 /**
- * Renders a placeholder comment if the renderFn returns null
+ * Recursive function to return the HTML element (or placeholder comment) from a renderFn
+ * This does not update the DOM or create any subscriptions
  * @param renderFn
  * @returns
  */
-function safeRender(renderFn: RenderFn): Component | HTMLElement | Comment {
-  const node = renderFn();
-  if (node) return node;
+export function safeRenderHtml(renderFn: RenderFn): HTMLElement | Comment {
+  const htmlComponentOrComment = safeRenderHtmlOrComponent(renderFn);
 
+  if (isHtmlOrComment(htmlComponentOrComment)) return htmlComponentOrComment;
+
+  return safeRenderHtml(htmlComponentOrComment.renderFn);
+}
+
+/**
+ * Returns a placeholder comment if the renderFn returns null (when using a show.when structure)
+ * @param renderFn
+ * @returns
+ */
+function safeRenderHtmlOrComponent(
+  renderFn: RenderFn
+): SimpleComponent | HTMLElement | Comment {
+  const node = renderFn();
+
+  if (!node) return buildPlaceholderComment();
+
+  return node;
+}
+
+function buildPlaceholderComment() {
   const commentText = `placeholder--${crypto.randomUUID()}`;
   const comment = document.createComment(commentText);
   return comment;
@@ -51,19 +93,26 @@ export function render(
   component: Component,
   parent: HTMLElement
 ): HTMLElement | Comment {
+  if (isForLoopComponent(component)) {
+    renderForLoop(component as any, parent);
+    return buildPlaceholderComment();
+  }
+
   const { renderFn, sources } = component;
 
-  let node = safeRender(renderFn);
+  let node = safeRenderHtmlOrComponent(renderFn);
 
   if (isHtmlOrComment(node)) {
     parent.append(node);
 
     if (hasSources(sources)) {
       watchAllSources(sources).subscribe(() => {
+        console.debug('HTML  source changed');
+
         const index = [...parent.childNodes].findIndex((n) => n === node);
         parent.removeChild(node as HTMLElement);
 
-        node = safeRender(renderFn) as HTMLElement | Comment;
+        node = safeRenderHtml(renderFn);
 
         parent.insertBefore(node, [...parent.childNodes][index]);
       });
@@ -77,7 +126,7 @@ export function render(
     watchAllSources(sources).subscribe(() => {
       const index = [...parent.childNodes].findIndex((n) => n === html);
       parent.removeChild(html);
-      html = render(node as Component, parent);
+      html = safeRenderHtml(renderFn);
       parent.insertBefore(html, [...parent.childNodes][index]);
     });
   }
@@ -92,24 +141,3 @@ export function renderApp(id: string, component: Component) {
     render(component, container);
   });
 }
-
-export const show = (cmp: Component) => {
-  return {
-    when: (when: MaybeReactive<boolean>) => {
-      const sources = isReactive(when) ? [when] : [];
-
-      const elseFn = (fallback: Component): Component => ({
-        renderFn: () => (toValue(when) ? cmp.renderFn() : fallback.renderFn()),
-        sources,
-        __isComponent: true,
-      });
-
-      return {
-        else: elseFn,
-        renderFn: () => (toValue(when) ? cmp.renderFn() : null),
-        __isComponent: true,
-        sources,
-      } satisfies Component & { else: typeof elseFn };
-    },
-  };
-};

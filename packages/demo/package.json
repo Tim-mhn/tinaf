@@ -8,7 +8,6 @@
     "dev": "vite"
   },
   "dependencies": {
-    "tinaf": "*",
     "vite": "^5.0.10"
   },
   "devDependencies": {
