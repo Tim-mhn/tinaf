@@ -1,13 +1,19 @@
 {
   "name": "tinaf-demo",
   "version": "0.0.1",
-  "description": "Demo app using TINAF",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "rxjs": "^7.8.1",
     "vite": "^5.0.10"
   },
   "devDependencies": {
@@ -15,7 +21,5 @@
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
     "vitest": "^1.1.0"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }

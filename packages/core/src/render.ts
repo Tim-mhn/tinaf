@@ -5,6 +5,13 @@ import { forLoopRender } from './component/for-loop';
 import { isReactive, toValue } from './reactive';
 import { watchList } from './reactive/watch-list';
 import { PrimitiveType, isPrimitive } from './utils/primitive';
+import {
+  renderHtmlChild,
+  renderSimpleComponentChild,
+} from './rendering/rendering-strategies';
+import { VComponent } from './component/wip/v-component.v2';
+import { ComponentV2 } from './component/wip/component';
+import { isV2Component } from './component/wip/isComponent';
 
 export type RenderFn = () =>
   | SimpleComponent
@@ -53,7 +60,7 @@ export function isForLoopComponent(
   return isComponent(node) && node['__type'] === 'for-loop';
 }
 
-function hasSources(
+export function hasSources(
   sources?: ReactiveValue<any>[]
 ): sources is ReactiveValue<any>[] {
   return !!sources && sources.length > 0;
@@ -78,7 +85,7 @@ export function safeRenderHtml(renderFn: RenderFn): HTMLElement | Comment {
  * @param renderFn
  * @returns
  */
-function safeRenderHtmlOrComponent(
+export function safeRenderHtmlOrComponent(
   renderFn: RenderFn
 ): SimpleComponent | HTMLElement | Comment {
   const node = renderFn();
@@ -97,7 +104,7 @@ function buildPlaceholderComment() {
 }
 
 export function render(
-  component: Component,
+  component: ComponentV2,
   parent: HTMLElement
 ): HTMLElement | Comment {
   if (isForLoopComponent(component)) {
@@ -105,40 +112,25 @@ export function render(
     return buildPlaceholderComment();
   }
 
-  const { renderFn, sources } = component;
+  if (isV2Component(component)) {
+    console.info('Calling init from render');
+    (component as VComponent).init({ html: parent });
+    const html = (component as VComponent).renderOnce();
+    parent.append(html);
+    return html;
+  }
+
+  throw new Error('pathway not supported in render function');
+
+  const { renderFn } = component;
 
   let node = safeRenderHtmlOrComponent(renderFn);
 
   if (isHtmlOrComment(node)) {
-    parent.append(node);
-
-    if (hasSources(sources)) {
-      watchAllSources(sources).subscribe(() => {
-        console.debug('HTML  source changed');
-
-        const index = [...parent.childNodes].findIndex((n) => n === node);
-        parent.removeChild(node as HTMLElement);
-
-        node = safeRenderHtml(renderFn);
-
-        parent.insertBefore(node, [...parent.childNodes][index]);
-      });
-    }
-    return node;
+    return renderHtmlChild(component, node, parent);
   }
 
-  let html = render(node, parent);
-
-  if (hasSources(sources)) {
-    watchAllSources(sources).subscribe(() => {
-      const index = [...parent.childNodes].findIndex((n) => n === html);
-      parent.removeChild(html);
-      html = safeRenderHtml(renderFn);
-      parent.insertBefore(html, [...parent.childNodes][index]);
-    });
-  }
-
-  return html;
+  return renderSimpleComponentChild(component, node, parent);
 }
 
 function renderForLoop<T>(
@@ -178,7 +170,7 @@ function renderForLoop<T>(
   return parent;
 }
 
-export function renderApp(id: string, component: Component) {
+export function renderApp(id: string, component: ComponentV2) {
   window.addEventListener('load', () => {
     const container = document.getElementById(id) as HTMLElement;
 

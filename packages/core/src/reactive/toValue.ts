@@ -22,6 +22,8 @@ export function isReactive<T>(
   return !!maybeRx && typeof maybeRx === 'object' && 'value' in maybeRx;
 }
 
+export function toValue<T>(maybeRx: MaybeReactive<T>): T;
+
 export function toValue<T>(
   maybeRx: MaybeDeepReactive<T>
 ): MaybeDeepReactiveToValue<T> {
