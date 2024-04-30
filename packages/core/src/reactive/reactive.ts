@@ -2,6 +2,7 @@ import {
   Observable,
   Subject,
   combineLatest,
+  filter,
   from,
   map,
   skip,
@@ -61,7 +62,7 @@ class Computed<T> implements ReactiveValue<T> {
 }
 
 export class InputReactive<T extends string | number>
-  implements ReactiveValue<{ value: T; fromUI?: boolean }>
+  implements ReactiveValue<T>
 {
   private _value: { value: T; fromUI?: boolean };
   constructor(initialValue: T) {
@@ -71,7 +72,13 @@ export class InputReactive<T extends string | number>
   }
 
   private _valueChanges$ = new Subject<{ value: T; fromUI: boolean }>();
-  public valueChanges$ = this._valueChanges$.asObservable();
+  public valueChanges$ = this._valueChanges$
+    .asObservable()
+    .pipe(map((v) => v.value));
+
+  public nonUiValueChanges$ = this._valueChanges$.pipe(
+    filter(({ fromUI }) => !fromUI)
+  );
 
   update(newValue: T, { fromUI }: { fromUI: boolean } = { fromUI: false }) {
     this._value = { value: newValue, fromUI };
@@ -79,7 +86,7 @@ export class InputReactive<T extends string | number>
   }
 
   get value() {
-    return this._value;
+    return this._value.value;
   }
 }
 

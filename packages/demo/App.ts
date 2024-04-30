@@ -206,14 +206,14 @@ const NestedStateExample = vcomponent(() => {
 });
 
 const InputExample = vcomponent(() => {
-  const textInput = inputReactive<string>('initial text');
+  const text = inputReactive<string>('initial text');
 
-  const text = computed(() => textInput.value.value, [textInput]);
   return div(
     span('TODO: make inputs work properly').addClass(
       'text-red-700 font-semibold'
     ),
-    input(textInput).addClass('border p-1 border-slate-800 rounded-sm'),
+    span('DONE ✓✓✓'),
+    input(text).addClass('border p-1 border-slate-800 rounded-sm'),
     span(text)
   ).addClass('flex flex-col gap-2 border-2 border-blue-600 p-2 rounded-md');
 });

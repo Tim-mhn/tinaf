@@ -60,16 +60,15 @@ class VInputComponent<T extends string | number> implements ComponentV2 {
   ) {}
 
   init(parent: WithHtml) {
-    this.reactiveValue.valueChanges$
-      .pipe(filter(({ fromUI }) => !fromUI))
-      .subscribe(() => {
-        const index = [...parent.html.childNodes].findIndex(
-          (n) => n === this.html
-        );
-        parent.html.removeChild(this.html);
-        this._html = this.renderOnce();
-        parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
-      });
+    this.reactiveValue.nonUiValueChanges$.subscribe(() => {
+      const index = [...parent.html.childNodes].findIndex(
+        (n) => n === this.html
+      );
+      console.log(this.html);
+      parent.html.removeChild(this.html);
+      this._html = this.renderOnce();
+      parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
+    });
   }
 
   // FIXME: this as copied from create-dom-element to avoid too much class nesting
@@ -80,7 +79,7 @@ class VInputComponent<T extends string | number> implements ComponentV2 {
 
     input.setAttribute('x-id', crypto.randomUUID());
 
-    const initialValue = this.reactiveValue.value.value;
+    const initialValue = this.reactiveValue.value;
 
     input.value = initialValue.toString();
     if (this.classes) addClassToElement(input, this.classes);
@@ -101,6 +100,8 @@ class VInputComponent<T extends string | number> implements ComponentV2 {
           : newValue;
       this.reactiveValue.update(formattedNewValue as T, { fromUI: true });
     });
+
+    this._html = html;
 
     return html;
   }

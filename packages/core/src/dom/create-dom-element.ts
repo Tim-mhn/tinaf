@@ -2,7 +2,6 @@ import { objectEntries } from '../utils/object';
 import { toValue } from '../reactive/toValue';
 import { MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
-import { Component, render, SimpleComponent, isComponent } from '../render';
 import { MaybeArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
