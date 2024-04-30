@@ -74,16 +74,14 @@ export class VDomComponent<T extends TagName> implements ComponentV2 {
   }
 
   init(parent: WithHtml) {
-    watchAllSources(this.reactiveChildren)
-      .pipe(tap(console.log))
-      .subscribe(() => {
-        const index = [...parent.html.childNodes].findIndex(
-          (n) => n === this.html
-        );
-        parent.html.removeChild(this.html);
-        this._html = this.renderOnce();
-        parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
-      });
+    watchAllSources(this.reactiveChildren).subscribe(() => {
+      const index = [...parent.html.childNodes].findIndex(
+        (n) => n === this.html
+      );
+      parent.html.removeChild(this.html);
+      this._html = this.renderOnce();
+      parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
+    });
     this.children.forEach((child) => {
       if (isV2Component(child)) {
         child.init(this);

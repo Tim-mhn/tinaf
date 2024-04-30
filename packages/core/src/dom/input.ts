@@ -1,26 +1,12 @@
-import { Observable, filter, tap } from 'rxjs';
-import { component, componentWithProps } from '../component/component';
 import { ComponentV2, WithHtml } from '../component/wip/component';
-import {
-  InputReactive,
-  MaybeReactive,
-  Reactive,
-  isReactive,
-  toValue,
-} from '../reactive';
+import { InputReactive } from '../reactive';
 import { Component } from '../render';
 import {
   AddClassesArgs,
   EventHandlers,
-  VDomComponent,
   addEventListenersToElement,
-  createDomElement,
 } from './create-dom-element';
 import { AddStylesArgs, addStylesToElement } from './styles';
-import { getReactiveElements } from '../reactive/utils';
-import { PrimitiveType } from '../utils/primitive';
-import { isV2Component } from '../component/wip/isComponent';
-import { watchAllSources } from '../reactive/watch';
 import { addClassToElement } from './classes';
 
 export const input = <T extends string | number>(value: InputReactive<T>) => {
@@ -95,7 +81,7 @@ class VInputComponent<T extends string | number> implements ComponentV2 {
       const newValue = (e.target as HTMLInputElement).value;
       console.log({ newValue });
       const formattedNewValue =
-        typeof this.reactiveValue.value.value === 'number'
+        typeof this.reactiveValue.value === 'number'
           ? Number.parseFloat(newValue)
           : newValue;
       this.reactiveValue.update(formattedNewValue as T, { fromUI: true });

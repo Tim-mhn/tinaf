@@ -14,6 +14,7 @@ import { ParentWithReactiveChild } from './components/NestedReativeComponent';
 import { VDivExample } from './components/VDivExample';
 import { vcomponent } from '../core/src/component/wip/v-component.v2';
 import { input } from '../core/src/dom/input';
+import { when } from '../core/src/component/wip/conditional-render';
 
 const Counter = vcomponent(() => {
   const count = reactive(0);
@@ -156,7 +157,8 @@ const ShowWhen = vcomponent(() => {
 
   return div(
     span(visible),
-    show(div('hello i"m visible').addClass('custom-div')).when(visible),
+    when(visible).render(div('visible')),
+    when(visible).render(div('visible')).else(div('invisible')),
     toggleVisibleButton
   ).addClass('flex flex-row gap-4 border border-blue-300 p-1');
 });
@@ -230,7 +232,8 @@ export const App = vcomponent(() => {
     ToggleClasses,
     world, // NB: this does not work
     InputExample,
-    // ShowWhenElse,
+
+    ShowWhen,
     // ShowWhen,
     // hello,
     // world,
@@ -252,6 +255,12 @@ export const App = vcomponent(() => {
     // ForLoopV2ComplexExample,
     // ParentWithReactiveChild,
     NestedStateExample,
-    VDivExample
+    VDivExample,
+    div('TODO: make the if/else work').addClass(
+      'text-lg text-slate-100 font-bold p-2 bg-red-800 rounded-sm justify-center flex'
+    ),
+    div('DONE ✓✓✓').addClass(
+      'bg-green-600 text-white text-lg flex justify-center p-2'
+    )
   ).addClass('flex flex-col  gap-4 p-4');
 });
