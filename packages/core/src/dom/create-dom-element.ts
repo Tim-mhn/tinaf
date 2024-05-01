@@ -6,9 +6,9 @@ import { MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
 import { PrimitiveType } from '../utils/primitive';
-import { VComponent } from '../component/v-component.v2';
-import { ComponentV2, WithHtml } from '../component/component';
-import { isV2Component } from '../component/isComponent';
+import { SimpleVComponent } from '../component/v-component.v2';
+import { VComponent, WithHtml } from '../component/component';
+import { isVComponent } from '../component/isComponent';
 import { watchAllSources } from '../reactive/watch';
 import { ReactiveValue } from '../reactive';
 import { Observable, tap } from 'rxjs';
@@ -33,16 +33,16 @@ export type AddClassesArgs =
 
 type CreateDomElementProps<T extends TagName> = {
   type: T;
-  children: (ComponentV2 | MaybeReactive<PrimitiveType>)[];
+  children: (VComponent | MaybeReactive<PrimitiveType>)[];
   handlers?: EventHandlers;
   classes?: AddClassesArgs;
   styles?: AddStylesArgs;
 };
 
-export class VDomComponent<T extends TagName> implements ComponentV2 {
+export class VDomComponent<T extends TagName> implements VComponent {
   constructor(
     private type: T,
-    private children: (ComponentV2 | MaybeReactive<PrimitiveType>)[],
+    private children: (VComponent | MaybeReactive<PrimitiveType>)[],
     private classes?: AddClassesArgs,
     private styles?: AddStylesArgs,
     private handlers?: EventHandlers
@@ -83,7 +83,7 @@ export class VDomComponent<T extends TagName> implements ComponentV2 {
       parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
     });
     this.children.forEach((child) => {
-      if (isV2Component(child)) {
+      if (isVComponent(child)) {
         child.init(this);
       }
     });
@@ -99,10 +99,10 @@ export class VDomComponent<T extends TagName> implements ComponentV2 {
     console.log({ children: this.children });
     console.groupEnd();
     this.children?.forEach((child) => {
-      if (isV2Component(child)) {
+      if (isVComponent(child)) {
         // NOTE: this function breaks state when rerendering a div parent with children with inner state !!
 
-        const vchild = child as any as VComponent;
+        const vchild = child as any as SimpleVComponent;
         const childrenHtml = toArray(vchild.renderOnce());
         childrenHtml.forEach((childHtml) => this.html.append(childHtml));
       } else {
@@ -116,7 +116,7 @@ export class VDomComponent<T extends TagName> implements ComponentV2 {
     if (this.styles) addStylesToElement(this.html, this.styles);
     return this.html;
   }
-  readonly __type = 'componentV2';
+  readonly __type = 'V_COMPONENT';
 }
 const _createDomElement = <T extends TagName>(
   props: CreateDomElementProps<T>
@@ -129,7 +129,7 @@ const _createDomElement = <T extends TagName>(
 };
 export const createDomElement =
   <T extends TagName>(type: T) =>
-  (...children: (ComponentV2 | MaybeReactive<PrimitiveType>)[]) => {
+  (...children: (VComponent | MaybeReactive<PrimitiveType>)[]) => {
     return _createDomElement({
       type,
       children,

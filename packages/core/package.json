@@ -5,6 +5,10 @@
   "type": "module",
   "types": "index.d.ts",
   "private": true,
+  "exports": {
+    "./*": "./src/*.ts",
+    "./reactive": "./src/reactive/index.ts"
+  },
   "scripts": {
     "test": "vitest"
   },

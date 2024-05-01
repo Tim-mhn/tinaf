@@ -44,7 +44,7 @@ class HTMLComponent {
   }
 }
 
-class VComponent {
+class SimpleVComponent {
     render() {
         return this.renderFn();
     }
@@ -100,7 +100,7 @@ class ForLoopComponent {
 
 30/03/24 Prop
 
-class VComponent
+class SimpleVComponent
 
 
 sources

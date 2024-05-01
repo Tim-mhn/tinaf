@@ -1,4 +1,4 @@
-import { ComponentV2, WithHtml } from '../component/component';
+import { VComponent, WithHtml } from '../component/component';
 import { InputReactive } from '../reactive';
 import { Component } from '../render';
 import {
@@ -14,10 +14,10 @@ export const input = <T extends string | number>(value: InputReactive<T>) => {
 };
 
 // TODO: make the inputs correctly reactive and stop breaking state & UI
-class VInputComponent<T extends string | number> implements ComponentV2 {
+class VInputComponent<T extends string | number> implements VComponent {
   private _html!: HTMLInputElement;
 
-  readonly __type = 'componentV2';
+  readonly __type = 'V_COMPONENT';
 
   get html() {
     return this._html;

@@ -1,8 +1,8 @@
 import { ReactiveValue } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
 import { PrimitiveType, isPrimitive } from './utils/primitive';
-import { VComponent } from './component/v-component.v2';
-import { ComponentV2 } from './component/component';
+import { SimpleVComponent } from './component/v-component.v2';
+import { VComponent } from './component/component';
 import { MaybeArray, toArray } from './utils/array';
 
 export type RenderFn = () =>
@@ -96,17 +96,17 @@ function buildPlaceholderComment() {
 }
 
 export function render(
-  component: ComponentV2,
+  component: VComponent,
   parent: HTMLElement
 ): MaybeArray<HTMLElement | Comment> {
   console.info('Calling init from render');
-  (component as VComponent).init({ html: parent });
-  const html = (component as VComponent).renderOnce();
+  (component as SimpleVComponent).init({ html: parent });
+  const html = (component as SimpleVComponent).renderOnce();
   parent.append(...toArray(html));
   return html;
 }
 
-export function renderApp(id: string, component: ComponentV2) {
+export function renderApp(id: string, component: VComponent) {
   window.addEventListener('load', () => {
     const container = document.getElementById(id) as HTMLElement;
 

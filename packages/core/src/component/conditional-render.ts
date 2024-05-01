@@ -1,6 +1,6 @@
 import { type MaybeReactive, isReactive, reactive, toValue } from '../reactive';
 import { MaybeArray, maybeArrayForEach, toArray } from '../utils/array';
-import { ComponentV2, WithHtml } from './component';
+import { VComponent, WithHtml } from './component';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
 function buildPlaceholderComment() {
@@ -9,14 +9,14 @@ function buildPlaceholderComment() {
   return comment;
 }
 
-class ConditionallyRenderedComponent implements ComponentV2 {
+class ConditionallyRenderedComponent implements VComponent {
   constructor(
     private condition: MaybeReactive<boolean>,
-    private cmp: ComponentV2,
-    private fallback?: ComponentV2
+    private cmp: VComponent,
+    private fallback?: VComponent
   ) {}
 
-  readonly __type = 'componentV2';
+  readonly __type = 'V_COMPONENT';
   private _html!: MaybeArray<HTMLElement | Comment>;
   get html() {
     return this._html;
@@ -58,7 +58,7 @@ class ConditionallyRenderedComponent implements ComponentV2 {
     });
   }
 
-  else(fallback: ComponentV2) {
+  else(fallback: VComponent) {
     return new ConditionallyRenderedComponent(
       this.condition,
       this.cmp,
@@ -68,6 +68,6 @@ class ConditionallyRenderedComponent implements ComponentV2 {
 }
 
 export const when = (condition: MaybeReactive<boolean>) => ({
-  render: (cmp: ComponentV2) =>
+  render: (cmp: VComponent) =>
     new ConditionallyRenderedComponent(condition, cmp),
 });

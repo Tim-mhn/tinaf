@@ -2,18 +2,18 @@ import { tap } from 'rxjs';
 import { MaybeReactive, isReactive, toValue } from '../reactive';
 import { watchList } from '../reactive/watch-list';
 import { toArray } from '../utils/array';
-import { ComponentV2, WithHtml } from './component';
-import { isV2Component } from './isComponent';
+import { VComponent, WithHtml } from './component';
+import { isVComponent } from './isComponent';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
-import { VComponent } from './v-component.v2';
+import { SimpleVComponent } from './v-component.v2';
 
-class ForLoopComponent<T> implements ComponentV2 {
+class ForLoopComponent<T> implements VComponent {
   constructor(
     private items: MaybeReactive<T[]>,
-    private renderFn: (item: T) => HTMLElement | Comment | ComponentV2
+    private renderFn: (item: T) => HTMLElement | Comment | VComponent
   ) {}
 
-  readonly __type = 'componentV2';
+  readonly __type = 'V_COMPONENT';
   private _html!: (HTMLElement | Comment)[];
   get html() {
     return this._html;
@@ -21,8 +21,8 @@ class ForLoopComponent<T> implements ComponentV2 {
 
   private _renderChildHtmlAndInit(value: T, parent: WithHtml) {
     const child = this.renderFn(value);
-    if (isV2Component(child)) {
-      (child as any as VComponent).init(parent);
+    if (isVComponent(child)) {
+      (child as any as SimpleVComponent).init(parent);
       return child.renderOnce();
     }
     return child;
@@ -81,5 +81,5 @@ class ForLoopComponent<T> implements ComponentV2 {
 
 export const forLoop = <T>(
   items: MaybeReactive<T[]>,
-  renderFn: (item: T) => HTMLElement | Comment | ComponentV2
+  renderFn: (item: T) => HTMLElement | Comment | VComponent
 ) => new ForLoopComponent(items, renderFn);

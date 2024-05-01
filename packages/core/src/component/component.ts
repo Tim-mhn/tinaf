@@ -4,10 +4,10 @@ export type WithHtml = {
   html: HTMLElement;
 };
 
-export interface ComponentV2 {
+export interface VComponent {
   init(parent: WithHtml): void;
   renderOnce(): MaybeArray<HTMLElement | Comment>;
-  __type: 'componentV2';
+  __type: 'V_COMPONENT';
   html: MaybeArray<HTMLElement | Comment>;
 }
 

@@ -1,13 +1,13 @@
 import { MaybeReactive } from '../reactive';
-import { ComponentV2 } from './component';
+import { VComponent } from './component';
 
-export function isV2Component(
-  cmp: ComponentV2 | MaybeReactive<any> | HTMLElement | Comment
-): cmp is ComponentV2 {
+export function isVComponent(
+  cmp: VComponent | MaybeReactive<any> | HTMLElement | Comment
+): cmp is VComponent {
   return (
     cmp &&
     typeof cmp === 'object' &&
     '__type' in cmp &&
-    cmp.__type === 'componentV2'
+    cmp.__type === 'V_COMPONENT'
   );
 }

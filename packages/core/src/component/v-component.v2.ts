@@ -3,19 +3,19 @@ import { ReactiveValue } from '../reactive';
 import { watchAllSources } from '../reactive/watch';
 import { hasSources, isComponent, isForLoopComponent } from '../render';
 import { MaybeArray } from '../utils/array';
-import { ComponentV2, WithHtml } from './component';
-import { isV2Component } from './isComponent';
+import { VComponent, WithHtml } from './component';
+import { isVComponent } from './isComponent';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
-export class VComponent implements ComponentV2 {
+export class SimpleVComponent implements VComponent {
   constructor(
-    public renderFn: () => HTMLElement | Comment | ComponentV2,
+    public renderFn: () => HTMLElement | Comment | VComponent,
     public sources?: ReactiveValue<any>[]
   ) {}
 
-  readonly __type = 'componentV2';
+  readonly __type = 'V_COMPONENT';
 
-  child!: HTMLElement | Comment | ComponentV2;
+  child!: HTMLElement | Comment | VComponent;
   html!: MaybeArray<HTMLElement | Comment>;
   parent!: WithHtml;
 
@@ -26,8 +26,8 @@ export class VComponent implements ComponentV2 {
     if (isForLoopComponent(this.child))
       throw new Error('for loop component not supported');
 
-    if (isV2Component(this.child)) {
-      (this.child as any as VComponent).init(this.parent);
+    if (isVComponent(this.child)) {
+      (this.child as any as SimpleVComponent).init(this.parent);
     } else {
       this.html = this.child;
     }
@@ -51,7 +51,7 @@ export class VComponent implements ComponentV2 {
     if (isForLoopComponent(this.child))
       throw new Error('for loop component not supported');
 
-    if (isV2Component(this.child)) {
+    if (isVComponent(this.child)) {
       const html = this.child.renderOnce();
       this.html = html;
       return html;
@@ -61,8 +61,6 @@ export class VComponent implements ComponentV2 {
   }
 }
 
-export function vcomponent(
-  renderFn: () => HTMLElement | Comment | ComponentV2
-) {
-  return new VComponent(renderFn);
+export function vcomponent(renderFn: () => HTMLElement | Comment | VComponent) {
+  return new SimpleVComponent(renderFn);
 }
