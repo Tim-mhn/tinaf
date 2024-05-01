@@ -1,4 +1,4 @@
-import { MaybeReactive } from '../../reactive';
+import { MaybeReactive } from '../reactive';
 import { ComponentV2 } from './component';
 
 export function isV2Component(

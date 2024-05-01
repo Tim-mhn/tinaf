@@ -1,4 +1,3 @@
-import { component, componentWithProps } from '../core/src/component/component';
 import { button, div, span } from '../core/src/dom/dom';
 import {
   bool,
@@ -7,90 +6,11 @@ import {
   not,
   reactive,
 } from '../core/src/reactive';
-import { show } from '../core/src/component/show';
-import { forLoopRender } from '../core/src/component/for-loop';
-import { ForLoopV2ComplexExample } from './components/ForLoopExample';
-import { ParentWithReactiveChild } from './components/NestedReativeComponent';
 import { VDivExample } from './components/VDivExample';
-import { vcomponent } from '../core/src/component/wip/v-component.v2';
+import { vcomponent } from '../core/src/component/v-component.v2';
 import { input } from '../core/src/dom/input';
-import { when } from '../core/src/component/wip/conditional-render';
-import { forLoop } from '../core/src/component/wip/for-loop';
-
-const Counter = vcomponent(() => {
-  const count = reactive(0);
-
-  return div(
-    div(count),
-    button('Increment').on({ click: () => count.update(count.value + 1) })
-  ).addClass('flex border border-slate-300 gap-4');
-});
-
-const ConditionalCounter = vcomponent(() => {
-  const [visible, toggleVisible] = bool(true);
-
-  return div(
-    // show(div('visible')).when(visible),
-    show(Counter).when(visible),
-    button('Show/hide counter')
-      .on({ click: toggleVisible })
-      .addClass('border p-1 bg-slate-100'),
-    span(visible)
-  ).addClass('flex border border-slate-300 gap-4');
-});
-const ShowWhenElse = vcomponent(() => {
-  const [visible, toggleVisible] = bool(true);
-  // setInterval(() => toggleVisible(), 2000);
-  return div(show(div('visible')).when(visible).else(div('invisible')));
-});
-
-const AddStylesReactiveExample = vcomponent(() => {
-  const [isBlue, toggleTextColor] = bool(true);
-
-  const textColor = computed(() => (isBlue.value ? 'blue' : 'black'), [isBlue]);
-
-  return div(
-    div('This text may be blue or black').addStyles({
-      text: '20px',
-      color: textColor,
-    }),
-    button('Toggle text color').on({
-      click: toggleTextColor,
-    })
-  ).addClass('flex gap-4');
-});
-const AddStylesSimpleExample = div('hello I have custom style').addStyles({
-  background: 'red',
-  text: '20px',
-  color: 'white',
-});
-
-/**
- *
- * Dynamic conditional classes
- *
- *
- * boolean reactive
- *
- * const condition = reactive(true);
- *
- * const opposite = condition.opposite() ; // computed(() => !condition.value, [condition])
- *
- * const myDiv = div().addClass({
- *    'bg-primary text-primary': condition,
- *    'bg-seocndary text-secondary' :!condition
- * })
- *
- */
-
-// const DynamicConditionalClassesExample = vcomponentWithProps<{
-//   active: boolean;
-// }>(({ active }) => {
-//   return div('Example of dynamic conditional classes').addClass({
-//     'bg-green-300 text-green-600': active,
-//     'bg-red-300 text-red-800': not(active),
-//   });
-// });
+import { when } from '../core/src/component/conditional-render';
+import { forLoop } from '../core/src/component/for-loop';
 
 const ToggleClasses = vcomponent(() => {
   const [active, toggleActive] = bool(true);
@@ -175,10 +95,6 @@ const ShowWhen = vcomponent(() => {
   ).addClass('flex flex-row gap-4 border border-blue-300 p-1');
 });
 
-const Button = vcomponent(() => {
-  return button('Click');
-});
-
 const Header = vcomponent(() => {
   const title = reactive('Header');
 
@@ -241,25 +157,7 @@ export const App = vcomponent(() => {
     InputExample,
 
     ShowWhen,
-    // ShowWhen,
-    // hello,
-    // world,
-    // Button,
-    // AddStylesSimpleExample,
-    // AddStylesReactiveExample,
-    // DynamicConditionalClassesExample({ active }),
-    // button('Toggle active to toggle classes').on({
-    //   click: toggleActive,
-    // }),
-    // ConditionalCounter,
-    // Card({
-    //   title: hello,
-    //   subtitle: world,
-    //   content: div('This is custom content'),
-    //   onAdd: () => console.log('added !'),
-    // }),
-    // ForLoopV2ComplexExample,
-    // ParentWithReactiveChild,
+
     RenderForLoopV2Example,
     NestedStateExample,
     VDivExample,

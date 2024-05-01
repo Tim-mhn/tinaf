@@ -1,4 +1,4 @@
-import { MaybeArray, toArray } from '../../utils/array';
+import { MaybeArray, toArray } from '../utils/array';
 import { WithHtml } from './component';
 
 export function removeOldNodesAndRenderNewNodes({

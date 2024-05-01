@@ -1,4 +1,4 @@
-import { ComponentV2, WithHtml } from '../component/wip/component';
+import { ComponentV2, WithHtml } from '../component/component';
 import { InputReactive } from '../reactive';
 import { Component } from '../render';
 import {

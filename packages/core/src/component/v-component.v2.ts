@@ -1,16 +1,8 @@
-import { button, div } from '../../dom/dom';
-import { ReactiveValue } from '../../reactive';
-import { watchAllSources } from '../../reactive/watch';
-import {
-  Component,
-  RenderFn,
-  SimpleComponent,
-  hasSources,
-  isComponent,
-  isForLoopComponent,
-} from '../../render';
-import { MaybeArray } from '../../utils/array';
-import { component } from '../component';
+import { button, div } from '../dom/dom';
+import { ReactiveValue } from '../reactive';
+import { watchAllSources } from '../reactive/watch';
+import { hasSources, isComponent, isForLoopComponent } from '../render';
+import { MaybeArray } from '../utils/array';
 import { ComponentV2, WithHtml } from './component';
 import { isV2Component } from './isComponent';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';

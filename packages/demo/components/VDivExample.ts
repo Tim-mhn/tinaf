@@ -1,4 +1,4 @@
-import { vcomponent } from '../../core/src/component/wip/v-component.v2';
+import { vcomponent } from '../../core/src/component/v-component.v2';
 import { button, div } from '../../../packages/core/src/dom/dom';
 import { bool, reactive } from '../../../packages/core/src/reactive';
 

@@ -1,17 +1,9 @@
 import { ReactiveValue } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
-import { watchAllSources } from './reactive/watch';
-import { forLoopRender } from './component/for-loop';
-import { isReactive, toValue } from './reactive';
-import { watchList } from './reactive/watch-list';
 import { PrimitiveType, isPrimitive } from './utils/primitive';
-import {
-  renderHtmlChild,
-  renderSimpleComponentChild,
-} from './rendering/rendering-strategies';
-import { VComponent } from './component/wip/v-component.v2';
-import { ComponentV2 } from './component/wip/component';
-import { isV2Component } from './component/wip/isComponent';
+import { VComponent } from './component/v-component.v2';
+import { ComponentV2 } from './component/component';
+import { MaybeArray, toArray } from './utils/array';
 
 export type RenderFn = () =>
   | SimpleComponent
@@ -106,68 +98,12 @@ function buildPlaceholderComment() {
 export function render(
   component: ComponentV2,
   parent: HTMLElement
-): HTMLElement | Comment {
-  if (isForLoopComponent(component)) {
-    renderForLoop(component as any, parent);
-    return buildPlaceholderComment();
-  }
-
-  if (isV2Component(component)) {
-    console.info('Calling init from render');
-    (component as VComponent).init({ html: parent });
-    const html = (component as VComponent).renderOnce();
-    parent.append(html);
-    return html;
-  }
-
-  throw new Error('pathway not supported in render function');
-
-  const { renderFn } = component;
-
-  let node = safeRenderHtmlOrComponent(renderFn);
-
-  if (isHtmlOrComment(node)) {
-    return renderHtmlChild(component, node, parent);
-  }
-
-  return renderSimpleComponentChild(component, node, parent);
-}
-
-function renderForLoop<T>(
-  component: ReturnType<typeof forLoopRender<T>>,
-  parent: HTMLElement
-) {
-  const { componentFn, items } = component;
-
-  const children = toValue(items).map((i) =>
-    safeRenderHtml(componentFn(i).renderFn)
-  );
-  parent.append(...children);
-
-  if (!isReactive(items)) return parent;
-
-  watchList(items).subscribe((changes) => {
-    const childrenToRemove = changes
-      .filter(({ change }) => change === 'removed')
-      .map(({ index, value }) => {
-        console.debug('Removing child ', value);
-        return parent.childNodes[index];
-      });
-
-    childrenToRemove.forEach((child) => parent.removeChild(child));
-
-    const childrenToAdd = changes
-      .filter(({ change }) => change === 'added')
-      .sort((a, b) => b.index - a.index);
-
-    childrenToAdd.forEach(({ value, index }) => {
-      const child = safeRenderHtml(componentFn(value).renderFn);
-      console.debug('Adding child ', value);
-      parent.insertBefore(child, [...parent.childNodes][index]);
-    });
-  });
-
-  return parent;
+): MaybeArray<HTMLElement | Comment> {
+  console.info('Calling init from render');
+  (component as VComponent).init({ html: parent });
+  const html = (component as VComponent).renderOnce();
+  parent.append(...toArray(html));
+  return html;
 }
 
 export function renderApp(id: string, component: ComponentV2) {

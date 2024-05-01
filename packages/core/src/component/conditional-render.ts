@@ -1,10 +1,5 @@
-import {
-  type MaybeReactive,
-  isReactive,
-  reactive,
-  toValue,
-} from '../../reactive';
-import { MaybeArray, maybeArrayForEach, toArray } from '../../utils/array';
+import { type MaybeReactive, isReactive, reactive, toValue } from '../reactive';
+import { MaybeArray, maybeArrayForEach, toArray } from '../utils/array';
 import { ComponentV2, WithHtml } from './component';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
