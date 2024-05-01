@@ -1,4 +1,4 @@
-import { button, div, span } from '@tinaf/core/dom/dom';
+import { button, div, span } from '@tinaf/core/dom';
 import {
   bool,
   computed,
@@ -8,7 +8,7 @@ import {
 } from '@tinaf/core/reactive';
 import { VDivExample } from './components/VDivExample';
 import { vcomponent } from '@tinaf/core/component/v-component';
-import { input } from '@tinaf/core/dom/input';
+import { input } from '@tinaf/core/input';
 import { when } from '@tinaf/core/component/conditional-render';
 import { forLoop } from '@tinaf/core/component/for-loop';
 

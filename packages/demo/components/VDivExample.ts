@@ -1,5 +1,5 @@
 import { vcomponent } from '@tinaf/core/component/v-component';
-import { button, div } from '@tinaf/core/dom/dom';
+import { button, div } from '@tinaf/core/dom';
 import { bool, reactive } from '@tinaf/core/reactive';
 
 const Child = vcomponent(() => {
