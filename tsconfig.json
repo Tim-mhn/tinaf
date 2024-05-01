@@ -111,11 +111,6 @@
   
 
     "baseUrl": ".",
-    "paths": {
-      "tinaf/*": ["packages/core/src/*", "packages/core/dist/*"],
-      "tinaf/dom": ["packages/core/src/dom/dom", "packages/core/dist/dom/dom"]
-    },
-    
   },
   "exclude": ["**/*.spec.ts", "**/*.spec.js"],
   

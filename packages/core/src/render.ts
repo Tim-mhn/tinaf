@@ -1,10 +1,9 @@
 import { ReactiveValue } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
-import { watchAllSources } from './reactive/watch';
-import { forLoopRender } from './component/for-loop';
-import { isReactive, toValue } from './reactive';
-import { watchList } from './reactive/watch-list';
 import { PrimitiveType, isPrimitive } from './utils/primitive';
+import { VComponent } from './component/v-component.v2';
+import { ComponentV2 } from './component/component';
+import { MaybeArray, toArray } from './utils/array';
 
 export type RenderFn = () =>
   | SimpleComponent
@@ -53,7 +52,7 @@ export function isForLoopComponent(
   return isComponent(node) && node['__type'] === 'for-loop';
 }
 
-function hasSources(
+export function hasSources(
   sources?: ReactiveValue<any>[]
 ): sources is ReactiveValue<any>[] {
   return !!sources && sources.length > 0;
@@ -78,7 +77,7 @@ export function safeRenderHtml(renderFn: RenderFn): HTMLElement | Comment {
  * @param renderFn
  * @returns
  */
-function safeRenderHtmlOrComponent(
+export function safeRenderHtmlOrComponent(
   renderFn: RenderFn
 ): SimpleComponent | HTMLElement | Comment {
   const node = renderFn();
@@ -97,88 +96,17 @@ function buildPlaceholderComment() {
 }
 
 export function render(
-  component: Component,
+  component: ComponentV2,
   parent: HTMLElement
-): HTMLElement | Comment {
-  if (isForLoopComponent(component)) {
-    renderForLoop(component as any, parent);
-    return buildPlaceholderComment();
-  }
-
-  const { renderFn, sources } = component;
-
-  let node = safeRenderHtmlOrComponent(renderFn);
-
-  if (isHtmlOrComment(node)) {
-    parent.append(node);
-
-    if (hasSources(sources)) {
-      watchAllSources(sources).subscribe(() => {
-        console.debug('HTML  source changed');
-
-        const index = [...parent.childNodes].findIndex((n) => n === node);
-        parent.removeChild(node as HTMLElement);
-
-        node = safeRenderHtml(renderFn);
-
-        parent.insertBefore(node, [...parent.childNodes][index]);
-      });
-    }
-    return node;
-  }
-
-  let html = render(node, parent);
-
-  if (hasSources(sources)) {
-    watchAllSources(sources).subscribe(() => {
-      const index = [...parent.childNodes].findIndex((n) => n === html);
-      parent.removeChild(html);
-      html = safeRenderHtml(renderFn);
-      parent.insertBefore(html, [...parent.childNodes][index]);
-    });
-  }
-
+): MaybeArray<HTMLElement | Comment> {
+  console.info('Calling init from render');
+  (component as VComponent).init({ html: parent });
+  const html = (component as VComponent).renderOnce();
+  parent.append(...toArray(html));
   return html;
 }
 
-function renderForLoop<T>(
-  component: ReturnType<typeof forLoopRender<T>>,
-  parent: HTMLElement
-) {
-  const { componentFn, items } = component;
-
-  const children = toValue(items).map((i) =>
-    safeRenderHtml(componentFn(i).renderFn)
-  );
-  parent.append(...children);
-
-  if (!isReactive(items)) return parent;
-
-  watchList(items).subscribe((changes) => {
-    const childrenToRemove = changes
-      .filter(({ change }) => change === 'removed')
-      .map(({ index, value }) => {
-        console.debug('Removing child ', value);
-        return parent.childNodes[index];
-      });
-
-    childrenToRemove.forEach((child) => parent.removeChild(child));
-
-    const childrenToAdd = changes
-      .filter(({ change }) => change === 'added')
-      .sort((a, b) => b.index - a.index);
-
-    childrenToAdd.forEach(({ value, index }) => {
-      const child = safeRenderHtml(componentFn(value).renderFn);
-      console.debug('Adding child ', value);
-      parent.insertBefore(child, [...parent.childNodes][index]);
-    });
-  });
-
-  return parent;
-}
-
-export function renderApp(id: string, component: Component) {
+export function renderApp(id: string, component: ComponentV2) {
   window.addEventListener('load', () => {
     const container = document.getElementById(id) as HTMLElement;
 

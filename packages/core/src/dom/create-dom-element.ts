@@ -2,11 +2,16 @@ import { objectEntries } from '../utils/object';
 import { toValue } from '../reactive/toValue';
 import { MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
-import { Component, render, SimpleComponent, isComponent } from '../render';
-import { MaybeArray } from '../utils/array';
+import { MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
 import { PrimitiveType } from '../utils/primitive';
+import { VComponent } from '../component/v-component.v2';
+import { ComponentV2, WithHtml } from '../component/component';
+import { isV2Component } from '../component/isComponent';
+import { watchAllSources } from '../reactive/watch';
+import { ReactiveValue } from '../reactive';
+import { Observable, tap } from 'rxjs';
 
 type TagName = keyof HTMLElementTagNameMap;
 
@@ -28,86 +33,110 @@ export type AddClassesArgs =
 
 type CreateDomElementProps<T extends TagName> = {
   type: T;
-  children: (Component | MaybeReactive<PrimitiveType>)[];
+  children: (ComponentV2 | MaybeReactive<PrimitiveType>)[];
   handlers?: EventHandlers;
   classes?: AddClassesArgs;
   styles?: AddStylesArgs;
 };
 
-const _createDomElement = <T extends TagName>(
-  props: CreateDomElementProps<T>
-): SimpleComponent & {
-  on: typeof on;
-  addClass: typeof addClass;
-  addStyles: typeof addStyles;
-} => {
-  const { children, classes, type, handlers, styles } = props;
-  const reactiveChildren = getReactiveElements(children);
+export class VDomComponent<T extends TagName> implements ComponentV2 {
+  constructor(
+    private type: T,
+    private children: (ComponentV2 | MaybeReactive<PrimitiveType>)[],
+    private classes?: AddClassesArgs,
+    private styles?: AddStylesArgs,
+    private handlers?: EventHandlers
+  ) {}
 
-  const renderFn = () => {
-    const htmlElement = document.createElement(type);
+  private _html!: HTMLElementTagNameMap[T];
 
-    htmlElement.setAttribute('x-id', crypto.randomUUID());
-    children?.forEach((child) => {
-      if (isComponent(child)) {
-        render(child, htmlElement);
+  get html() {
+    return this._html;
+  }
+
+  private get reactiveChildren() {
+    return getReactiveElements(this.children);
+  }
+
+  addClass(newClasses: AddClassesArgs) {
+    this.classes = newClasses;
+    return this;
+  }
+
+  addStyles(newStyles: AddStylesArgs) {
+    this.styles = newStyles;
+    return this;
+  }
+
+  on(newEventHandlers: EventHandlers) {
+    this.handlers = newEventHandlers;
+    return this;
+  }
+
+  init(parent: WithHtml) {
+    watchAllSources(this.reactiveChildren).subscribe(() => {
+      const index = [...parent.html.childNodes].findIndex(
+        (n) => n === this.html
+      );
+      parent.html.removeChild(this.html);
+      this._html = this.renderOnce();
+      parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
+    });
+    this.children.forEach((child) => {
+      if (isV2Component(child)) {
+        child.init(this);
+      }
+    });
+  }
+
+  renderOnce(): HTMLElementTagNameMap[T] {
+    this._html = document.createElement(this.type);
+
+    this.html.setAttribute('x-id', crypto.randomUUID());
+    console.count('renderOnce');
+    console.group('Rendering VDomComponent');
+    console.log(this.type);
+    console.log({ children: this.children });
+    console.groupEnd();
+    this.children?.forEach((child) => {
+      if (isV2Component(child)) {
+        // NOTE: this function breaks state when rerendering a div parent with children with inner state !!
+
+        const vchild = child as any as VComponent;
+        const childrenHtml = toArray(vchild.renderOnce());
+        childrenHtml.forEach((childHtml) => this.html.append(childHtml));
       } else {
-        const textContent = toValue(child).toString();
-        htmlElement.append(textContent);
+        const textContent = toValue(child as MaybeReactive<any>).toString();
+        this.html.append(textContent);
       }
     });
 
-    if (classes) addClassToElement(htmlElement, classes);
-    if (handlers) addEventListenersToElement(htmlElement, handlers);
-    if (styles) addStylesToElement(htmlElement, styles);
-    return htmlElement;
-  };
+    if (this.classes) addClassToElement(this.html, this.classes);
+    if (this.handlers) addEventListenersToElement(this.html, this.handlers);
+    if (this.styles) addStylesToElement(this.html, this.styles);
+    return this.html;
+  }
+  readonly __type = 'componentV2';
+}
+const _createDomElement = <T extends TagName>(
+  props: CreateDomElementProps<T>
+): VDomComponent<T> => {
+  const { children, classes, type, handlers, styles } = props;
 
-  const on = (_handlers: EventHandlers) => {
-    const allHandlers = {
-      ...(handlers || {}),
-      ..._handlers,
-    };
+  const vdom = new VDomComponent(type, children, classes, styles, handlers);
 
-    return _createDomElement({
-      ...props,
-      handlers: allHandlers,
-    });
-  };
-
-  const addClass = (newClasses: AddClassesArgs) => {
-    return _createDomElement({
-      ...props,
-      classes: newClasses,
-    });
-  };
-
-  const addStyles = (newStyles: AddStylesArgs) => {
-    return _createDomElement({
-      ...props,
-      styles: newStyles,
-    });
-  };
-
-  return {
-    __type: 'component',
-    renderFn,
-    on,
-    addClass,
-    addStyles,
-    sources: reactiveChildren,
-  };
+  return vdom;
 };
 export const createDomElement =
   <T extends TagName>(type: T) =>
-  (...children: (Component | MaybeReactive<PrimitiveType>)[]) => {
+  (...children: (ComponentV2 | MaybeReactive<PrimitiveType>)[]) => {
     return _createDomElement({
       type,
       children,
     });
   };
 
-const addEventListenersToElement = (
+export const addEventListenersToElement = (
   element: HTMLElement,
   handlers: EventHandlers
 ) => {

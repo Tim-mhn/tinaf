@@ -57,4 +57,8 @@ describe('toValue', () => {
       },
     });
   });
+
+  it('keeps an array as it is', () => {
+    expect(toValue([1, 2, 3])).toEqual([1, 2, 3]);
+  });
 });

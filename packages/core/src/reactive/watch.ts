@@ -1,4 +1,4 @@
-import { combineLatest, skip, startWith } from 'rxjs';
+import { combineLatest, filter, skip, startWith } from 'rxjs';
 import { ReactiveValue } from './reactive';
 
 export function watchAllSources(sources: ReactiveValue<any>[]) {

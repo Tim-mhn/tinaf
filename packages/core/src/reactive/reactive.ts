@@ -1,4 +1,13 @@
-import { Observable, Subject, combineLatest, map, skip, startWith } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  combineLatest,
+  filter,
+  from,
+  map,
+  skip,
+  startWith,
+} from 'rxjs';
 import { MaybeDeepReactive, MaybeReactive, MaybeReactiveProps } from './types';
 import { isReactive, toValue } from './toValue';
 import { objectKeys } from '../utils/object';
@@ -50,6 +59,39 @@ class Computed<T> implements ReactiveValue<T> {
   get value() {
     return this.getterFn();
   }
+}
+
+export class InputReactive<T extends string | number>
+  implements ReactiveValue<T>
+{
+  private _value: { value: T; fromUI?: boolean };
+  constructor(initialValue: T) {
+    this._value = {
+      value: initialValue,
+    };
+  }
+
+  private _valueChanges$ = new Subject<{ value: T; fromUI: boolean }>();
+  public valueChanges$ = this._valueChanges$
+    .asObservable()
+    .pipe(map((v) => v.value));
+
+  public nonUiValueChanges$ = this._valueChanges$.pipe(
+    filter(({ fromUI }) => !fromUI)
+  );
+
+  update(newValue: T, { fromUI }: { fromUI: boolean } = { fromUI: false }) {
+    this._value = { value: newValue, fromUI };
+    this._valueChanges$.next({ value: newValue, fromUI });
+  }
+
+  get value() {
+    return this._value.value;
+  }
+}
+
+export function inputReactive<T extends string | number>(initialValue: T) {
+  return new InputReactive(initialValue);
 }
 
 export function computed<T>(getterFn: () => T, sources: ReactiveValue<any>[]) {

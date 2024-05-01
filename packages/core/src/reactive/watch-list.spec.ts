@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { watchList, type WatchList } from './watch-list';
+import {
+  getAdditionalCommonElements,
+  watchList,
+  type WatchList,
+} from './watch-list';
 import { reactive } from './reactive';
 import { take } from 'rxjs';
 describe('watch list', () => {
@@ -125,12 +129,6 @@ describe('watch list', () => {
     expect(emissions).toEqual<WatchList<string>[]>([
       [
         {
-          value: 'd',
-          index: 1,
-          change: 'changedIndex',
-        },
-
-        {
           value: 'b',
           index: 1,
           change: 'removed',
@@ -141,6 +139,54 @@ describe('watch list', () => {
           change: 'removed',
         },
       ],
+    ]);
+  });
+
+  it('emits new items as added even if the same value exists in the list', () => {
+    const list = reactive(['a', 'b', 'c']);
+
+    const emissions: WatchList<string>[] = [];
+
+    watchList(list)
+      .pipe(take(2))
+      .subscribe((emission) => emissions.push(emission));
+
+    list.update(['a', 'b', 'c', 'b']);
+    list.update(['a', 'b', 'c', 'b', 'c']);
+
+    expect(emissions).toEqual<WatchList<string>[]>([
+      [
+        {
+          value: 'b',
+          index: 3,
+          change: 'added',
+        },
+      ],
+      [
+        {
+          value: 'c',
+          index: 4,
+          change: 'added',
+        },
+      ],
+    ]);
+  });
+
+  it('getAdditionalCommonElements', () => {
+    expect(
+      getAdditionalCommonElements({
+        previousArray: ['a', 'b', 'c'],
+        nextArray: ['a', 'b', 'c', 'c', 'b'],
+      })
+    ).toEqual([
+      {
+        value: 'b',
+        index: 4,
+      },
+      {
+        value: 'c',
+        index: 3,
+      },
     ]);
   });
 });
