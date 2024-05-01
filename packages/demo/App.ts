@@ -7,12 +7,12 @@ import {
   reactive,
 } from '@tinaf/core/reactive';
 import { VDivExample } from './components/VDivExample';
-import { vcomponent } from '@tinaf/core/component';
+import { component } from '@tinaf/core/component';
 import { input } from '@tinaf/core/dom';
 import { when } from '@tinaf/core/component';
 import { forLoop } from '@tinaf/core/component';
 
-const ToggleClasses = vcomponent(() => {
+const ToggleClasses = component(() => {
   const [active, toggleActive] = bool(true);
 
   const bgClass = computed(
@@ -37,7 +37,7 @@ const createTodo = (title: string) => ({
   title,
   id: crypto.randomUUID(),
 });
-const RenderForLoopV2Example = vcomponent(() => {
+const RenderForLoopV2Example = component(() => {
   const todos = reactive([
     createTodo('Hello'),
     createTodo('Foo'),
@@ -78,7 +78,7 @@ const RenderForLoopV2Example = vcomponent(() => {
   ).addClass('flex flex-col gap-4');
 });
 
-const ShowWhen = vcomponent(() => {
+const ShowWhen = component(() => {
   const [visible, toggleVisible] = bool(true);
 
   const toggleVisibleButton = button('toggle visibility')
@@ -95,20 +95,20 @@ const ShowWhen = vcomponent(() => {
   ).addClass('flex flex-row gap-4 border border-blue-300 p-1');
 });
 
-const Header = vcomponent(() => {
+const Header = component(() => {
   const title = reactive('Header');
 
   // setInterval(() => title.update('Header @' + Date.now()), 2000);
   return div(title).addClass('flex flex-col gap-16 border border-blue-300');
 });
 
-const NestedStateChild = vcomponent(() => {
+const NestedStateChild = component(() => {
   const count = reactive(0);
   const increment = () => count.update(count.value + 1);
 
   return div(count, button('increment child counter').on({ click: increment }));
 });
-const NestedStateExample = vcomponent(() => {
+const NestedStateExample = component(() => {
   const count = reactive(0);
 
   const increment = () => count.update(count.value + 1);
@@ -120,7 +120,7 @@ const NestedStateExample = vcomponent(() => {
   ).addClass('border border-slate-300 p-4 rounded-sm');
 });
 
-const InputExample = vcomponent(() => {
+const InputExample = component(() => {
   const text = inputReactive<string>('initial text');
 
   return div(
@@ -133,7 +133,7 @@ const InputExample = vcomponent(() => {
   ).addClass('flex flex-col gap-2 border-2 border-blue-600 p-2 rounded-md');
 });
 
-const SimpleForLoop = vcomponent(() => {
+const SimpleForLoop = component(() => {
   const items = reactive(['Hello', 'World', 'Foo', 'Bar']);
 
   const addItem = () => items.update([...items.value, 'new item']);
@@ -143,7 +143,7 @@ const SimpleForLoop = vcomponent(() => {
   ).addClass('flex flex-col gap-4');
 });
 
-export const App = vcomponent(() => {
+export const App = component(() => {
   const hello = reactive('hello');
   const world = reactive('world');
 

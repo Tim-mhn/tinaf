@@ -60,6 +60,6 @@ export class SimpleVComponent implements VComponent {
   }
 }
 
-export function vcomponent(renderFn: () => HTMLElement | Comment | VComponent) {
+export function component(renderFn: () => HTMLElement | Comment | VComponent) {
   return new SimpleVComponent(renderFn);
 }

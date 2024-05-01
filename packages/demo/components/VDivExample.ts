@@ -1,8 +1,8 @@
-import { vcomponent } from '@tinaf/core/component';
+import { component } from '@tinaf/core/component';
 import { button, div } from '@tinaf/core/dom';
 import { bool, reactive } from '@tinaf/core/reactive';
 
-const Child = vcomponent(() => {
+const Child = component(() => {
   const [myBool, toggle] = bool(false);
 
   console.log('Child');
@@ -10,7 +10,7 @@ const Child = vcomponent(() => {
   return div(myBool, button('toggle bool').on({ click: toggle }));
 });
 
-export const VDivExample = vcomponent(() => {
+export const VDivExample = component(() => {
   const count = reactive(0);
   const increment = () => {
     count.update(count.value + 1);
