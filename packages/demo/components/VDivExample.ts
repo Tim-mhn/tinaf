@@ -1,4 +1,4 @@
-import { vcomponent } from '@tinaf/core/component/v-component';
+import { vcomponent } from '@tinaf/core/component';
 import { button, div } from '@tinaf/core/dom';
 import { bool, reactive } from '@tinaf/core/reactive';
 

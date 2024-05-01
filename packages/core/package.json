@@ -6,9 +6,9 @@
   "types": "index.d.ts",
   "private": true,
   "exports": {
-    "./*": "./src/*.ts",
-    "./dom": "./src/dom/dom.ts",
-    "./input": "./src/dom/input.ts",
+    "./render": "./src/render.ts",
+    "./dom": "./src/dom/index.ts",
+    "./component": "./src/component/index.ts",
     "./reactive": "./src/reactive/index.ts"
   },
   "scripts": {

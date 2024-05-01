@@ -7,10 +7,10 @@ import {
   reactive,
 } from '@tinaf/core/reactive';
 import { VDivExample } from './components/VDivExample';
-import { vcomponent } from '@tinaf/core/component/v-component';
-import { input } from '@tinaf/core/input';
-import { when } from '@tinaf/core/component/conditional-render';
-import { forLoop } from '@tinaf/core/component/for-loop';
+import { vcomponent } from '@tinaf/core/component';
+import { input } from '@tinaf/core/dom';
+import { when } from '@tinaf/core/component';
+import { forLoop } from '@tinaf/core/component';
 
 const ToggleClasses = vcomponent(() => {
   const [active, toggleActive] = bool(true);
