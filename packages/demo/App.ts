@@ -15,6 +15,7 @@ import { VDivExample } from './components/VDivExample';
 import { vcomponent } from '../core/src/component/wip/v-component.v2';
 import { input } from '../core/src/dom/input';
 import { when } from '../core/src/component/wip/conditional-render';
+import { forLoop } from '../core/src/component/wip/for-loop';
 
 const Counter = vcomponent(() => {
   const count = reactive(0);
@@ -110,33 +111,44 @@ const ToggleClasses = vcomponent(() => {
   ).addClass('flex gap-4');
 });
 
+type Todo = { title: string; id: string };
+
+const createTodo = (title: string) => ({
+  title,
+  id: crypto.randomUUID(),
+});
 const RenderForLoopV2Example = vcomponent(() => {
-  const todos = reactive(['Hello', 'Foo', 'Bar']);
+  const todos = reactive([
+    createTodo('Hello'),
+    createTodo('Foo'),
+    createTodo('Bar'),
+  ]);
 
-  const addTodo = (todo: string) => todos.update([...todos.value, todo]);
+  const addTodo = (todo: string) =>
+    todos.update([...todos.value, createTodo(todo)]);
 
-  const removeTodo = (todo: string) =>
-    todos.update([...todos.value].filter((t) => t !== todo));
+  const removeTodo = (todo: Todo) =>
+    todos.update([...todos.value].filter((t) => t.id !== todo.id));
 
   const insertTodo = () =>
-    todos.update([todos.value[0], 'bazz', ...todos.value.slice(1)]);
+    todos.update([todos.value[0], createTodo('bazz'), ...todos.value.slice(1)]);
 
   return div(
     div(
       button('Add todo').on({
         click: () => addTodo('test'),
       }),
-      button('remove todo').on({
-        click: () => removeTodo('Hello'),
+      button('remove last todo').on({
+        click: () => removeTodo(todos.value[todos.value.length - 1]),
       }),
       button('insert todo').on({
         click: insertTodo,
       })
     ).addClass('flex gap-8 border-b'),
     div(
-      forLoopRender(todos, (todo) =>
+      forLoop(todos, (todo) =>
         div(
-          div(todo).addClass('bg-blue-300 text-blue-800'),
+          div(todo.title).addClass('bg-blue-300 text-blue-800'),
           button('X').on({
             click: () => removeTodo(todo),
           })
@@ -166,21 +178,6 @@ const ShowWhen = vcomponent(() => {
 const Button = vcomponent(() => {
   return button('Click');
 });
-
-// const Card = vcomponentWithProps<
-//   { title: string; subtitle: string },
-//   {
-//     onAdd: () => void;
-//   },
-//   ['content']
-// >(({ title, subtitle, onAdd, content }) => {
-//   return div(
-//     div(title),
-//     div(content).addClass('border p-2 border-slate-300'),
-//     div(subtitle),
-//     button('Add').on({ click: onAdd })
-//   );
-// });
 
 const Header = vcomponent(() => {
   const title = reactive('Header');
@@ -220,6 +217,16 @@ const InputExample = vcomponent(() => {
   ).addClass('flex flex-col gap-2 border-2 border-blue-600 p-2 rounded-md');
 });
 
+const SimpleForLoop = vcomponent(() => {
+  const items = reactive(['Hello', 'World', 'Foo', 'Bar']);
+
+  const addItem = () => items.update([...items.value, 'new item']);
+  return div(
+    button('Add item').on({ click: addItem }),
+    forLoop(items, (item) => div(item))
+  ).addClass('flex flex-col gap-4');
+});
+
 export const App = vcomponent(() => {
   const hello = reactive('hello');
   const world = reactive('world');
@@ -251,9 +258,9 @@ export const App = vcomponent(() => {
     //   content: div('This is custom content'),
     //   onAdd: () => console.log('added !'),
     // }),
-    // RenderForLoopV2Example,
     // ForLoopV2ComplexExample,
     // ParentWithReactiveChild,
+    RenderForLoopV2Example,
     NestedStateExample,
     VDivExample,
     div('TODO: make the if/else work').addClass(
@@ -261,6 +268,7 @@ export const App = vcomponent(() => {
     ),
     div('DONE ✓✓✓').addClass(
       'bg-green-600 text-white text-lg flex justify-center p-2'
-    )
+    ),
+    SimpleForLoop
   ).addClass('flex flex-col  gap-4 p-4');
 });

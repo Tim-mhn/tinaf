@@ -1,12 +1,14 @@
+import { type MaybeArray } from '../../utils/array';
+
 export type WithHtml = {
   html: HTMLElement;
 };
 
 export interface ComponentV2 {
   init(parent: WithHtml): void;
-  renderOnce(): HTMLElement | Comment;
+  renderOnce(): MaybeArray<HTMLElement | Comment>;
   __type: 'componentV2';
-  html: HTMLElement | Comment;
+  html: MaybeArray<HTMLElement | Comment>;
 }
 
 /**

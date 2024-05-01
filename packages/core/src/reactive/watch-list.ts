@@ -5,7 +5,7 @@ import { Reactive, ReactiveValue } from './reactive';
 type WatchListItem<T> = {
   index: number;
   value: T;
-  change: 'added' | 'removed' | 'changedIndex';
+  change: 'added' | 'removed';
 };
 export type WatchList<T> = Array<WatchListItem<T>>;
 
@@ -34,20 +34,47 @@ export function watchList<T>(
         butNotIn: previous,
       }).map(({ value, index }) => ({ value, index, change: 'added' }));
 
+      const additionalCommonElements: WatchList<T> =
+        getAdditionalCommonElements({
+          previousArray: previous,
+          nextArray: current,
+        }).map(({ value, index }) => ({ value, index, change: 'added' }));
+
       const removedElements: WatchList<T> = findElements({
         inArray: previous,
         butNotIn: current,
       }).map(({ value, index }) => ({ value, index, change: 'removed' }));
 
-      const commonElements = current
-        .map((value, index) => ({ value, index }))
-        .filter(({ value }) => previous.includes(value));
-
-      const movedElements: WatchList<T> = commonElements
-        .filter(({ value, index }) => previous.indexOf(value) !== index)
-        .map(({ value, index }) => ({ value, index, change: 'changedIndex' }));
-
-      return [...newElements, ...movedElements, ...removedElements];
+      return [...newElements, ...additionalCommonElements, ...removedElements];
     })
   );
+}
+
+export function getAdditionalCommonElements<T>({
+  previousArray,
+  nextArray,
+}: {
+  previousArray: T[];
+  nextArray: T[];
+}): { value: T; index: number }[] {
+  const uniqueCommonElements = new Set(
+    nextArray.filter((element) => previousArray.includes(element))
+  );
+
+  const additionalCommonElements: { value: T; index: number }[] = [];
+
+  for (let element of uniqueCommonElements) {
+    const countInPreviousArray = previousArray.filter(
+      (e) => e === element
+    ).length;
+
+    const additionalInstancesOfThisCommonElement = nextArray
+      .map((value, index) => ({ value, index }))
+      .filter(({ value }) => value === element)
+      .slice(countInPreviousArray);
+
+    additionalCommonElements.push(...additionalInstancesOfThisCommonElement);
+  }
+
+  return additionalCommonElements;
 }

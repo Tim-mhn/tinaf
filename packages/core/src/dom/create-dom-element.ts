@@ -2,7 +2,7 @@ import { objectEntries } from '../utils/object';
 import { toValue } from '../reactive/toValue';
 import { MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
-import { MaybeArray } from '../utils/array';
+import { MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
 import { PrimitiveType } from '../utils/primitive';
@@ -93,7 +93,8 @@ export class VDomComponent<T extends TagName> implements ComponentV2 {
     this._html = document.createElement(this.type);
 
     this.html.setAttribute('x-id', crypto.randomUUID());
-    console.group('renderOnce');
+    console.count('renderOnce');
+    console.group('Rendering VDomComponent');
     console.log(this.type);
     console.log({ children: this.children });
     console.groupEnd();
@@ -102,8 +103,8 @@ export class VDomComponent<T extends TagName> implements ComponentV2 {
         // NOTE: this function breaks state when rerendering a div parent with children with inner state !!
 
         const vchild = child as any as VComponent;
-        const childHtml = vchild.renderOnce();
-        this.html.append(childHtml);
+        const childrenHtml = toArray(vchild.renderOnce());
+        childrenHtml.forEach((childHtml) => this.html.append(childHtml));
       } else {
         const textContent = toValue(child as MaybeReactive<any>).toString();
         this.html.append(textContent);

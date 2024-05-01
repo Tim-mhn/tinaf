@@ -8,7 +8,7 @@ const Child = vcomponent(() => {
   console.log('Child');
 
   return div(myBool, button('toggle bool').on({ click: toggle }));
-}).setName('Child');
+});
 
 export const VDivExample = vcomponent(() => {
   const count = reactive(0);
@@ -22,4 +22,4 @@ export const VDivExample = vcomponent(() => {
   //   console.log({ divSources: myDiv.sources });
   //   return myDiv;
   return myDiv;
-}).setName('VDIV Example');
+});

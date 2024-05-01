@@ -1,5 +1,12 @@
-import { MaybeReactive, isReactive, reactive, toValue } from '../../reactive';
+import {
+  type MaybeReactive,
+  isReactive,
+  reactive,
+  toValue,
+} from '../../reactive';
+import { MaybeArray, maybeArrayForEach, toArray } from '../../utils/array';
 import { ComponentV2, WithHtml } from './component';
+import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
 function buildPlaceholderComment() {
   const commentText = `placeholder--${crypto.randomUUID()}`;
@@ -15,7 +22,7 @@ class ConditionallyRenderedComponent implements ComponentV2 {
   ) {}
 
   readonly __type = 'componentV2';
-  private _html!: HTMLElement | Comment;
+  private _html!: MaybeArray<HTMLElement | Comment>;
   get html() {
     return this._html;
   }
@@ -42,12 +49,16 @@ class ConditionallyRenderedComponent implements ComponentV2 {
     if (!isReactive(this.condition)) return;
 
     this.condition.valueChanges$.subscribe(() => {
-      const index = [...parent.html.childNodes].findIndex(
-        (n) => n === this.html
-      );
-      parent.html.removeChild(this.html);
-      this._html = this.renderOnce();
-      parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
+      const oldNodes = this._html;
+
+      const newNodes = this.renderOnce();
+
+      removeOldNodesAndRenderNewNodes({
+        oldNodes,
+        newNodes,
+        parent,
+      });
+
       this._initChild(parent);
     });
   }
