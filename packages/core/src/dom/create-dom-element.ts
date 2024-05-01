@@ -8,7 +8,7 @@ import { AddStylesArgs, addStylesToElement } from './styles';
 import { PrimitiveType } from '../utils/primitive';
 import { SimpleVComponent } from '@tinaf/core/component/v-component';
 import { VComponent, WithHtml } from '../component/component';
-import { isVComponent } from '../component/isComponent';
+import { isVComponent } from '../component/is-component';
 import { watchAllSources } from '../reactive/watch';
 import { ReactiveValue } from '../reactive';
 import { Observable, tap } from 'rxjs';

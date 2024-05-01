@@ -3,7 +3,7 @@ import { MaybeReactive, isReactive, toValue } from '../reactive';
 import { watchList } from '../reactive/watch-list';
 import { toArray } from '../utils/array';
 import { VComponent, WithHtml } from './component';
-import { isVComponent } from './isComponent';
+import { isVComponent } from './is-component';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 import { SimpleVComponent } from './v-component';
 

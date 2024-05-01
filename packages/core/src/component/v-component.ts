@@ -3,7 +3,7 @@ import { watchAllSources } from '../reactive/watch';
 import { hasSources, isComponent, isForLoopComponent } from '../render';
 import { MaybeArray } from '../utils/array';
 import { VComponent, WithHtml } from './component';
-import { isVComponent } from './isComponent';
+import { isVComponent } from './is-component';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
 export class SimpleVComponent implements VComponent {
