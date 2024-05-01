@@ -1,4 +1,3 @@
-import { button, div } from '../dom/dom';
 import { ReactiveValue } from '../reactive';
 import { watchAllSources } from '../reactive/watch';
 import { hasSources, isComponent, isForLoopComponent } from '../render';

@@ -7,7 +7,7 @@ import {
   reactive,
 } from '@tinaf/core/reactive';
 import { VDivExample } from './components/VDivExample';
-import { vcomponent } from '@tinaf/core/component/v-component.v2';
+import { vcomponent } from '@tinaf/core/component/v-component';
 import { input } from '@tinaf/core/dom/input';
 import { when } from '@tinaf/core/component/conditional-render';
 import { forLoop } from '@tinaf/core/component/for-loop';

@@ -5,7 +5,7 @@ import { toArray } from '../utils/array';
 import { VComponent, WithHtml } from './component';
 import { isVComponent } from './isComponent';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
-import { SimpleVComponent } from './v-component.v2';
+import { SimpleVComponent } from './v-component';
 
 class ForLoopComponent<T> implements VComponent {
   constructor(

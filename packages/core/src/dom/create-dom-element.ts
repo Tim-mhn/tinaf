@@ -6,7 +6,7 @@ import { MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
 import { AddStylesArgs, addStylesToElement } from './styles';
 import { PrimitiveType } from '../utils/primitive';
-import { SimpleVComponent } from '../component/v-component.v2';
+import { SimpleVComponent } from '@tinaf/core/component/v-component';
 import { VComponent, WithHtml } from '../component/component';
 import { isVComponent } from '../component/isComponent';
 import { watchAllSources } from '../reactive/watch';

@@ -1,7 +1,7 @@
 import { ReactiveValue } from './reactive/reactive';
 import { MaybeReactive } from './reactive/types';
 import { PrimitiveType, isPrimitive } from './utils/primitive';
-import { SimpleVComponent } from './component/v-component.v2';
+import { SimpleVComponent } from '@tinaf/core/component/v-component';
 import { VComponent } from './component/component';
 import { MaybeArray, toArray } from './utils/array';
 
