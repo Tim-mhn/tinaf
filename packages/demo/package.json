@@ -14,13 +14,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "rxjs": "^7.8.1",
-    "vite": "^5.0.10"
+    "@tinaf/core": "workspace:*"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
+    "vite": "^5.0.10",
     "vitest": "^1.1.0"
+  },
+  "volta": {
+    "extends": "../../package.json"
   }
 }

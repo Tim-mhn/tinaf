@@ -1,16 +1,16 @@
-import { button, div, span } from '../core/src/dom/dom';
+import { button, div, span } from '@tinaf/core/src/dom/dom';
 import {
   bool,
   computed,
   inputReactive,
   not,
   reactive,
-} from '../core/src/reactive';
+} from '@tinaf/core/src/reactive';
 import { VDivExample } from './components/VDivExample';
-import { vcomponent } from '../core/src/component/v-component.v2';
-import { input } from '../core/src/dom/input';
-import { when } from '../core/src/component/conditional-render';
-import { forLoop } from '../core/src/component/for-loop';
+import { vcomponent } from '@tinaf/core/src/component/v-component.v2';
+import { input } from '@tinaf/core/src/dom/input';
+import { when } from '@tinaf/core/src/component/conditional-render';
+import { forLoop } from '@tinaf/core/src/component/for-loop';
 
 const ToggleClasses = vcomponent(() => {
   const [active, toggleActive] = bool(true);
