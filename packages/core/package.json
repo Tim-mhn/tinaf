@@ -1,0 +1,22 @@
+{
+  "name": "@tinaf/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "vite": "^5.0.10",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.8.0",
+    "vitest": "^1.5.3"
+  }
+}
