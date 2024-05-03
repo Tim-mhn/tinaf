@@ -1,15 +1,18 @@
-import { ReactiveValue } from '../reactive';
-import { watchAllSources } from '../reactive/watch';
-import { hasSources, isComponent, isForLoopComponent } from '../render';
-import { MaybeArray } from '../utils/array';
-import { VComponent, WithHtml } from './component';
+import { objectKeys } from '../utils/object';
+import { type MaybeReactiveProps } from '../reactive';
+import { isForLoopComponent } from '../render';
+import { type MaybeArray } from '../utils/array';
+import { type VComponent, type WithHtml } from './component';
 import { isVComponent } from './is-component';
-import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
-export class SimpleVComponent implements VComponent {
+export class SimpleVComponent<Props extends object = object>
+  implements VComponent
+{
   constructor(
-    public renderFn: () => HTMLElement | Comment | VComponent,
-    public sources?: ReactiveValue<any>[]
+    private props: RenderFnParams<MaybeReactiveProps<Props>>,
+    public renderFn: (
+      ...params: RenderFnParams<MaybeReactiveProps<Props>>
+    ) => HTMLElement | Comment | VComponent
   ) {}
 
   readonly __type = 'V_COMPONENT';
@@ -20,8 +23,7 @@ export class SimpleVComponent implements VComponent {
 
   init(parent: WithHtml) {
     this.parent = parent;
-    this.child = this.renderFn();
-    debugger;
+    this.child = this.renderFn(...this.props);
     if (isForLoopComponent(this.child))
       throw new Error('for loop component not supported');
 
@@ -30,26 +32,9 @@ export class SimpleVComponent implements VComponent {
     } else {
       this.html = this.child;
     }
-
-    if (!hasSources(this.sources)) return;
-
-    watchAllSources(this.sources).subscribe(() => {
-      const oldNodes = this.html;
-
-      this.html = this.renderOnce();
-
-      removeOldNodesAndRenderNewNodes({
-        newNodes: this.html,
-        oldNodes,
-        parent,
-      });
-    });
   }
 
   renderOnce(): MaybeArray<HTMLElement | Comment> {
-    if (isForLoopComponent(this.child))
-      throw new Error('for loop component not supported');
-
     if (isVComponent(this.child)) {
       const html = this.child.renderOnce();
       this.html = html;
@@ -60,6 +45,15 @@ export class SimpleVComponent implements VComponent {
   }
 }
 
-export function component(renderFn: () => HTMLElement | Comment | VComponent) {
-  return new SimpleVComponent(renderFn);
+// TODO: better name these params
+type RenderFnParams<Props extends object> = Props extends Record<string, never>
+  ? []
+  : [Props];
+export function component<Props extends object = Record<string, never>>(
+  renderFn: (
+    ...params: RenderFnParams<MaybeReactiveProps<Props>>
+  ) => HTMLElement | Comment | VComponent
+) {
+  return (...propsParams: RenderFnParams<MaybeReactiveProps<Props>>) =>
+    new SimpleVComponent(propsParams, renderFn);
 }

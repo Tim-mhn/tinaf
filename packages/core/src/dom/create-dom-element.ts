@@ -93,11 +93,11 @@ export class VDomComponent<T extends TagName> implements VComponent {
     this._html = document.createElement(this.type);
 
     this.html.setAttribute('x-id', crypto.randomUUID());
-    console.count('renderOnce');
-    console.group('Rendering VDomComponent');
-    console.log(this.type);
-    console.log({ children: this.children });
-    console.groupEnd();
+    // console.count('renderOnce');
+    // console.group('Rendering VDomComponent');
+    // console.log(this.type);
+    // console.log({ children: this.children });
+    // console.groupEnd();
     this.children?.forEach((child) => {
       if (isVComponent(child)) {
         // NOTE: this function breaks state when rerendering a div parent with children with inner state !!

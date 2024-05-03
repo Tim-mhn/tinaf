@@ -1,9 +1,9 @@
 import { objectKeys } from '../utils/object';
-import { Reactive, ReactiveValue } from './reactive';
+import { Reactive, type ReactiveValue } from './reactive';
 import {
-  MaybeDeepReactive,
-  MaybeDeepReactiveToValue,
-  MaybeReactive,
+  type MaybeDeepReactive,
+  type MaybeDeepReactiveToValue,
+  type MaybeReactive,
 } from './types';
 
 export function isSourceReactive<T>(

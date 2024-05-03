@@ -11,6 +11,7 @@ import { component } from '@tinaf/core/component';
 import { input } from '@tinaf/core/dom';
 import { when } from '@tinaf/core/component';
 import { forLoop } from '@tinaf/core/component';
+import { type VComponent } from '@tinaf/core/component';
 
 const ToggleClasses = component(() => {
   const [active, toggleActive] = bool(true);
@@ -116,9 +117,27 @@ const NestedStateExample = component(() => {
   return div(
     count,
     button('increment parent counter').on({ click: increment }),
-    NestedStateChild
+    NestedStateChild()
   ).addClass('border border-slate-300 p-4 rounded-sm');
 });
+
+const Card = component(
+  ({
+    title,
+    subtitle,
+    text,
+  }: {
+    title: string;
+    subtitle: string;
+    text: string;
+  }) => {
+    return div(
+      div(title).addClass('text-lg font-semibold'),
+      div(subtitle).addClass('text-md font-light'),
+      div(text).addClass('text-sm font-light')
+    ).addClass('flex flex-col gap-2 border p-4');
+  }
+);
 
 const InputExample = component(() => {
   const text = inputReactive<string>('initial text');
@@ -143,7 +162,7 @@ const SimpleForLoop = component(() => {
   ).addClass('flex flex-col gap-4');
 });
 
-export const App = component(() => {
+export const App: VComponent = component(() => {
   const hello = reactive('hello');
   const world = reactive('world');
 
@@ -151,22 +170,23 @@ export const App = component(() => {
 
   setTimeout(() => world.update('world 2'), 2000);
   return div(
-    Header,
-    ToggleClasses,
+    Header(),
+    ToggleClasses(),
     world, // NB: this does not work
-    InputExample,
+    InputExample(),
 
-    ShowWhen,
+    ShowWhen(),
 
-    RenderForLoopV2Example,
-    NestedStateExample,
-    VDivExample,
+    RenderForLoopV2Example(),
+    NestedStateExample(),
+    VDivExample(),
     div('TODO: make the if/else work').addClass(
       'text-lg text-slate-100 font-bold p-2 bg-red-800 rounded-sm justify-center flex'
     ),
     div('DONE ✓✓✓').addClass(
       'bg-green-600 text-white text-lg flex justify-center p-2'
     ),
-    SimpleForLoop
+    SimpleForLoop(),
+    Card({ title: 'Hello', subtitle: world, text: 'Foo' })
   ).addClass('flex flex-col  gap-4 p-4');
-});
+})();

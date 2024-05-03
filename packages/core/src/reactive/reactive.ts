@@ -8,7 +8,11 @@ import {
   skip,
   startWith,
 } from 'rxjs';
-import { MaybeDeepReactive, MaybeReactive, MaybeReactiveProps } from './types';
+import type {
+  MaybeDeepReactive,
+  MaybeReactive,
+  MaybeReactiveProps,
+} from './types';
 import { isReactive, toValue } from './toValue';
 import { objectKeys } from '../utils/object';
 export interface ReactiveValue<T> {
