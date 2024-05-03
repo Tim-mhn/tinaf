@@ -13,7 +13,7 @@
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
     "skipLibCheck": true ,                                /* Skip type checking all .d.ts files. */
-  
+    "preserveSymlinks": true,
     "verbatimModuleSyntax": true,
 
     "baseUrl": ".",
@@ -28,6 +28,9 @@
     },
     {
       "path": "./packages/core"
+    },
+    {
+      "path": "./packages/demo-todo-app"
     }
   ]
 

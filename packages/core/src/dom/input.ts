@@ -7,9 +7,16 @@ import {
 } from './create-dom-element';
 import { type AddStylesArgs, addStylesToElement } from './styles';
 import { addClassToElement } from './classes';
+import { objectKeys } from '../utils/object';
 
-export const input = <T extends string | number>(value: InputReactive<T>) => {
-  return new VInputComponent(value);
+type HTMLInputElementOptions = {
+  placeholder: string;
+};
+export const input = <T extends string | number>(
+  value: InputReactive<T>,
+  options: Partial<HTMLInputElementOptions> = {}
+) => {
+  return new VInputComponent(value, options);
 };
 
 // TODO: make the inputs correctly reactive and stop breaking state & UI
@@ -37,8 +44,15 @@ class VInputComponent<T extends string | number> implements VComponent {
     return this;
   }
 
+  private _onInputHandler?: (newValue: T) => void;
+  onInput(handler: (newValue: T) => void) {
+    this._onInputHandler = handler;
+    return this;
+  }
+
   constructor(
     private reactiveValue: InputReactive<T>,
+    private options: Partial<HTMLInputElementOptions> = {},
     private classes?: AddClassesArgs,
     private styles?: AddStylesArgs,
     private handlers?: EventHandlers
@@ -64,6 +78,11 @@ class VInputComponent<T extends string | number> implements VComponent {
 
     input.setAttribute('x-id', crypto.randomUUID());
 
+    objectKeys(this.options).forEach((key) => {
+      const value = this.options[key];
+      if (value) input[key] = value;
+    });
+
     const initialValue = this.reactiveValue.value;
 
     input.value = initialValue.toString();
@@ -78,11 +97,11 @@ class VInputComponent<T extends string | number> implements VComponent {
 
     html.addEventListener('input', (e) => {
       const newValue = (e.target as HTMLInputElement).value;
-      console.log({ newValue });
       const formattedNewValue =
         typeof this.reactiveValue.value === 'number'
           ? Number.parseFloat(newValue)
           : newValue;
+      this._onInputHandler?.(formattedNewValue as T);
       this.reactiveValue.update(formattedNewValue as T, { fromUI: true });
     });
 

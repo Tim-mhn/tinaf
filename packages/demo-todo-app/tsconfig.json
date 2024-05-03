@@ -5,7 +5,11 @@
     "declaration": true,
     "declarationDir": "./dist/types",
     "outDir": "./dist",
-    "composite": true
+    "composite": true,
+    "paths": {
+        
+        "@tinaf/core": ["node_modules/tinaf-core/"]
+      },
     },
     "references": [
         { "path": "../core" }
