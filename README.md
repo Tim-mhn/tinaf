@@ -26,7 +26,7 @@ import { div } from "@tinaf/core/dom";
 
 const App = div('Hello world')
 
-renderApp('app', App)
+renderApp('app', App())
 ```
 
 ### Reactivity system
@@ -75,7 +75,7 @@ Use the `componentWithProps` function
 ```
 import { componentWithProps } from "@tinaf/core/component";
 
-const Card = componentWithProps<{ title: string; subtitle: string}>(( { title, subtitle}) => {
+const Card = component<{ title: string; subtitle: string}>(( { title, subtitle}) => {
     return div(
         div(title),
         div(subtitle)
@@ -163,7 +163,7 @@ import { component, componentWithProps } from "@tinaf/core/component";
 import { div, button } from "@tinaf/core/dom";
 import { reactive, computed, bool } from "@tinaf/core/reactive";
 
-const Card = componentWithProps<{ title: string; subtitle: string}>(({ title, subtitle}) => {
+const Card = component<{ title: string; subtitle: string}>(({ title, subtitle}) => {
 
     return div(
         div(title).addClasses('text-lg font-bold'),
@@ -187,7 +187,7 @@ const Button = component(() => {
 const Example = component(() => {
    return div(
       Card({ title: 'Hello', subtitle: 'How are you ?'}),
-      Button,
+      Button(),
    ).addClasses('flex gap-4')
 
 })
