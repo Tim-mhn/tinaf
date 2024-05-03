@@ -1,9 +1,9 @@
-import { ReactiveValue } from './reactive/reactive';
-import { MaybeReactive } from './reactive/types';
-import { PrimitiveType, isPrimitive } from './utils/primitive';
-import { SimpleVComponent } from '@tinaf/core/component/v-component';
-import { VComponent } from './component/component';
-import { MaybeArray, toArray } from './utils/array';
+import { type ReactiveValue } from './reactive/reactive';
+import { type MaybeReactive } from './reactive/types';
+import { type PrimitiveType, isPrimitive } from './utils/primitive';
+import { SimpleVComponent } from './component/v-component';
+import { type VComponent } from './component/component';
+import { type MaybeArray, toArray } from './utils/array';
 
 export type RenderFn = () =>
   | SimpleComponent

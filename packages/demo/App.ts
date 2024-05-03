@@ -121,16 +121,8 @@ const NestedStateExample = component(() => {
   ).addClass('border border-slate-300 p-4 rounded-sm');
 });
 
-const Card = component(
-  ({
-    title,
-    subtitle,
-    text,
-  }: {
-    title: string;
-    subtitle: string;
-    text: string;
-  }) => {
+const Card = component<{ title: string; subtitle: string; text: string }>(
+  ({ title, subtitle, text }) => {
     return div(
       div(title).addClass('text-lg font-semibold'),
       div(subtitle).addClass('text-md font-light'),
@@ -162,7 +154,7 @@ const SimpleForLoop = component(() => {
   ).addClass('flex flex-col gap-4');
 });
 
-export const App: VComponent = component(() => {
+export const App: any = component(() => {
   const hello = reactive('hello');
   const world = reactive('world');
 

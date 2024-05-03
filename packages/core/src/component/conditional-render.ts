@@ -1,6 +1,6 @@
-import { type MaybeReactive, isReactive, reactive, toValue } from '../reactive';
-import { MaybeArray, maybeArrayForEach, toArray } from '../utils/array';
-import { VComponent, WithHtml } from './component';
+import { type MaybeReactive, isReactive, toValue } from '../reactive';
+import type { MaybeArray } from '../utils/array';
+import type { VComponent, WithHtml } from './component';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 
 function buildPlaceholderComment() {

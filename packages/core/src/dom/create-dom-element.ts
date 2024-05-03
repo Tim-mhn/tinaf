@@ -1,17 +1,15 @@
 import { objectEntries } from '../utils/object';
 import { toValue } from '../reactive/toValue';
-import { MaybeReactive } from '../reactive/types';
+import { type MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
-import { MaybeArray, toArray } from '../utils/array';
+import { type MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
-import { AddStylesArgs, addStylesToElement } from './styles';
-import { PrimitiveType } from '../utils/primitive';
-import { SimpleVComponent } from '@tinaf/core/component/v-component';
-import { VComponent, WithHtml } from '../component/component';
+import { type AddStylesArgs, addStylesToElement } from './styles';
+import { type PrimitiveType } from '../utils/primitive';
+import { SimpleVComponent } from '../component/v-component';
+import type { VComponent, WithHtml } from '../component/component';
 import { isVComponent } from '../component/is-component';
 import { watchAllSources } from '../reactive/watch';
-import { ReactiveValue } from '../reactive';
-import { Observable, tap } from 'rxjs';
 
 type TagName = keyof HTMLElementTagNameMap;
 

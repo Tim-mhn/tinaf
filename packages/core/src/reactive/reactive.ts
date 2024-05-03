@@ -47,7 +47,7 @@ export function reactive<T>(initialValue: T) {
 class Computed<T> implements ReactiveValue<T> {
   valueChanges$: Observable<T>;
 
-  constructor(private getterFn: () => T, sources: ReactiveValue<any>[]) {
+  constructor(public getterFn: () => T, sources: ReactiveValue<any>[]) {
     if (sources.length === 0)
       throw new Error(
         'Computed value was created without any source. Please include at least 1 source'

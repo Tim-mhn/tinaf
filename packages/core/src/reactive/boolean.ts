@@ -1,14 +1,12 @@
 import { Reactive, computed } from './reactive';
-import { isReactive } from './toValue';
-import { MaybeReactive } from './types';
 
 export class BooleanReactive extends Reactive<boolean> {
   constructor(initialValue: boolean) {
     super(initialValue);
   }
 
-  not() {
-    return not(this);
+  public not() {
+    return computed(() => !this.value, [this]);
   }
 }
 
@@ -20,10 +18,10 @@ export function bool(initialValue: boolean): [Reactive<boolean>, () => void] {
   return [rx, toggle];
 }
 
-export function not(condition: MaybeReactive<boolean>) {
-  if (isReactive(condition)) {
-    return computed(() => !condition.value, [condition]);
-  }
+// function notFn(condition: MaybeReactive<boolean>) {
+//   if (isReactive(condition)) {
+//     return computed(() => !condition.value, [condition]);
+//   }
 
-  return !condition;
-}
+//   return !condition;
+// }

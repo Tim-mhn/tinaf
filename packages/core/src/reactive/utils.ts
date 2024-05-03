@@ -1,7 +1,7 @@
-import { MaybeArray, toArray } from '../utils/array';
+import { type MaybeArray, toArray } from '../utils/array';
 import { Reactive } from './reactive';
 import { isReactive } from './toValue';
-import { MaybeReactive } from './types';
+import type { MaybeReactive } from './types';
 
 export function getReactiveElements<T>(
   maybeArray?: MaybeArray<MaybeReactive<T>>

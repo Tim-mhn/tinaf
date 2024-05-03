@@ -1,8 +1,8 @@
 import { isReactive, toValue } from '../reactive/toValue';
 import { getReactiveElements } from '../reactive/utils';
 import { watchAllSources } from '../reactive/watch';
-import { MaybeArray, toArray } from '../utils/array';
-import { AddClassesArgs } from './create-dom-element';
+import { type MaybeArray, toArray } from '../utils/array';
+import type { AddClassesArgs } from './create-dom-element';
 import { type MaybeReactive } from '../reactive/types';
 import { objectEntries } from '../utils/object';
 import { computed } from '../reactive';

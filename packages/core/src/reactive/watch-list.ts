@@ -1,6 +1,6 @@
 import { Observable, map, pairwise, startWith } from 'rxjs';
 import { toValue } from './toValue';
-import { Reactive, ReactiveValue } from './reactive';
+import { type ReactiveValue } from './reactive';
 
 type WatchListItem<T> = {
   index: number;

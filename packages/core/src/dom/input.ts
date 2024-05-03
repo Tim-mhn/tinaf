@@ -1,12 +1,11 @@
-import { VComponent, WithHtml } from '../component/component';
+import type { VComponent, WithHtml } from '../component/component';
 import { InputReactive } from '../reactive';
-import { Component } from '../render';
 import {
-  AddClassesArgs,
-  EventHandlers,
+  type AddClassesArgs,
+  type EventHandlers,
   addEventListenersToElement,
 } from './create-dom-element';
-import { AddStylesArgs, addStylesToElement } from './styles';
+import { type AddStylesArgs, addStylesToElement } from './styles';
 import { addClassToElement } from './classes';
 
 export const input = <T extends string | number>(value: InputReactive<T>) => {

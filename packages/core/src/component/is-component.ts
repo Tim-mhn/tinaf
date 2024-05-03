@@ -1,5 +1,5 @@
-import { MaybeReactive } from '../reactive';
-import { VComponent } from './component';
+import type { MaybeReactive } from '../reactive';
+import type { VComponent } from './component';
 
 export function isVComponent(
   cmp: VComponent | MaybeReactive<any> | HTMLElement | Comment

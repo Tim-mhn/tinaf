@@ -1,7 +1,7 @@
 import { map, merge } from 'rxjs';
-import { ReactiveValue } from '../reactive/reactive';
+import type { ReactiveValue } from '../reactive/reactive';
 import { isReactive, toValue } from '../reactive/toValue';
-import { MaybeReactive } from '../reactive/types';
+import type { MaybeReactive } from '../reactive/types';
 import { objectEntries } from '../utils/object';
 
 export type AddStylesArgs = Record<string, MaybeReactive<string>>;
