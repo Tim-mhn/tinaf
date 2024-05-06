@@ -1,17 +1,17 @@
 import { objectKeys } from '../utils/object';
-import { type MaybeReactiveProps } from '../reactive';
+import { type MaybeReactive, type MaybeReactiveProps } from '../reactive';
 import { isForLoopComponent } from '../render';
 import { type MaybeArray } from '../utils/array';
 import { type VComponent, type WithHtml } from './component';
 import { isVComponent } from './is-component';
 
-export class SimpleVComponent<Props extends object = object>
+export class SimpleVComponent<Props extends ComponentProps = NoProps>
   implements VComponent
 {
   constructor(
-    private props: RenderFnParams<MaybeReactiveProps<Props>>,
+    private props: RenderFnParams<Props>,
     public renderFn: (
-      ...params: RenderFnParams<MaybeReactiveProps<Props>>
+      ...params: RenderFnParams<Props>
     ) => HTMLElement | Comment | VComponent
   ) {}
 
@@ -45,15 +45,34 @@ export class SimpleVComponent<Props extends object = object>
   }
 }
 
-// TODO: better name these params
-type RenderFnParams<Props extends object> = Props extends Record<string, never>
-  ? []
-  : [Props];
-export function component<Props extends object = Record<string, never>>(
+export function component<Props extends ComponentProps = NoProps>(
   renderFn: (
-    ...params: RenderFnParams<MaybeReactiveProps<Props>>
+    ...params: RenderFnParams<Props>
   ) => HTMLElement | Comment | VComponent
 ) {
-  return (...propsParams: RenderFnParams<MaybeReactiveProps<Props>>) =>
+  return (...propsParams: RenderFnParams<Props>) =>
     new SimpleVComponent(propsParams, renderFn);
 }
+
+type NoProps = Record<string, never>;
+
+type RenderFnParams<Props extends ComponentProps> = Props extends Record<
+  string,
+  never
+>
+  ? []
+  : [_RenderFnParams<Props>];
+
+type _RenderFnParams<Props extends ComponentProps> = {
+  children?: 'component'[];
+} & {
+  [K in keyof Props]: Props[K] extends Function
+    ? Props[K]
+    : MaybeReactive<Props[K]>;
+};
+
+type ComponentProps = {
+  [key: string]: any;
+} & {
+  children?: never;
+};
