@@ -4,8 +4,8 @@ import { inputReactive } from 'tinaf/reactive';
 
 type OnAddItem = (item: string) => void;
 
-export const GroceryItemInput = component(
-  ({ onAddItem }: { onAddItem: OnAddItem }) => {
+export const GroceryItemInput = component<{ onAddItem: OnAddItem }>(
+  ({ onAddItem }) => {
     const i = inputReactive<string>('');
 
     return div(

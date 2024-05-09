@@ -1,13 +1,16 @@
 import { component, forLoop, type VComponent } from 'tinaf/component';
 import { div } from 'tinaf/dom';
 import { Header } from './Header';
-import { reactiveList } from 'tinaf/reactive';
+import {
+  reactiveList,
+  type MaybeReactive,
+  type ReactiveValue,
+} from 'tinaf/reactive';
 
 import { GroceryItemInput } from './GroceryItemInput';
-import { reactive } from 'tinaf/reactive';
 
 // TODO: this seems to work but the typs are broken
-const MainContainer = component(({ children }: { children: VComponent[] }) => {
+const MainContainer = component(({ children }) => {
   return div(...children).addClass('p-8 gap-8 flex flex-col ');
 });
 export const App: () => VComponent = component(() => {
@@ -30,3 +33,11 @@ export const App: () => VComponent = component(() => {
     })
   ).addClass('flex flex-col w-screen h-screen text-slate-800');
 });
+
+component<{ hello: string; onAdd: () => void }>(
+  ({ hello, onAdd, children }) => {
+    return div('hello');
+  }
+);
+
+

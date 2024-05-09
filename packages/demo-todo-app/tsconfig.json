@@ -8,7 +8,7 @@
     "composite": true,
     "paths": {
         
-        "tinaf": ["node_modules/tinaf-core/"]
+        "tinaf": ["../core/"]
       },
     },
     "references": [
