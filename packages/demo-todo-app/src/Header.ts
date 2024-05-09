@@ -1,5 +1,5 @@
-import { component } from '@tinaf/core/component';
-import { div } from '@tinaf/core/dom';
+import { component } from 'tinaf/component';
+import { div } from 'tinaf/dom';
 
 // @ts-expect-error
 export const Header = component(() => {

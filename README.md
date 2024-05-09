@@ -24,8 +24,8 @@ This is fully JS/TS based. Here is how it works.
 </body>
 
 // main.ts
-import { renderApp } from "@tinaf/core/render";
-import { div } from "@tinaf/core/dom";
+import { renderApp } from "tinaf/render";
+import { div } from "tinaf/dom";
 
 const App = div('Hello world')
 
@@ -37,7 +37,7 @@ renderApp('app', App())
 Reactive values are created with `reactive`. The system is based on the great [RxJS](https://github.com/ReactiveX/rxjs)
 
 ```
-import { reactive } from "@tinaf/core/reactive";
+import { reactive } from "tinaf/reactive";
 
 const count = reactive(0);
 count.update(2);
@@ -57,8 +57,8 @@ const double = computed(() => count.value * 2, [count])
 Let's create a component that uses a reactive value
 
 ```
-import { component } from "@tinaf/core/component";
-import { reactive } from "@tinaf/core/reactive";
+import { component } from "tinaf/component";
+import { reactive } from "tinaf/reactive";
 
 const Counter = component(() => {
     const count = reactive(0);
@@ -76,7 +76,7 @@ const Counter = component(() => {
 Use the `componentWithProps` function
 
 ```
-import { componentWithProps } from "@tinaf/core/component";
+import { componentWithProps } from "tinaf/component";
 
 const Card = component<{ title: string; subtitle: string}>(( { title, subtitle}) => {
     return div(
@@ -98,7 +98,7 @@ Traditional _if/else_ syntax does not work, like it would in React or Solid :(
 To achieve this, use the `show` function
 
 ```
-import { when } from '@tinaf/core/component';
+import { when } from 'tinaf/component';
 
 const ShowWhenExample = component(() => {
     // 'bool' is a helper around 'reactive' similar to React's useState
@@ -162,9 +162,9 @@ const Example = button('Click to log').on({
 ### Wrapping-up
 
 ```
-import { component, componentWithProps } from "@tinaf/core/component";
-import { div, button } from "@tinaf/core/dom";
-import { reactive, computed, bool } from "@tinaf/core/reactive";
+import { component, componentWithProps } from "tinaf/component";
+import { div, button } from "tinaf/dom";
+import { reactive, computed, bool } from "tinaf/reactive";
 
 const Card = component<{ title: string; subtitle: string}>(({ title, subtitle}) => {
 

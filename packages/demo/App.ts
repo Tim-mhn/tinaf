@@ -1,10 +1,10 @@
-import { button, div, span } from '@tinaf/core/dom';
-import { bool, computed, inputReactive, reactive } from '@tinaf/core/reactive';
+import { button, div, span } from 'tinaf/dom';
+import { bool, computed, inputReactive, reactive } from 'tinaf/reactive';
 import { VDivExample } from './components/VDivExample';
-import { component } from '@tinaf/core/component';
-import { input } from '@tinaf/core/dom';
-import { when } from '@tinaf/core/component';
-import { forLoop } from '@tinaf/core/component';
+import { component } from 'tinaf/component';
+import { input } from 'tinaf/dom';
+import { when } from 'tinaf/component';
+import { forLoop } from 'tinaf/component';
 
 const ToggleClasses = component(() => {
   const [active, toggleActive] = bool(true);

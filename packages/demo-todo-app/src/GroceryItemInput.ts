@@ -1,6 +1,6 @@
-import { component } from '@tinaf/core/component';
-import { button, div, input } from '@tinaf/core/dom';
-import { inputReactive } from '@tinaf/core/reactive';
+import { component } from 'tinaf/component';
+import { button, div, input } from 'tinaf/dom';
+import { inputReactive } from 'tinaf/reactive';
 
 type OnAddItem = (item: string) => void;
 

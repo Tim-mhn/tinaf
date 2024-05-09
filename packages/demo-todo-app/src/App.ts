@@ -1,10 +1,10 @@
-import { component, forLoop, type VComponent } from '@tinaf/core/component';
-import { div } from '@tinaf/core/dom';
+import { component, forLoop, type VComponent } from 'tinaf/component';
+import { div } from 'tinaf/dom';
 import { Header } from './Header';
-import { reactiveList } from '@tinaf/core/reactive';
+import { reactiveList } from 'tinaf/reactive';
 
 import { GroceryItemInput } from './GroceryItemInput';
-import { reactive } from '@tinaf/core/reactive';
+import { reactive } from 'tinaf/reactive';
 
 // TODO: this seems to work but the typs are broken
 const MainContainer = component(({ children }: { children: VComponent[] }) => {

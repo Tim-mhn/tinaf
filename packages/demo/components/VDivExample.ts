@@ -1,6 +1,6 @@
-import { component, type VComponent } from '@tinaf/core/component';
-import { button, div } from '@tinaf/core/dom';
-import { bool, reactive } from '@tinaf/core/reactive';
+import { component, type VComponent } from 'tinaf/component';
+import { button, div } from 'tinaf/dom';
+import { bool, reactive } from 'tinaf/reactive';
 
 const Child = component(() => {
   const [myBool, toggle] = bool(false);

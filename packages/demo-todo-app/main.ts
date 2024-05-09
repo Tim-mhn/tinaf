@@ -1,4 +1,4 @@
-import { renderApp } from '@tinaf/core/render';
+import { renderApp } from 'tinaf/render';
 import { App } from './src/App';
 
 renderApp('app', App());
