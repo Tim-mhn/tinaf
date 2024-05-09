@@ -1,4 +1,4 @@
-import { objectEntries } from '../utils/object';
+import { objectEntries, objectKeys } from '../utils/object';
 import { toValue } from '../reactive/toValue';
 import { type MaybeReactive } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
@@ -71,6 +71,20 @@ export class VDomComponent<T extends TagName> implements VComponent {
     return this;
   }
 
+  private options: Partial<HTMLElementTagNameMap[T]> = {};
+
+  withOptions(options: Partial<HTMLElementTagNameMap[T]>) {
+    this.options = options;
+    return this;
+  }
+
+  private _addOptionsToElement(element: HTMLElementTagNameMap[T]) {
+    objectKeys(this.options).forEach((key) => {
+      const value = this.options[key];
+      if (value) element[key] = value;
+    });
+  }
+
   init(parent: WithHtml) {
     watchAllSources(this.reactiveChildren).subscribe(() => {
       const index = [...parent.html.childNodes].findIndex(
@@ -108,6 +122,8 @@ export class VDomComponent<T extends TagName> implements VComponent {
         this.html.append(textContent);
       }
     });
+
+    this._addOptionsToElement(this.html);
 
     if (this.classes) addClassToElement(this.html, this.classes);
     if (this.handlers) addEventListenersToElement(this.html, this.handlers);

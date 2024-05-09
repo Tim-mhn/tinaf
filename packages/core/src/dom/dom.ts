@@ -1,4 +1,5 @@
 import { createDomElement } from './create-dom-element';
+import { input } from './input';
 
 export const div = createDomElement('div');
 export const span = createDomElement('span');

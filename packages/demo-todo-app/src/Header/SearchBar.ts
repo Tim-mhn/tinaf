@@ -1,0 +1,41 @@
+import type { Product } from 'src/models/product';
+import { component } from 'tinaf/component';
+import { div, input, span } from 'tinaf/dom';
+import { inputReactive } from 'tinaf/reactive';
+import { PRODUCTS } from './products.mock';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+
+export const SearchBar = component<{
+  updateProducts: (products: Product[]) => void;
+}>(({ updateProducts }) => {
+  const searchInput = inputReactive('');
+
+  searchInput.valueChanges$
+    .pipe(
+      map((s) => s.toLowerCase()),
+      debounceTime(300),
+      distinctUntilChanged()
+    )
+    .subscribe((newInput) => {
+      const newProducts = PRODUCTS.filter(
+        (product) =>
+          product.title.toLowerCase().includes(newInput) ||
+          product.description.toLowerCase().includes(newInput)
+      );
+
+      updateProducts(newProducts);
+
+      console.log('updating new products with input: ', newInput);
+    });
+
+  searchInput.valueChanges$.subscribe(console.log);
+
+  return div(
+    input(searchInput, { placeholder: 'What are you looking for ?' }).addClass(
+      'outline-none w-full'
+    ),
+    span(searchInput)
+  ).addClass(
+    'p-4 border rounded-md h-9 flex grow items-center justify-center  border-slate-400'
+  );
+});

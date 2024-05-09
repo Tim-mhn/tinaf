@@ -63,7 +63,6 @@ class VInputComponent<T extends string | number> implements VComponent {
       const index = [...parent.html.childNodes].findIndex(
         (n) => n === this.html
       );
-      console.log(this.html);
       parent.html.removeChild(this.html);
       this._html = this.renderOnce();
       parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);

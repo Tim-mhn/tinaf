@@ -1,43 +1,23 @@
 import { component, forLoop, type VComponent } from 'tinaf/component';
 import { div } from 'tinaf/dom';
-import { Header } from './Header';
-import {
-  reactiveList,
-  type MaybeReactive,
-  type ReactiveValue,
-} from 'tinaf/reactive';
+import { Header } from './Header/Header';
+import { reactiveList } from 'tinaf/reactive';
 
-import { GroceryItemInput } from './GroceryItemInput';
+import { ProductList } from './ProductList/ProductList';
+import { PRODUCTS } from './Header/products.mock';
+import type { Product } from './models/product';
 
 // TODO: this seems to work but the typs are broken
 const MainContainer = component(({ children }) => {
   return div(...children).addClass('p-8 gap-8 flex flex-col ');
 });
 export const App: () => VComponent = component(() => {
-  const items = reactiveList<string>([]);
-
-  const addItem = (newItem: string) => items.add(newItem);
+  const products = reactiveList<Product>(PRODUCTS);
 
   return div(
-    Header(),
+    Header({ updateProducts: (ps) => products.update(ps) }),
     MainContainer({
-      children: [
-        GroceryItemInput({
-          onAddItem: addItem,
-        }),
-
-        div(forLoop(items, (item) => div(item))).addClass(
-          'flex flex-col gap-4'
-        ),
-      ],
+      children: [ProductList({ products })],
     })
   ).addClass('flex flex-col w-screen h-screen text-slate-800');
 });
-
-component<{ hello: string; onAdd: () => void }>(
-  ({ hello, onAdd, children }) => {
-    return div('hello');
-  }
-);
-
-
