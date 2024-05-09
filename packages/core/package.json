@@ -1,6 +1,6 @@
 {
   "name": "tinaf",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "",
   "type": "module",
   "types": "index.d.ts",
@@ -31,7 +31,8 @@
     "build": "tsc --noEmit && vite build"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "keywords": [],
   "author": "",
