@@ -57,6 +57,14 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
 
     throw new Error('path way not supported in renderOnce');
   }
+
+  destroy(): void {
+    console.log('Destroying component');
+    console.log(this.props);
+    if (isVComponent(this.child)) {
+      this.child.destroy?.();
+    }
+  }
 }
 
 export function component<Props extends ComponentProps = NoProps>(

@@ -24,8 +24,11 @@ class ConditionallyRenderedComponent implements VComponent {
   renderOnce() {
     if (toValue(this.condition)) {
       this._html = this.cmp.renderOnce();
+      this.fallback?.destroy?.();
       return this._html;
     }
+
+    this.cmp.destroy?.();
 
     if (!this.fallback) {
       this._html = buildPlaceholderComment();
@@ -40,6 +43,7 @@ class ConditionallyRenderedComponent implements VComponent {
     if (toValue(this.condition)) this.cmp.init(parent);
     else if (this.fallback) this.fallback.init(parent);
   }
+
   init(parent: WithHtml) {
     if (!isReactive(this.condition)) return;
 

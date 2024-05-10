@@ -9,8 +9,5 @@ export interface VComponent {
   renderOnce(): MaybeArray<HTMLElement | Comment>;
   __type: 'V_COMPONENT';
   html: MaybeArray<HTMLElement | Comment>;
+  destroy?(): void;
 }
-
-/**
- * NB: not sure if this is the right interface to use. Mounting requires to also render some stuff on the DOM
- */

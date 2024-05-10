@@ -36,6 +36,6 @@ export const SearchBar = component<{
     ),
     span(searchInput)
   ).addClass(
-    'p-4 border rounded-md h-9 flex grow items-center justify-center  border-slate-400'
+    'p-4 border rounded-sm h-9 flex grow items-center justify-center  border-slate-800'
   );
 });

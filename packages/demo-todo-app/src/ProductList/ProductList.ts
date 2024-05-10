@@ -30,7 +30,11 @@ const ProductCard = component<{ product: Product }>(({ product }) => {
 export const ProductList = component<{ products: Product[] }>(
   ({ products }) => {
     return ul(
-      forLoop(products, (product) => ProductCard({ product }))
+      forLoop(
+        products,
+        (product) => ProductCard({ product }),
+        (p) => p.id
+      )
     ).addClass(
       'grid border border-black gap-y-8 grid-flow-row-dense grid-cols-1 md:grid-cols-3 lg:grid-cols-5 h-fit'
     );

@@ -7,7 +7,6 @@ import { ProductList } from './ProductList/ProductList';
 import { PRODUCTS } from './Header/products.mock';
 import type { Product } from './models/product';
 
-// TODO: this seems to work but the typs are broken
 const MainContainer = component(({ children }) => {
   return div(...children).addClass('p-8 gap-8 flex flex-col ');
 });
