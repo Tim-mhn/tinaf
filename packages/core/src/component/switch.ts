@@ -30,7 +30,6 @@ class SwitchComponent<T> implements VComponent {
   }
 
   init(parent: WithHtml) {
-    console.log('SwitchComponent.init');
     const value = toValue(this.reactiveValue);
     const component = this.switchFn(value);
 

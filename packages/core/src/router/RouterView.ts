@@ -3,7 +3,6 @@ import { injectApp } from '../common';
 import { ROUTER_PROVIDER_KEY } from './provider.key';
 import type { Router } from './router';
 
-// TODO: let the Router handle most of the logic instead ?
 export const RouterView = component(() => {
   const tinafApp = injectApp();
 

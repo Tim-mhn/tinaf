@@ -1,21 +1,20 @@
 import { createApp } from 'tinaf/render';
 import { App } from './src/App';
 import { routerBuilder, ROUTER_PROVIDER_KEY } from 'tinaf/router';
-import { div } from 'tinaf/dom';
+import { ProductListPage } from './src/pages/ProductList.page';
+import { ProductPage } from './src/pages/Product.page';
 
 const app = createApp(App);
 
-const Home = () => div('Home');
-const Dashboard = () => div('Dashboard');
 const router = routerBuilder()
   .withConfig([
     {
       path: '/',
-      component: Home,
+      component: ProductListPage,
     },
     {
-      path: '/dashboard',
-      component: Dashboard,
+      path: '/product',
+      component: ProductPage,
     },
   ])
   .build();

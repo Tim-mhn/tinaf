@@ -12,23 +12,13 @@ const MainContainer = component(({ children }) => {
   return div(...children).addClass('p-8 gap-8 flex flex-col ');
 });
 export const App: () => VComponent = component(() => {
-  const products = reactiveList<Product>(PRODUCTS);
-
   const router = injectRouter();
 
   return div(
-    Header({ updateProducts: (ps) => products.update(ps) }),
+    Header(),
+
     MainContainer({
-      children: [ProductList({ products })],
-    }),
-    div(
-      button('Go to home').on({
-        click: () => router.navigate('/'),
-      }),
-      button('Go to dashboard').on({
-        click: () => router.navigate('/dashboard'),
-      })
-    ),
-    RouterView()
+      children: [RouterView()],
+    })
   ).addClass('flex flex-col w-screen h-screen text-slate-800');
 });
