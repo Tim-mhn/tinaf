@@ -9,6 +9,7 @@ function buildPlaceholderComment() {
   return comment;
 }
 
+// TODO: refactor this to use switchComponent
 class ConditionallyRenderedComponent implements VComponent {
   constructor(
     private condition: MaybeReactive<boolean>,

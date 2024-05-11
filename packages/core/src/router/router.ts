@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import type { VComponent } from 'src/component';
-import type { Url } from 'url';
+import { reactive } from '../reactive';
 
 type RouterConfig = Array<{ path: string; component: () => VComponent }>;
 
@@ -10,21 +10,25 @@ export class Router {
     private config: RouterConfig // private renderFn: (component: Component, parent: Container) => any
   ) {}
 
-  private _route$ = new Subject<Location>();
-
-  public route$ = this._route$.asObservable();
+  public readonly route = reactive<Location>(window.location);
 
   getCurrentUrl() {
-    return window.location;
+    return this.route.value;
   }
 
-  private _intialized = false;
+  private _initialized = false;
   init() {
-    if (this._intialized) return;
+    if (this._initialized) return;
 
-    this._intialized = true;
+    this._initialized = true;
     window.addEventListener('popstate', () => {
-      this._route$.next(window.location);
+      console.log('popstate');
+      console.log({ location: window.location.pathname });
+      // NB: this is necessary to make sure the new route is a different object
+      // and the emission is not blocked by distinctUntilChanged in switch
+      this.route.update({
+        ...window.location,
+      });
     });
   }
 
@@ -40,17 +44,7 @@ export class Router {
     return route.component;
   }
 
-  private activePage: any;
-
   navigate(url: string) {
-    // if (this.activePage) this.activePage.destroy();
-    // const route = this.config.find((route) => route.path === url);
-
-    // if (!route)
-    //   throw new Error(`Could not find matching route for url ${url} `);
-
-    // // this.renderFn(route.component, this.container);
-    // this.activePage = route.component;
     const UNUSED_PARAM = '';
     history.pushState({}, UNUSED_PARAM, url);
     window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
@@ -64,13 +58,6 @@ class RouterBuilder {
     this.config = config;
     return this;
   }
-
-  // renderFn: any;
-
-  // withRenderFn(renderFn: RenderFn) {
-  //   this.renderFn = renderFn;
-  //   return this;
-  // }
 
   build() {
     return new Router(this.config);

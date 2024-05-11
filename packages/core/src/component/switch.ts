@@ -1,9 +1,4 @@
-import {
-  isReactive,
-  toValue,
-  type MaybeReactive,
-  type ReactiveValue,
-} from '../reactive';
+import { isReactive, toValue, type ReactiveValue } from '../reactive';
 import type { VComponent, WithHtml } from './component';
 import { distinctUntilChanged } from 'rxjs';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
@@ -11,7 +6,7 @@ import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 class SwitchComponent<T> implements VComponent {
   constructor(
     private reactiveValue: ReactiveValue<T>,
-    private switchFn: (value: T) => VComponent
+    private switchFn: (value: T) => VComponent | null
   ) {}
 
   readonly __type = 'V_COMPONENT';
@@ -28,11 +23,22 @@ class SwitchComponent<T> implements VComponent {
     return this._html;
   }
 
+  private _warnEmptyComponentReturnedBySwitchFn() {
+    console.warn(
+      '[TINAF] SwitchComponent: switchFn returned null, no component will be rendered.'
+    );
+  }
+
   init(parent: WithHtml) {
+    console.log('SwitchComponent.init');
     const value = toValue(this.reactiveValue);
     const component = this.switchFn(value);
 
-    component.init(parent);
+    if (component) {
+      component.init(parent);
+    } else {
+      this._warnEmptyComponentReturnedBySwitchFn();
+    }
 
     this._currentComponent = component;
 
@@ -46,7 +52,11 @@ class SwitchComponent<T> implements VComponent {
 
         this._currentComponent = newComponent;
 
-        this._currentComponent.init(parent);
+        if (this._currentComponent) {
+          this._currentComponent.init(parent);
+        } else {
+          this._warnEmptyComponentReturnedBySwitchFn();
+        }
 
         const oldNodes = this._html;
 
@@ -62,8 +72,8 @@ class SwitchComponent<T> implements VComponent {
 }
 
 export function buildSwitchComponent<T>(
-  reactiveValue: MaybeReactive<T>,
-  switchFn: (value: T) => VComponent
+  reactiveValue: ReactiveValue<T>,
+  switchFn: (value: T) => VComponent | null
 ): VComponent {
   return new SwitchComponent(reactiveValue, switchFn);
 }
