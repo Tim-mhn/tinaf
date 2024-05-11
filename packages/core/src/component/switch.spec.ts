@@ -1,77 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { bool } from '../reactive/boolean';
-import { VComponent, WithHtml } from './component';
-import { MaybeReactive } from '../reactive/types';
-import { isReactive, toValue } from '../reactive/toValue';
-import {
-  buildMockHtmlElement,
-  buildMockParent,
-} from '../test-utils/dom-element.mock';
-import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
-import { build } from 'vite';
-import { Reactive, reactive } from '../reactive/reactive';
-import { MaybeArray } from '../utils/array';
-import { distinctUntilChanged } from 'rxjs';
+import { VComponent } from './component';
+import { buildMockParent } from '../test-utils/dom-element.mock';
+import { reactive } from '../reactive/reactive';
+import { buildSwitchComponent } from './switch';
 
-class SwitchComponent<T> implements VComponent {
-  constructor(
-    private reactiveValue: MaybeReactive<T>,
-    private switchFn: (value: T) => VComponent
-  ) {}
-
-  readonly __type = 'V_COMPONENT';
-  private _html: ReturnType<VComponent['renderOnce']> = [];
-
-  get html() {
-    return this._html;
-  }
-
-  private _currentComponent: VComponent | null = null;
-  renderOnce() {
-    const newHtml = this._currentComponent?.renderOnce?.() || [];
-    this._html = newHtml;
-    return this._html;
-  }
-
-  init(parent: WithHtml) {
-    const value = toValue(this.reactiveValue);
-    const component = this.switchFn(value);
-
-    component.init(parent);
-
-    this._currentComponent = component;
-
-    if (!isReactive(this.reactiveValue)) return;
-
-    this.reactiveValue.valueChanges$
-      .pipe(distinctUntilChanged())
-      .subscribe((newValue) => {
-        const newComponent = this.switchFn(newValue);
-        this._currentComponent?.destroy?.();
-
-        this._currentComponent = newComponent;
-
-        this._currentComponent.init(parent);
-
-        const oldNodes = this._html;
-
-        const newNodes = this.renderOnce();
-
-        removeOldNodesAndRenderNewNodes({
-          oldNodes,
-          newNodes,
-          parent,
-        });
-      });
-  }
-}
-
-function buildSwitchComponent<T>(
-  reactiveValue: MaybeReactive<T>,
-  switchFn: (value: T) => VComponent
-): VComponent {
-  return new SwitchComponent(reactiveValue, switchFn);
-}
 describe('switchComponent', () => {
   describe('binary switch component', () => {
     const Comp1: VComponent = {
@@ -206,8 +139,8 @@ describe('switchComponent', () => {
       const { A, B, C } = createComponents();
 
       const value = reactive<'a' | 'b' | 'c'>('a');
-      const switchComponent = buildSwitchComponent(value, (value) => {
-        switch (value) {
+      const switchComponent = buildSwitchComponent(value, (v) => {
+        switch (v) {
           case 'a':
             return A;
           case 'b':
