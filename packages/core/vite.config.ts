@@ -10,6 +10,7 @@ export default defineConfig({
         resolve(__dirname, 'src/dom/dom.exports.ts'),
         resolve(__dirname, 'src/component/component.exports.ts'),
         resolve(__dirname, 'src/reactive/reactive.exports.ts'),
+        resolve(__dirname, 'src/router/router.exports.ts'),
       ],
       fileName: (_format, entryName) => {
         console.log({ entryName });

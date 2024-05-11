@@ -100,16 +100,55 @@ export function render(
   parent: HTMLElement
 ): MaybeArray<HTMLElement | Comment> {
   console.info('Calling init from render');
-  (component as SimpleVComponent).init({ html: parent });
-  const html = (component as SimpleVComponent).renderOnce();
+  component.init({ html: parent });
+  const html = component.renderOnce();
   parent.append(...toArray(html));
   return html;
 }
 
+/**
+ * @deprecated Use createApp instead
+ * @param id
+ * @param component
+ */
 export function renderApp(id: string, component: VComponent) {
   window.addEventListener('load', () => {
     const container = document.getElementById(id) as HTMLElement;
 
     render(component, container);
   });
+}
+declare global {
+  interface Window {
+    __TINAF__: TinafApp;
+  }
+}
+
+export class TinafApp {
+  constructor(private app: () => VComponent) {}
+
+  private PROVIDERS: Map<string | symbol, any> = new Map();
+
+  provide<T>(key: string | symbol, value: T) {
+    this.PROVIDERS.set(key, value);
+    return this;
+  }
+
+  get<T>(key: string | symbol): T {
+    return this.PROVIDERS.get(key);
+  }
+
+  render(id: string) {
+    window.__TINAF__ = this;
+
+    window.addEventListener('load', () => {
+      const container = document.getElementById(id) as HTMLElement;
+
+      render(this.app(), container);
+    });
+  }
+}
+
+export function createApp(app: () => VComponent) {
+  return new TinafApp(app);
 }

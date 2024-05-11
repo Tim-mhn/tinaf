@@ -55,7 +55,7 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
       return html;
     }
 
-    throw new Error('path way not supported in renderOnce');
+    return this.child;
   }
 
   destroy(): void {

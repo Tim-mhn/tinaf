@@ -24,6 +24,10 @@
     "./reactive": {
       "import": "./dist/reactive.js",
       "types": "./dist/src/reactive/index.d.ts"
+    },
+    "./router": {
+      "import": "./dist/router.js",
+      "types": "./dist/src/router/router.exports.d.ts"
     }
   },
   "scripts": {
