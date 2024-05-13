@@ -64,4 +64,10 @@ class RouterBuilder {
   }
 }
 
+/**
+ * @deprecated use createRouter instead
+ * @returns
+ */
 export const routerBuilder = () => new RouterBuilder();
+
+export const createRouter = (config: RouterConfig) => new Router(config);
