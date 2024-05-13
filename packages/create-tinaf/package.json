@@ -1,6 +1,6 @@
 {
   "name": "create-tinaf",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "",
   "main": "dist/index.js",
   "type": "module",
@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/prompts": "^2",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
@@ -30,5 +31,8 @@
   "volta": {
     "node": "20.11.1",
     "yarn": "4.1.1"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
   }
 }

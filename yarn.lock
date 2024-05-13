@@ -1139,12 +1139,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.12.11":
+"@types/node@npm:*, @types/node@npm:^20.12.11":
   version: 20.12.11
   resolution: "@types/node@npm:20.12.11"
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10c0/efaa7b08c50ba6e6982ac7d531ba08d5935539ba76e954807df1ff9382a319ead7e003ccaca5ad7cf33ecf53f212507f7c1f2794bd2ff52df6365fef21f6e1fb
+  languageName: node
+  linkType: hard
+
+"@types/prompts@npm:^2":
+  version: 2.4.9
+  resolution: "@types/prompts@npm:2.4.9"
+  dependencies:
+    "@types/node": "npm:*"
+    kleur: "npm:^3.0.3"
+  checksum: 10c0/22fe0da6807681c85e88ba283184f4be4c8a95c744ea12a638865c98c4e0c22e7f733542f6b0f1fbca02245cdc3fe84feacf9c9adf4ddd8bc98a337fd679d8d2
   languageName: node
   linkType: hard
 
@@ -2037,8 +2047,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "create-tinaf@workspace:packages/create-tinaf"
   dependencies:
+    "@types/prompts": "npm:^2"
     autoprefixer: "npm:^10.4.16"
     postcss: "npm:^8.4.32"
+    prompts: "npm:^2.4.2"
     tailwindcss: "npm:^3.4.0"
     tinaf: "npm:^0.0.8"
     typescript: "npm:^5.4.5"
@@ -3918,6 +3930,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kleur@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "kleur@npm:3.0.3"
+  checksum: 10c0/cd3a0b8878e7d6d3799e54340efe3591ca787d9f95f109f28129bdd2915e37807bf8918bb295ab86afb8c82196beec5a1adcaf29042ce3f2bd932b038fe3aa4b
+  languageName: node
+  linkType: hard
+
 "kolorist@npm:^1.8.0":
   version: 1.8.0
   resolution: "kolorist@npm:1.8.0"
@@ -5152,6 +5171,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prompts@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "prompts@npm:2.4.2"
+  dependencies:
+    kleur: "npm:^3.0.3"
+    sisteransi: "npm:^1.0.5"
+  checksum: 10c0/16f1ac2977b19fe2cf53f8411cc98db7a3c8b115c479b2ca5c82b5527cd937aa405fa04f9a5960abeb9daef53191b53b4d13e35c1f5d50e8718c76917c5f1ea4
+  languageName: node
+  linkType: hard
+
 "punycode@npm:^2.1.0":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
@@ -5523,6 +5552,13 @@ __metadata:
   version: 4.1.0
   resolution: "signal-exit@npm:4.1.0"
   checksum: 10c0/41602dce540e46d599edba9d9860193398d135f7ff72cab629db5171516cfae628d21e7bfccde1bbfdf11c48726bc2a6d1a8fb8701125852fbfda7cf19c6aa83
+  languageName: node
+  linkType: hard
+
+"sisteransi@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "sisteransi@npm:1.0.5"
+  checksum: 10c0/230ac975cca485b7f6fe2b96a711aa62a6a26ead3e6fb8ba17c5a00d61b8bed0d7adc21f5626b70d7c33c62ff4e63933017a6462942c719d1980bb0b1207ad46
   languageName: node
   linkType: hard
 
@@ -5934,7 +5970,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"tinaf@npm:^0.0.8, tinaf@workspace:*, tinaf@workspace:packages/core":
+"tinaf@npm:^0.0.8":
+  version: 0.0.8
+  resolution: "tinaf@npm:0.0.8"
+  dependencies:
+    rxjs: "npm:^7.8.1"
+  checksum: 10c0/682639e98d425472c3a57ea817f0cf6de92b13a980312beee5b2ccdcf7b47c4687624331908c2a2b9cecf4877852dc8e49e5842b54bf65c01d99e6e02e7d35bb
+  languageName: node
+  linkType: hard
+
+"tinaf@workspace:*, tinaf@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "tinaf@workspace:packages/core"
   dependencies:
