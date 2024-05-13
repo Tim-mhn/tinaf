@@ -1,0 +1,27 @@
+{
+  "name": "tinaf-starter",
+  "version": "1.0.0",
+  "description": "Demo starter app for tinaf",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tinaf": "^0.0.8"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.0.10"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "yarn": "4.1.1"
+  }
+}
