@@ -45,6 +45,13 @@ function init(targetDir: string = 'tinaf-start-app') {
     write(file);
   }
 
+  try {
+    fs.rmSync(path.join(cwd, 'package-lock.json'));
+  } catch (err) {}
+  try {
+    fs.rmSync(path.join(cwd, 'yarn.lock'));
+  } catch (err) {}
+
   fs.rmSync(path.join(root, 'package.template.json'));
 }
 

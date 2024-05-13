@@ -1,9 +1,13 @@
 {
   "name": "create-tinaf",
-  "version": "0.0.5",
-  "description": "",
+  "version": "0.0.8",
+  "description": "This is a starter template for creating a Tinaf app with Vite.",
   "main": "dist/index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tim-mhn/tinaf/tree/main/packages/create-tinaf"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
@@ -15,8 +19,11 @@
     "demo",
     "index.js"
   ],
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "Front-end library",
+    "Template app"
+  ],
+  "author": "Tim Meehan",
   "license": "ISC",
   "devDependencies": {
     "@types/prompts": "^2",
