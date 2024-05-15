@@ -1,6 +1,6 @@
 {
   "name": "tinaf",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "type": "module",
   "types": "index.d.ts",
@@ -27,7 +27,7 @@
     },
     "./router": {
       "import": "./dist/router.js",
-      "types": "./dist/src/router/router.exports.d.ts"
+      "types": "./dist/src/router/index.d.ts"
     }
   },
   "scripts": {

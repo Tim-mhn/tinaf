@@ -2,7 +2,7 @@ import type { Product } from 'src/models/product';
 import { component } from 'tinaf/component';
 import { div, input, span } from 'tinaf/dom';
 import { inputReactive } from 'tinaf/reactive';
-import { PRODUCTS } from './products.mock';
+import { PRODUCTS } from '../data/products.mock';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 export const SearchBar = component<{

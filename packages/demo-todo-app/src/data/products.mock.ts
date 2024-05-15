@@ -268,3 +268,9 @@ export const PRODUCTS: Product[] = [
     },
   },
 ] as const;
+
+export function getProduct(productId: string) {
+  const p = PRODUCTS.find((p) => p.id === Number.parseInt(productId));
+  if (!p) throw new Error(`product ${productId} not found`);
+  return p;
+}

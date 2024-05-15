@@ -1,6 +1,6 @@
 import { div } from 'tinaf/dom';
 import { SearchBar } from '../Header/SearchBar';
-import { PRODUCTS } from '../Header/products.mock';
+import { PRODUCTS } from '../data/products.mock';
 import { ProductList } from '../ProductList/ProductList';
 import type { Product } from '../models/product';
 import { component } from 'tinaf/component';

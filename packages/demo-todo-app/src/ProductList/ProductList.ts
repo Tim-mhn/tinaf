@@ -39,11 +39,13 @@ export const ProductList = component<{ products: Product[] }>(
   ({ products }) => {
     const router = injectRouter();
 
-    const goToProductPage = () => router.navigate('product');
+    const goToProductPage = (p: Product) => router.navigate(`/product/${p.id}`);
+
     return ul(
       forLoop(
         products,
-        (product) => ProductCard({ product, onClick: goToProductPage }),
+        (product) =>
+          ProductCard({ product, onClick: () => goToProductPage(product) }),
         (p) => p.id
       )
     ).addClass(

@@ -13,7 +13,7 @@ export const RouterView = component(() => {
   const switchComponentBasedOnRoute = buildSwitchComponent(
     router.route,
     (newRoute) => {
-      const pathComponent = router.getComponentForPath(newRoute.pathname);
+      const pathComponent = router.getComponentForPath(newRoute.path);
 
       const res = pathComponent?.() || null;
 

@@ -1,11 +1,7 @@
 import { component, forLoop, type VComponent } from 'tinaf/component';
 import { button, div } from 'tinaf/dom';
 import { Header } from './Header/Header';
-import { reactiveList } from 'tinaf/reactive';
 
-import { ProductList } from './ProductList/ProductList';
-import { PRODUCTS } from './Header/products.mock';
-import type { Product } from './models/product';
 import { RouterView, injectRouter } from 'tinaf/router';
 
 const MainContainer = component(({ children }) => {
