@@ -2,19 +2,24 @@ import { component, forLoop, type VComponent } from 'tinaf/component';
 import { button, div } from 'tinaf/dom';
 import { Header } from './Header/Header';
 
-import { RouterView, injectRouter } from 'tinaf/router';
+import { RouterView } from 'tinaf/router';
+import { Link } from './ui/Link';
 
 const MainContainer = component(({ children }) => {
+  console.log('Main container');
   return div(...children).addClass('p-8 gap-8 flex flex-col ');
 });
 export const App: () => VComponent = component(() => {
-  const router = injectRouter();
-
   return div(
     Header(),
 
     MainContainer({
       children: [RouterView()],
-    })
+    }),
+
+    div(
+      Link({ to: '/product/1', children: ['To product'] }),
+      Link({ to: '/', children: ['To home'] })
+    ).addClass('flex gap-2')
   ).addClass('flex flex-col w-screen h-screen text-slate-800');
 });

@@ -1,3 +1,4 @@
+import type { AddClassesArgs } from 'src/dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
 import { isForLoopComponent } from '../render';
 import { type MaybeArray } from '../utils/array';
@@ -35,14 +36,23 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
     return params;
   }
 
+  private classes?: AddClassesArgs;
+  addClass(newClass: AddClassesArgs) {
+    console.log('added class: ', newClass);
+    this.classes = newClass;
+    return this;
+  }
+
   init(parent: WithHtml) {
     this.parent = parent;
     this.child = this.renderFn(...this.renderFnParamsWithChildren);
+
     if (isForLoopComponent(this.child))
       throw new Error('for loop component not supported');
 
     if (isVComponent(this.child)) {
-      (this.child as any as SimpleVComponent).init(this.parent);
+      this.child.init(this.parent);
+      this.child.addClass(this.classes);
     } else {
       this.html = this.child;
     }
@@ -101,12 +111,22 @@ type ComponentProps = {
   children?: never;
 };
 
-// const c = component<{ onAddItem: () => void }>(({ onAddItem }) => {
-//   return div('hello');
-// });
-
-// type t = RenderFnParams<{ hello: string }>;
-
-// c({
-//   onAddItem: () => {},
-// });
+/***
+ * cont Container = component(() => {
+ *
+ *    return div('hello container')
+ * }
+ *
+ *
+ *
+ * cont App = component(() => {
+ *
+ *    return Container({ classes: 'w-fit h-fit'})
+ * })
+ *
+ *
+ * const App = component(() => {
+ *
+ *    return Container().addClass('w-fit h-fit')
+ * })
+ */

@@ -56,8 +56,8 @@ export class VDomComponent<T extends TagName> implements VComponent {
     return getReactiveElements(this.children);
   }
 
-  addClass(newClasses: AddClassesArgs) {
-    this.classes = newClasses;
+  addClass(newClasses?: AddClassesArgs) {
+    if (newClasses) this.classes = newClasses;
     return this;
   }
 

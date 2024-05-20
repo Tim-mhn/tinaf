@@ -2,6 +2,7 @@ import { isReactive, toValue, type ReactiveValue } from '../reactive';
 import type { VComponent, WithHtml } from './component';
 import { distinctUntilChanged } from 'rxjs';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
+import type { AddClassesArgs } from 'src/dom/create-dom-element';
 
 class SwitchComponent<T> implements VComponent {
   constructor(
@@ -35,6 +36,7 @@ class SwitchComponent<T> implements VComponent {
 
     if (component) {
       component.init(parent);
+      component.addClass(this.classes);
     } else {
       this._warnEmptyComponentReturnedBySwitchFn();
     }
@@ -67,6 +69,12 @@ class SwitchComponent<T> implements VComponent {
           parent,
         });
       });
+  }
+
+  private classes?: AddClassesArgs;
+  addClass(args: AddClassesArgs): VComponent {
+    this.classes = args;
+    return this;
   }
 }
 

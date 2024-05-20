@@ -32,8 +32,9 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "tsc --noEmit && vite build",
-    "build:watch": "vite build --watch"
+    "build": "y run typecheck && vite build",
+    "build:watch": "vite build --watch",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist",

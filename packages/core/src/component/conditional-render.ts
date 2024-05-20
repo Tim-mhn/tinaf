@@ -1,3 +1,4 @@
+import type { AddClassesArgs } from 'src/dom/create-dom-element';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
 import type { MaybeArray } from '../utils/array';
 import type { VComponent, WithHtml } from './component';
@@ -45,6 +46,12 @@ class ConditionallyRenderedComponent implements VComponent {
     else if (this.fallback) this.fallback.init(parent);
   }
 
+  classes?: AddClassesArgs;
+  addClass(args: AddClassesArgs) {
+    this.classes = args;
+    return this;
+  }
+
   init(parent: WithHtml) {
     if (!isReactive(this.condition)) return;
 
@@ -61,6 +68,11 @@ class ConditionallyRenderedComponent implements VComponent {
 
       this._initChild(parent);
     });
+
+    if (!this.classes) return;
+
+    this.cmp.addClass(this.classes);
+    this.fallback?.addClass?.(this.classes);
   }
 
   else(fallback: VComponent) {

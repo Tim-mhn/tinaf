@@ -5,6 +5,7 @@ import { toArray, type MaybeArray } from '../utils/array';
 import type { VComponent, WithHtml } from './component';
 import { isVComponent } from './is-component';
 import { SimpleVComponent } from './v-component';
+import type { AddClassesArgs } from 'src/dom/create-dom-element';
 
 class ForLoopComponent<T> implements VComponent {
   constructor(
@@ -77,6 +78,11 @@ class ForLoopComponent<T> implements VComponent {
       console.log(this);
       throw new Error('error in renderOnce');
     }
+  }
+
+  addClass(args: AddClassesArgs): VComponent {
+    console.warn('[TINAF] addClass has no effect in a forLoop component');
+    return this;
   }
 
   private parent!: WithHtml;

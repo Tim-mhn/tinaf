@@ -7,3 +7,9 @@ export const injectRouter = () => {
   const router = tinafApp.get<Router>(ROUTER_PROVIDER_KEY);
   return router;
 };
+
+export const injectRoute = () => {
+  const router = injectRouter();
+
+  return router.route;
+};
