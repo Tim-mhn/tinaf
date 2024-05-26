@@ -201,6 +201,10 @@ const Example = component(() => {
 
 ```
 
+## Routing 
+
+See more info [here](https://github.com/Tim-mhn/tinaf/blob/main/docs/routing.md)
+
 ## Inspirations
 
 - <b>React</b> with JSX, even though this is just JS/TS and not JSX/TSX
