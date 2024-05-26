@@ -1,6 +1,6 @@
 {
   "name": "tinaf",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "type": "module",
   "types": "index.d.ts",
@@ -32,7 +32,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "y run typecheck && vite build",
+    "build": "yarn run typecheck && vite build",
     "build:watch": "vite build --watch",
     "typecheck": "tsc --noEmit"
   },
