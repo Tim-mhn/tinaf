@@ -7,7 +7,7 @@ Tinaf uses 2 main objects for routing: `Router` and `RouterView`.
 
 ## Basics
 
-### 1. Create routes
+### 1. Define the routes
 
 ```
 
@@ -30,7 +30,7 @@ const Bar = component(() => "Bar")
 }]
 ```
 
-### 2. Create the router with the routes
+### 2. Create the router 
 
 ```
 import { createRouter } from 'tinaf/router';
