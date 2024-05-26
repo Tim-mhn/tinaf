@@ -2,8 +2,8 @@
 
 Tinaf uses 2 main objects for routing: `Router` and `RouterView`.
 
-`Router` handles the client-side navigation
-`RouterView` tells the router where to render the components
+- `Router` handles the client-side navigation
+- `RouterView` tells the router where to render the components
 
 ## Basics
 
