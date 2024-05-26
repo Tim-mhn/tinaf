@@ -1,7 +1,8 @@
 {
   "cSpell.words": [
     "initialising",
-    "Renderable"
+    "Renderable",
+    "Tinaf"
   ],
   // "tailwindCSS.experimental.classRegex": ["tw`([^`]*)"],
   "tailwindCSS.experimental.classRegex": ["class: '(.*)"],

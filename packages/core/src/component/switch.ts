@@ -1,16 +1,21 @@
 import { isReactive, toValue, type ReactiveValue } from '../reactive';
 import type { VComponent, WithHtml } from './component';
-import { distinctUntilChanged } from 'rxjs';
+import { distinctUntilChanged, map, skip, startWith, tap } from 'rxjs';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
-import type { AddClassesArgs } from 'src/dom/create-dom-element';
+import type { AddClassesArgs } from '../dom/create-dom-element';
+import { logger } from '../common';
 
 class SwitchComponent<T> implements VComponent {
   constructor(
     private reactiveValue: ReactiveValue<T>,
-    private switchFn: (value: T) => VComponent | null
+    private switchFn: (value: T) => VComponent | null,
+    private comparisonFn?: (a: T, b: T) => boolean,
+    private onDestroy?: () => void
   ) {}
 
   readonly __type = 'V_COMPONENT';
+
+  readonly __subtype = 'SWITCH_COMPONENT';
   private _html: ReturnType<VComponent['renderOnce']> = [];
 
   get html() {
@@ -46,7 +51,11 @@ class SwitchComponent<T> implements VComponent {
     if (!isReactive(this.reactiveValue)) return;
 
     this.reactiveValue.valueChanges$
-      .pipe(distinctUntilChanged())
+      .pipe(
+        startWith(this.reactiveValue.value),
+        distinctUntilChanged(this.comparisonFn),
+        skip(1)
+      )
       .subscribe((newValue) => {
         const newComponent = this.switchFn(newValue);
         this._currentComponent?.destroy?.();
@@ -76,11 +85,22 @@ class SwitchComponent<T> implements VComponent {
     this.classes = args;
     return this;
   }
+
+  destroy() {
+    this.onDestroy?.();
+  }
 }
 
 export function buildSwitchComponent<T>(
   reactiveValue: ReactiveValue<T>,
-  switchFn: (value: T) => VComponent | null
+  switchFn: (value: T) => VComponent | null,
+  {
+    comparisonFn,
+    onDestroy,
+  }: {
+    comparisonFn?: (a: T, b: T) => boolean;
+    onDestroy?: () => void;
+  } = {}
 ): VComponent {
-  return new SwitchComponent(reactiveValue, switchFn);
+  return new SwitchComponent(reactiveValue, switchFn, comparisonFn, onDestroy);
 }

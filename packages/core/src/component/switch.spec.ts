@@ -12,6 +12,7 @@ describe('switchComponent', () => {
       renderOnce: vi.fn(),
       __type: 'V_COMPONENT',
       html: [],
+      addClass: vi.fn(),
       destroy: vi.fn(),
     };
 
@@ -20,6 +21,8 @@ describe('switchComponent', () => {
       renderOnce: vi.fn(),
       __type: 'V_COMPONENT',
       html: [],
+      addClass: vi.fn(),
+
       destroy: vi.fn(),
     };
 
@@ -79,6 +82,7 @@ describe('switchComponent', () => {
         __type: 'V_COMPONENT',
         html: [],
         destroy: vi.fn(),
+        addClass: vi.fn(),
       };
 
       const B: VComponent = {
@@ -87,6 +91,7 @@ describe('switchComponent', () => {
         __type: 'V_COMPONENT',
         html: [],
         destroy: vi.fn(),
+        addClass: vi.fn(),
       };
 
       const C: VComponent = {
@@ -95,6 +100,7 @@ describe('switchComponent', () => {
         __type: 'V_COMPONENT',
         html: [],
         destroy: vi.fn(),
+        addClass: vi.fn(),
       };
 
       // NB: this is to easily identify the component when debugging the test

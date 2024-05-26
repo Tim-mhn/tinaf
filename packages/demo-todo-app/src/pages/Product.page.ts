@@ -16,7 +16,6 @@ export const ProductPage = component(() => {
 
   const { title, description, image, price, rating } = toReactiveProps(product);
 
-  console.log({ route: router.route.value });
   return div(
     div(title).addClass('text-4xl text-semibold'),
     div(description).addClass('text-md font-light'),

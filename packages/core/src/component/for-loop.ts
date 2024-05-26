@@ -75,7 +75,6 @@ class ForLoopComponent<T> implements VComponent {
       return newHtml;
     } catch (err) {
       console.error(err);
-      console.log(this);
       throw new Error('error in renderOnce');
     }
   }
@@ -108,40 +107,38 @@ class ForLoopComponent<T> implements VComponent {
     this.parent = parent;
     if (!isReactive(this.items)) return;
 
-    const updateUiSub = watchList(this.items)
-      .pipe(tap((c) => console.log(c)))
-      .subscribe((changes) => {
-        const childrenToRemove = changes
-          .filter(({ change }) => change === 'removed')
-          .map(({ index, value }) => {
-            console.debug('Removing child ', value);
+    const updateUiSub = watchList(this.items).subscribe((changes) => {
+      const childrenToRemove = changes
+        .filter(({ change }) => change === 'removed')
+        .map(({ index, value }) => {
+          console.debug('Removing child ', value);
 
-            this._destroyVNode(value);
+          this._destroyVNode(value);
 
-            return parent.html.childNodes[index];
-          });
-
-        childrenToRemove.forEach((child) => parent.html.removeChild(child));
-
-        const childrenToAdd = changes
-          .filter(({ change }) => change === 'added')
-          .sort((a, b) => b.index - a.index);
-
-        childrenToAdd.forEach(({ value, index: childIndex }) => {
-          const { html, vnode, key } = this._renderChildHtmlAndInit(
-            value,
-            this.parent
-          );
-
-          console.debug('Adding child ', value);
-          toArray(html).forEach((childHtml, index) =>
-            parent.html.insertBefore(
-              childHtml,
-              [...parent.html.childNodes][childIndex + index + 1]
-            )
-          );
+          return parent.html.childNodes[index];
         });
+
+      childrenToRemove.forEach((child) => parent.html.removeChild(child));
+
+      const childrenToAdd = changes
+        .filter(({ change }) => change === 'added')
+        .sort((a, b) => b.index - a.index);
+
+      childrenToAdd.forEach(({ value, index: childIndex }) => {
+        const { html, vnode, key } = this._renderChildHtmlAndInit(
+          value,
+          this.parent
+        );
+
+        console.debug('Adding child ', value);
+        toArray(html).forEach((childHtml, index) =>
+          parent.html.insertBefore(
+            childHtml,
+            [...parent.html.childNodes][childIndex + index + 1]
+          )
+        );
       });
+    });
 
     this.sub.add(updateUiSub);
   }

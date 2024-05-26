@@ -24,11 +24,7 @@ export const SearchBar = component<{
       );
 
       updateProducts(newProducts);
-
-      console.log('updating new products with input: ', newInput);
     });
-
-  searchInput.valueChanges$.subscribe(console.log);
 
   return div(
     input(searchInput, { placeholder: 'What are you looking for ?' }).addClass(

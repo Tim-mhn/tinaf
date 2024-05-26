@@ -130,6 +130,16 @@ export class VDomComponent<T extends TagName> implements VComponent {
     if (this.styles) addStylesToElement(this.html, this.styles);
     return this.html;
   }
+
+  // FIXME: destroy all children of a component is a general workflow
+  // it should be re-implemented by all types of components!
+  destroy() {
+    this.children.forEach((child) => {
+      if (isVComponent(child)) {
+        child.destroy?.();
+      }
+    });
+  }
   readonly __type = 'V_COMPONENT';
 }
 const _createDomElement = <T extends TagName>(

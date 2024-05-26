@@ -1,8 +1,8 @@
 # Todos
 
-- Classes: Improve the DX to pass classes to a component. classes could be a special keyword like children that's automatically passed to the first DOM child
+- Classes: Improve the DX to pass classes to a component. classes could be a special keyword like children that's automatically passed to the first DOM child ✔
 
-- Component: add option to pass string children that are simply rendered as text nodes
+- Component: add option to pass string children that are simply rendered as text nodes ✔
 
 - Lifecycle hooks: Implement some onMounted / onDestroy lifecycle hooks to better control subscriptions and avoid memory leaks
 

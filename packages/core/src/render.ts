@@ -4,6 +4,7 @@ import { type PrimitiveType, isPrimitive } from './utils/primitive';
 import { SimpleVComponent } from './component/v-component';
 import { type VComponent } from './component/component';
 import { type MaybeArray, toArray } from './utils/array';
+import { ROUTER_VIEW_DEPTH_KEY } from './router/RouterView';
 
 export type RenderFn = () =>
   | SimpleComponent
@@ -127,6 +128,9 @@ declare global {
 export class TinafApp {
   constructor(private app: () => VComponent) {}
 
+  // TODO: should we isolate the providing logic into its own class ?
+  // like a AppProviders ?
+  // motivation: providing dependencies has nothing to do with DOM rendering
   private PROVIDERS: Map<string | symbol, any> = new Map();
 
   provide<T>(key: string | symbol, value: T) {
@@ -134,8 +138,8 @@ export class TinafApp {
     return this;
   }
 
-  get<T>(key: string | symbol): T {
-    return this.PROVIDERS.get(key);
+  get<T>(key: string | symbol, defaultValue?: T): T {
+    return this.PROVIDERS.get(key) || defaultValue;
   }
 
   render(id: string) {

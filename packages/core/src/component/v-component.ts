@@ -1,4 +1,4 @@
-import type { AddClassesArgs } from 'src/dom/create-dom-element';
+import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
 import { isForLoopComponent } from '../render';
 import { type MaybeArray } from '../utils/array';
@@ -38,7 +38,6 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
 
   private classes?: AddClassesArgs;
   addClass(newClass: AddClassesArgs) {
-    console.log('added class: ', newClass);
     this.classes = newClass;
     return this;
   }
@@ -69,11 +68,10 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   }
 
   destroy(): void {
-    console.log('Destroying component');
-    console.log(this.props);
     if (isVComponent(this.child)) {
       this.child.destroy?.();
     }
+    console.groupEnd();
   }
 }
 
@@ -88,17 +86,17 @@ export function component<Props extends ComponentProps = NoProps>(
 
 // This is like RenderFnParams but children are optional
 type RenderFnInputParams<Props extends ComponentProps> = Props extends NoProps
-  ? [] | [{ children: VComponent[] }]
+  ? [] | [{ children: (VComponent | string)[] | string }]
   : [_RenderFnParams<Props>];
 
 type NoProps = Record<string, never>;
 
 type RenderFnParams<Props extends ComponentProps> = Props extends NoProps
-  ? [{ children: VComponent[] }]
+  ? [{ children: (VComponent | string)[] | string }]
   : [_RenderFnParams<Props>];
 
 type _RenderFnParams<Props extends ComponentProps> = {
-  children?: VComponent[];
+  children?: (VComponent | string)[] | string;
 } & {
   [K in keyof Omit<Props, 'children'>]: Props[K] extends Function
     ? Props[K]
