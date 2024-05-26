@@ -28,21 +28,6 @@ const Bar = component(() => "Bar")
     path: '/',
     component: Home
 }]
-
-// create a router and provide it to the App
-
-const router = createRouter(routes)
-
-const App = component(() => {
-    return div(
-        div('Header'),
-        RouterView(),
-        div('Footer')
-    )
-})
-const app = createApp(App)
-
-app.provide(ROUTER_PROVIDER_KEY, router)
 ```
 
 ### 2. Provide your router with the routes you created
