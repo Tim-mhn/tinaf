@@ -30,7 +30,7 @@ const Bar = component(() => "Bar")
 }]
 ```
 
-### 2. Provide your router with the routes you created
+### 2. Create the router with the routes
 
 ```
 import { createRouter } from 'tinaf/router';
