@@ -1,9 +1,13 @@
 import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
-import { isForLoopComponent } from '../render';
+import { isForLoopComponent } from '../render/render';
 import { type MaybeArray } from '../utils/array';
 import { type VComponent, type WithHtml } from './component';
 import { isVComponent } from './is-component';
+import {
+  popLastOnDestroyCallback,
+  popLastOnInitCallback,
+} from './lifecycle-hooks';
 
 export class SimpleVComponent<Props extends ComponentProps = NoProps>
   implements VComponent
@@ -42,12 +46,13 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
     return this;
   }
 
+  private onDestroyCallback: () => void = () => undefined;
+
   init(parent: WithHtml) {
     this.parent = parent;
     this.child = this.renderFn(...this.renderFnParamsWithChildren);
 
-    if (isForLoopComponent(this.child))
-      throw new Error('for loop component not supported');
+    this._registerOnDestroyCallback();
 
     if (isVComponent(this.child)) {
       this.child.init(this.parent);
@@ -55,6 +60,18 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
     } else {
       this.html = this.child;
     }
+
+    this._executeOnInitCallback();
+  }
+
+  private _executeOnInitCallback() {
+    const lastOnInitCallback = popLastOnInitCallback();
+    if (lastOnInitCallback) lastOnInitCallback();
+  }
+
+  private _registerOnDestroyCallback() {
+    const lastOnDestroyCallback = popLastOnDestroyCallback();
+    if (lastOnDestroyCallback) this.onDestroyCallback = lastOnDestroyCallback;
   }
 
   renderOnce(): MaybeArray<HTMLElement | Comment> {
@@ -68,6 +85,8 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   }
 
   destroy(): void {
+    this.onDestroyCallback();
+
     if (isVComponent(this.child)) {
       this.child.destroy?.();
     }

@@ -5,7 +5,7 @@ import { toArray, type MaybeArray } from '../utils/array';
 import type { VComponent, WithHtml } from './component';
 import { isVComponent } from './is-component';
 import { SimpleVComponent } from './v-component';
-import type { AddClassesArgs } from 'src/dom/create-dom-element';
+import type { AddClassesArgs } from '../dom/create-dom-element';
 
 class ForLoopComponent<T> implements VComponent {
   constructor(

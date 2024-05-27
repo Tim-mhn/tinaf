@@ -1,10 +1,10 @@
-import { type ReactiveValue } from './reactive/reactive';
-import { type MaybeReactive } from './reactive/types';
-import { type PrimitiveType, isPrimitive } from './utils/primitive';
-import { SimpleVComponent } from './component/v-component';
-import { type VComponent } from './component/component';
-import { type MaybeArray, toArray } from './utils/array';
-import { ROUTER_VIEW_DEPTH_KEY } from './router/RouterView';
+import { type ReactiveValue } from '../reactive/reactive';
+import { type MaybeReactive } from '../reactive/types';
+import { type PrimitiveType, isPrimitive } from '../utils/primitive';
+import { type VComponent } from '../component/component';
+import { type MaybeArray, toArray } from '../utils/array';
+import type { IDocument, IWindow } from './window';
+import { TinafApp } from './app';
 
 export type RenderFn = () =>
   | SimpleComponent
@@ -59,42 +59,44 @@ export function hasSources(
   return !!sources && sources.length > 0;
 }
 
+// THIS SEEMS TO BE UNUSED LETS DELETE IT IF ITS THE CASE
 /**
  * Recursive function to return the HTML element (or placeholder comment) from a renderFn
  * This does not update the DOM or create any subscriptions
  * @param renderFn
  * @returns
  */
-export function safeRenderHtml(renderFn: RenderFn): HTMLElement | Comment {
-  const htmlComponentOrComment = safeRenderHtmlOrComponent(renderFn);
+// export function safeRenderHtml(renderFn: RenderFn, doc : IDocument = document): HTMLElement | Comment {
+//   const htmlComponentOrComment = safeRenderHtmlOrComponent(renderFn, doc);
 
-  if (isHtmlOrComment(htmlComponentOrComment)) return htmlComponentOrComment;
+//   if (isHtmlOrComment(htmlComponentOrComment)) return htmlComponentOrComment;
 
-  return safeRenderHtml(htmlComponentOrComment.renderFn);
-}
+//   return safeRenderHtml(htmlComponentOrComment.renderFn, doc);
+// }
 
 /**
  * Returns a placeholder comment if the renderFn returns null (when using a show.when structure)
  * @param renderFn
  * @returns
  */
-export function safeRenderHtmlOrComponent(
-  renderFn: RenderFn
-): SimpleComponent | HTMLElement | Comment {
-  const node = renderFn();
+// export function safeRenderHtmlOrComponent(
+//   renderFn: RenderFn,
+//   doc: IDocument = document
+// ): SimpleComponent | HTMLElement | Comment {
+//   const node = renderFn();
 
-  if (!node) return buildPlaceholderComment();
+//   if (!node) return buildPlaceholderComment();
 
-  if (isPrimitive(node)) return document.createTextNode(node.toString());
+//   if (isPrimitive(node)) return doc.createTextNode(node.toString());
 
-  return node;
-}
+//   return node;
+// }
 
-function buildPlaceholderComment() {
-  const commentText = `placeholder--${crypto.randomUUID()}`;
-  const comment = document.createComment(commentText);
-  return comment;
-}
+// function buildPlaceholderComment(doc: IDocument = document) {
+//   const commentText = `placeholder--${crypto.randomUUID()}`;
+//   const comment = doc.createComment(commentText);
+//   return comment;
+// }
 
 export function render(
   component: VComponent,
@@ -125,34 +127,27 @@ declare global {
   }
 }
 
-export class TinafApp {
-  constructor(private app: () => VComponent) {}
-
-  // TODO: should we isolate the providing logic into its own class ?
-  // like a AppProviders ?
-  // motivation: providing dependencies has nothing to do with DOM rendering
-  private PROVIDERS: Map<string | symbol, any> = new Map();
-
-  provide<T>(key: string | symbol, value: T) {
-    this.PROVIDERS.set(key, value);
-    return this;
-  }
-
-  get<T>(key: string | symbol, defaultValue?: T): T {
-    return this.PROVIDERS.get(key) || defaultValue;
-  }
-
-  render(id: string) {
-    window.__TINAF__ = this;
-
-    window.addEventListener('load', () => {
-      const container = document.getElementById(id) as HTMLElement;
-
-      render(this.app(), container);
-    });
-  }
+export function createApp(
+  app: () => VComponent,
+  _window?: IWindow,
+  _doc?: IDocument
+) {
+  const win = _window || buildDomWindow();
+  const doc = _doc || buildDomDocument();
+  return new TinafApp(app, win, doc);
 }
 
-export function createApp(app: () => VComponent) {
-  return new TinafApp(app);
-}
+export const buildDomDocument = (): IDocument => {
+  return document;
+};
+
+export const buildDomWindow = (): IWindow => {
+  return {
+    attachApp(app: TinafApp) {
+      window.__TINAF__ = app;
+    },
+    onLoad(callback: () => void) {
+      window.addEventListener('load', callback);
+    },
+  };
+};

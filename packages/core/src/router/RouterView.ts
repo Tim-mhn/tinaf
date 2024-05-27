@@ -2,7 +2,7 @@ import { component, buildSwitchComponent } from '../component';
 import { injectApp, logger } from '../common';
 import { ROUTER_PROVIDER_KEY } from './provider.key';
 import type { Router } from './router';
-import { computed, toValue } from '../reactive';
+import { computed } from '../reactive';
 
 export const ROUTER_VIEW_DEPTH_KEY = Symbol('router-view-depth');
 
@@ -13,7 +13,6 @@ export const RouterView = component(() => {
   const router = tinafApp.get<Router>(ROUTER_PROVIDER_KEY);
 
   router.init(() => {
-    console.log('providing router view depth 0');
     tinafApp.provide(ROUTER_VIEW_DEPTH_KEY, 0);
   });
 
@@ -31,7 +30,6 @@ export const RouterView = component(() => {
   }, [router.route]);
 
   const decrementDepth = () => {
-    console.log('decrementing RouterView depth');
     const currentDepth = tinafApp.get<number>(ROUTER_VIEW_DEPTH_KEY, 0);
     tinafApp.provide(ROUTER_VIEW_DEPTH_KEY, currentDepth - 1);
   };

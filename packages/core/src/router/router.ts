@@ -1,4 +1,4 @@
-import type { VComponent } from 'src/component';
+import type { VComponent } from '../component';
 import { Reactive, reactive } from '../reactive';
 import type { Maybe } from '../utils/types';
 

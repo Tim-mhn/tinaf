@@ -8,7 +8,7 @@
 
 - Routing: add the option to pass a route object (and not just a string)
 
-- Routing: Nested RouterView
+- Routing: Nested RouterView ✔
 
 /dashboard/orders
 

@@ -1,4 +1,4 @@
-import type { AddClassesArgs } from 'src/dom/create-dom-element';
+import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
 import type { MaybeArray } from '../utils/array';
 import type { VComponent, WithHtml } from './component';

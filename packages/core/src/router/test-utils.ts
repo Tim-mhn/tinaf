@@ -1,4 +1,4 @@
-import { fromPartial } from 'src/test-utils/from-partial';
+import { fromPartial } from '../test-utils/from-partial';
 import {
   Router,
   type CurrentLocation,
@@ -6,7 +6,6 @@ import {
   type RouterConfig,
 } from './router';
 import { vi } from 'vitest';
-import { from } from 'rxjs';
 export class MockRouteChangeHandler implements RouteChangeHandler {
   private callback: () => void = () => undefined;
 

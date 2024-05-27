@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: [
-        resolve(__dirname, 'src/render.ts'),
+        resolve(__dirname, 'src/render/render.exports.ts'),
         resolve(__dirname, 'src/dom/dom.exports.ts'),
         resolve(__dirname, 'src/component/component.exports.ts'),
         resolve(__dirname, 'src/reactive/reactive.exports.ts'),
