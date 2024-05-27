@@ -13,7 +13,8 @@ export const provideFakeTinafApp = (fakeApp: TinafApp) => {
 
 export const injectFakeTinafApp = () => fakeTinafApp;
 
-const createFakeApp = () => createApp(() => '' as any, {}, {});
+// FIXME: use one version of fakeApp
+const createFakeApp = () => createApp(() => '' as any, {} as any, {} as any);
 
 export const setupFakeApp = ({ router }: { router: Router }) => {
   const fakeApp = createFakeApp();

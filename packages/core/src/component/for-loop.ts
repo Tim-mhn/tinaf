@@ -111,8 +111,6 @@ class ForLoopComponent<T> implements VComponent {
       const childrenToRemove = changes
         .filter(({ change }) => change === 'removed')
         .map(({ index, value }) => {
-          console.debug('Removing child ', value);
-
           this._destroyVNode(value);
 
           return parent.html.childNodes[index];
@@ -130,7 +128,6 @@ class ForLoopComponent<T> implements VComponent {
           this.parent
         );
 
-        console.debug('Adding child ', value);
         toArray(html).forEach((childHtml, index) =>
           parent.html.insertBefore(
             childHtml,

@@ -1,5 +1,5 @@
 import type { Product } from 'src/models/product';
-import { component } from 'tinaf/component';
+import { component, onDestroy } from 'tinaf/component';
 import { div, input, span } from 'tinaf/dom';
 import { inputReactive } from 'tinaf/reactive';
 import { PRODUCTS } from '../data/products.mock';
@@ -10,7 +10,8 @@ export const SearchBar = component<{
 }>(({ updateProducts }) => {
   const searchInput = inputReactive('');
 
-  searchInput.valueChanges$
+  // TODO: create an effect hook to avoid having to manually call .unsubscribe
+  const sub = searchInput.valueChanges$
     .pipe(
       map((s) => s.toLowerCase()),
       debounceTime(300),
@@ -25,6 +26,10 @@ export const SearchBar = component<{
 
       updateProducts(newProducts);
     });
+
+  onDestroy(() => {
+    sub.unsubscribe();
+  });
 
   return div(
     input(searchInput, { placeholder: 'What are you looking for ?' }).addClass(
