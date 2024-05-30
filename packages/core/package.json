@@ -32,6 +32,7 @@
   },
   "scripts": {
     "test": "vitest",
+    "test:ci": "vitest run",
     "build": "yarn run typecheck && vite build",
     "build:watch": "vite build --watch",
     "typecheck": "tsc --noEmit"
