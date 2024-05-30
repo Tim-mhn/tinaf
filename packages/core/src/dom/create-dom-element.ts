@@ -1,6 +1,6 @@
 import { objectEntries, objectKeys } from '../utils/object';
-import { toValue } from '../reactive/toValue';
-import { type MaybeReactive } from '../reactive/types';
+import { isReactive, toValue } from '../reactive/toValue';
+import { type MaybeReactive, type MaybeReactiveProps } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
 import { type MaybeArray, toArray } from '../utils/array';
 import { addClassToElement } from './classes';
@@ -10,6 +10,10 @@ import { SimpleVComponent } from '../component/v-component';
 import type { VComponent, WithHtml } from '../component/component';
 import { isVComponent } from '../component/is-component';
 import { watchAllSources } from '../reactive/watch';
+import type { IDocument } from '../render/window';
+import { buildDomDocument } from '../render/render';
+import { fromPartial } from 'src/test-utils/from-partial';
+import { Subscription } from 'rxjs';
 
 type TagName = keyof HTMLElementTagNameMap;
 
@@ -39,6 +43,7 @@ type CreateDomElementProps<T extends TagName> = {
 
 export class VDomComponent<T extends TagName> implements VComponent {
   constructor(
+    private _doc: IDocument,
     private type: T,
     private children: (VComponent | MaybeReactive<PrimitiveType>)[],
     private classes?: AddClassesArgs,
@@ -71,22 +76,37 @@ export class VDomComponent<T extends TagName> implements VComponent {
     return this;
   }
 
-  private options: Partial<HTMLElementTagNameMap[T]> = {};
+  private options: Partial<MaybeReactiveProps<HTMLElementTagNameMap[T]>> = {};
 
-  withOptions(options: Partial<HTMLElementTagNameMap[T]>) {
+  withOptions(options: Partial<MaybeReactiveProps<HTMLElementTagNameMap[T]>>) {
     this.options = options;
     return this;
   }
 
   private _addOptionsToElement(element: HTMLElementTagNameMap[T]) {
     objectKeys(this.options).forEach((key) => {
-      const value = this.options[key];
-      if (value) element[key] = value;
+      const value = toValue(this.options[key]);
+      // FIXME: goddamn TS what do i need to do that:'|
+      if (value)
+        element[key as keyof HTMLElementTagNameMap[T]] =
+          value as HTMLElementTagNameMap[T][keyof HTMLElementTagNameMap[T]];
     });
   }
 
   init(parent: WithHtml) {
-    watchAllSources(this.reactiveChildren).subscribe(() => {
+    this._rerenderOnChanges(parent);
+
+    this.children.forEach((child) => {
+      if (isVComponent(child)) {
+        child.init(this);
+      }
+    });
+
+    this._updateOptionsReactively();
+  }
+
+  private _rerenderOnChanges(parent: WithHtml) {
+    const sub = watchAllSources(this.reactiveChildren).subscribe(() => {
       const index = [...parent.html.childNodes].findIndex(
         (n) => n === this.html
       );
@@ -94,22 +114,35 @@ export class VDomComponent<T extends TagName> implements VComponent {
       this._html = this.renderOnce();
       parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
     });
-    this.children.forEach((child) => {
-      if (isVComponent(child)) {
-        child.init(this);
-      }
+
+    this.sub.add(sub);
+  }
+
+  private sub = new Subscription();
+
+  private _updateOptionsReactively() {
+    const reactiveOptionsSub = new Subscription();
+
+    objectKeys(this.options).forEach((key) => {
+      const reactiveOption = this.options[key];
+
+      if (!isReactive(reactiveOption)) return;
+      const sub = reactiveOption.valueChanges$.subscribe((value) => {
+        const k = key as keyof HTMLElementTagNameMap[T];
+        this._html[k] =
+          value as HTMLElementTagNameMap[T][keyof HTMLElementTagNameMap[T]];
+      });
+
+      reactiveOptionsSub.add(sub);
     });
+
+    this.sub.add(reactiveOptionsSub);
   }
 
   renderOnce(): HTMLElementTagNameMap[T] {
-    this._html = document.createElement(this.type);
+    this._html = this._doc.createElement(this.type);
 
     this.html.setAttribute('x-id', crypto.randomUUID());
-    // console.count('renderOnce');
-    // console.group('Rendering VDomComponent');
-    // console.log(this.type);
-    // console.log({ children: this.children });
-    // console.groupEnd();
     this.children?.forEach((child) => {
       if (isVComponent(child)) {
         // NOTE: this function breaks state when rerendering a div parent with children with inner state !!
@@ -134,6 +167,7 @@ export class VDomComponent<T extends TagName> implements VComponent {
   // FIXME: destroy all children of a component is a general workflow
   // it should be re-implemented by all types of components!
   destroy() {
+    this.sub.unsubscribe();
     this.children.forEach((child) => {
       if (isVComponent(child)) {
         child.destroy?.();
@@ -143,21 +177,33 @@ export class VDomComponent<T extends TagName> implements VComponent {
   readonly __type = 'V_COMPONENT';
 }
 const _createDomElement = <T extends TagName>(
-  props: CreateDomElementProps<T>
+  props: CreateDomElementProps<T>,
+  injections: { doc: IDocument }
 ): VDomComponent<T> => {
   const { children, classes, type, handlers, styles } = props;
 
-  const vdom = new VDomComponent(type, children, classes, styles, handlers);
+  const vdom = new VDomComponent(
+    injections.doc,
+    type,
+    children,
+    classes,
+    styles,
+    handlers
+  );
 
   return vdom;
 };
 export const createDomElement =
-  <T extends TagName>(type: T) =>
+  <T extends TagName>(type: T, injections: { doc?: IDocument } = {}) =>
   (...children: (VComponent | MaybeReactive<PrimitiveType>)[]) => {
-    return _createDomElement({
-      type,
-      children,
-    });
+    const doc = injections?.doc || buildDomDocument();
+    return _createDomElement(
+      {
+        type,
+        children,
+      },
+      { doc }
+    );
   };
 
 export const addEventListenersToElement = (

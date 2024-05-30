@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
 import type { MaybeArray } from '../utils/array';
@@ -52,10 +53,12 @@ class ConditionallyRenderedComponent implements VComponent {
     return this;
   }
 
+  private subs = new Subscription();
+
   init(parent: WithHtml) {
     if (!isReactive(this.condition)) return;
 
-    this.condition.valueChanges$.subscribe(() => {
+    const sub = this.condition.valueChanges$.subscribe(() => {
       const oldNodes = this._html;
 
       const newNodes = this.renderOnce();
@@ -69,10 +72,18 @@ class ConditionallyRenderedComponent implements VComponent {
       this._initChild(parent);
     });
 
+    this.subs.add(sub);
+
     if (!this.classes) return;
 
     this.cmp.addClass(this.classes);
     this.fallback?.addClass?.(this.classes);
+  }
+
+  destroy(): void {
+    this.subs.unsubscribe();
+    this.cmp.destroy?.();
+    this.fallback?.destroy?.();
   }
 
   else(fallback: VComponent) {

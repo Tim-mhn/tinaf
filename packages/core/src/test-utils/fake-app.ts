@@ -2,9 +2,10 @@ import { TinafApp, createApp } from '../render';
 import { fromPartial } from './from-partial';
 import { ROUTER_PROVIDER_KEY, type Router } from '../router';
 import type { IDocument, IWindow } from 'src/render/window';
-import { buildMockHtmlElement } from './dom-element.mock';
+import { buildMockHtmlElement, createFakeElement } from './dom-element.mock';
 import { vi } from 'vitest';
 import type { VComponent } from 'src/component';
+import { FakeWindow } from './fake-window';
 
 let fakeTinafApp = fromPartial<TinafApp>({});
 export const provideFakeTinafApp = (fakeApp: TinafApp) => {
@@ -16,6 +17,14 @@ export const injectFakeTinafApp = () => fakeTinafApp;
 // FIXME: use one version of fakeApp
 const createFakeApp = () => createApp(() => '' as any, {} as any, {} as any);
 
+export const createMockDocument = (): IDocument => ({
+  getElementById: vi.fn(createFakeElement),
+  createComment: vi.fn(),
+  createTextNode: vi.fn(createFakeTextNode),
+  createElement: vi.fn(createFakeElement),
+});
+
+const createFakeTextNode = (): Text => ({});
 export const setupFakeApp = ({ router }: { router: Router }) => {
   const fakeApp = createFakeApp();
   fakeApp.provide(ROUTER_PROVIDER_KEY, router);
@@ -23,21 +32,19 @@ export const setupFakeApp = ({ router }: { router: Router }) => {
   return fakeApp;
 };
 
-export const setupFakeApp_v2 = (component: () => VComponent) => {
-  const fakeDocument: IDocument = {
-    getElementById: () => buildMockHtmlElement(),
-    createComment: vi.fn(),
-    createTextNode: vi.fn(),
-  };
+export const setupFakeApp_v2 = (
+  component: () => VComponent,
+  injections: { document: IDocument } = {
+    document: createMockDocument(),
+  }
+) => {
+  const fakeWindow = new FakeWindow();
 
-  const fakeWindow: IWindow = {
-    attachApp: vi.fn(),
-    onLoad: (callback) => callback(),
-  };
-
-  const app = new TinafApp(component, fakeWindow, fakeDocument);
+  const app = new TinafApp(component, fakeWindow, injections.document);
 
   app.render('root');
 
-  return app;
+  fakeWindow.load();
+
+  return { app, document: injections.document, fakeWindow };
 };

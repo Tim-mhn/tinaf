@@ -4,7 +4,7 @@
 
 - Component: add option to pass string children that are simply rendered as text nodes ✔
 
-- Lifecycle hooks: Implement some onMounted / onDestroy lifecycle hooks to better control subscriptions and avoid memory leaks
+- Lifecycle hooks: Implement some onMounted / onDestroy lifecycle hooks to better control subscriptions and avoid memory leaks ✔
 
 - Routing: add the option to pass a route object (and not just a string)
 
@@ -26,4 +26,4 @@
 
 - Routing: passing a string route that is not resolved should pass it as is in the <a> href attribute
 
-- Routing: avoid rerendering the components when route changes but it's the same route pattern.
+- Routing: avoid rerendering the components when route changes but it's the same route pattern. ✔

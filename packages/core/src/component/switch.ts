@@ -1,9 +1,8 @@
 import { isReactive, toValue, type ReactiveValue } from '../reactive';
 import type { VComponent, WithHtml } from './component';
-import { distinctUntilChanged, map, skip, startWith, tap } from 'rxjs';
+import { Subscription, distinctUntilChanged, skip, startWith, tap } from 'rxjs';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 import type { AddClassesArgs } from '../dom/create-dom-element';
-import { logger } from '../common';
 
 class SwitchComponent<T> implements VComponent {
   constructor(
@@ -35,6 +34,8 @@ class SwitchComponent<T> implements VComponent {
     );
   }
 
+  private sub = new Subscription();
+
   init(parent: WithHtml) {
     const value = toValue(this.reactiveValue);
     const component = this.switchFn(value);
@@ -50,34 +51,36 @@ class SwitchComponent<T> implements VComponent {
 
     if (!isReactive(this.reactiveValue)) return;
 
-    this.reactiveValue.valueChanges$
-      .pipe(
-        startWith(this.reactiveValue.value),
-        distinctUntilChanged(this.comparisonFn),
-        skip(1)
-      )
-      .subscribe((newValue) => {
-        const newComponent = this.switchFn(newValue);
-        this._currentComponent?.destroy?.();
+    this.sub.add(
+      this.reactiveValue.valueChanges$
+        .pipe(
+          startWith(this.reactiveValue.value),
+          distinctUntilChanged(this.comparisonFn),
+          skip(1)
+        )
+        .subscribe((newValue) => {
+          const newComponent = this.switchFn(newValue);
+          this._currentComponent?.destroy?.();
 
-        this._currentComponent = newComponent;
+          this._currentComponent = newComponent;
 
-        if (this._currentComponent) {
-          this._currentComponent.init(parent);
-        } else {
-          this._warnEmptyComponentReturnedBySwitchFn();
-        }
+          if (this._currentComponent) {
+            this._currentComponent.init(parent);
+          } else {
+            this._warnEmptyComponentReturnedBySwitchFn();
+          }
 
-        const oldNodes = this._html;
+          const oldNodes = this._html;
 
-        const newNodes = this.renderOnce();
+          const newNodes = this.renderOnce();
 
-        removeOldNodesAndRenderNewNodes({
-          oldNodes,
-          newNodes,
-          parent,
-        });
-      });
+          removeOldNodesAndRenderNewNodes({
+            oldNodes,
+            newNodes,
+            parent,
+          });
+        })
+    );
   }
 
   private classes?: AddClassesArgs;
@@ -87,6 +90,8 @@ class SwitchComponent<T> implements VComponent {
   }
 
   destroy() {
+    this.sub.unsubscribe();
+    this._currentComponent?.destroy?.();
     this.onDestroy?.();
   }
 }
