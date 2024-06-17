@@ -12,7 +12,6 @@ import { isVComponent } from '../component/is-component';
 import { watchAllSources } from '../reactive/watch';
 import type { IDocument } from '../render/window';
 import { buildDomDocument } from '../render/render';
-import { fromPartial } from 'src/test-utils/from-partial';
 import { Subscription } from 'rxjs';
 
 type TagName = keyof HTMLElementTagNameMap;
@@ -176,9 +175,11 @@ export class VDomComponent<T extends TagName> implements VComponent {
   }
   readonly __type = 'V_COMPONENT';
 }
-const _createDomElement = <T extends TagName>(
+export const _createDomElement = <T extends TagName>(
   props: CreateDomElementProps<T>,
-  injections: { doc: IDocument }
+  injections: { doc: IDocument } = {
+    doc: buildDomDocument(),
+  }
 ): VDomComponent<T> => {
   const { children, classes, type, handlers, styles } = props;
 

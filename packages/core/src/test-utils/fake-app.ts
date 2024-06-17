@@ -1,10 +1,10 @@
 import { TinafApp, createApp } from '../render';
 import { fromPartial } from './from-partial';
 import { ROUTER_PROVIDER_KEY, type Router } from '../router';
-import type { IDocument, IWindow } from 'src/render/window';
-import { buildMockHtmlElement, createFakeElement } from './dom-element.mock';
+import type { IDocument } from '../render/window';
+import { createFakeElement } from './dom-element.mock';
 import { vi } from 'vitest';
-import type { VComponent } from 'src/component';
+import type { VComponent } from '../component';
 import { FakeWindow } from './fake-window';
 
 let fakeTinafApp = fromPartial<TinafApp>({});

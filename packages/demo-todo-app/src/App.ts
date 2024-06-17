@@ -4,6 +4,7 @@ import { Header } from './Header/Header';
 
 import { RouterView } from 'tinaf/router';
 import { Link } from './ui/Link';
+import { Example } from './tests/Example';
 
 const MainContainer = component(({ children }) => {
   return div(...children).addClass('p-8 gap-8 flex flex-col ');
@@ -11,6 +12,8 @@ const MainContainer = component(({ children }) => {
 export const App: () => VComponent = component(() => {
   return div(
     Header(),
+
+    Example(),
 
     MainContainer({
       children: [RouterView()],

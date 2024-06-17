@@ -1,6 +1,5 @@
 import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
-import { isForLoopComponent } from '../render/render';
 import { type MaybeArray } from '../utils/array';
 import { type VComponent, type WithHtml } from './component';
 import { isVComponent } from './is-component';

@@ -6,11 +6,14 @@
     "declarationDir": "./dist/types",
     "outDir": "./dist",
     "composite": true,
+    
+    "jsx": "react-jsx",
+    "jsxImportSource": "tinaf",
     "paths": {
-        
         "tinaf": ["../core/"]
       },
     },
+    
     "references": [
         { "path": "../core" }
     ]
