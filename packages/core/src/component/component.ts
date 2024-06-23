@@ -13,3 +13,5 @@ export interface VComponent {
   addClass(args?: AddClassesArgs): VComponent;
   destroy?(): void;
 }
+
+export type TinafElement = HTMLElement | Comment | VComponent;

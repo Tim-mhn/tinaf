@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ReactiveValue } from '../reactive/reactive';
 import { type MaybeReactive } from '../reactive/types';
 import { type PrimitiveType, isPrimitive } from '../utils/primitive';
@@ -59,50 +60,10 @@ export function hasSources(
   return !!sources && sources.length > 0;
 }
 
-// THIS SEEMS TO BE UNUSED LETS DELETE IT IF ITS THE CASE
-/**
- * Recursive function to return the HTML element (or placeholder comment) from a renderFn
- * This does not update the DOM or create any subscriptions
- * @param renderFn
- * @returns
- */
-// export function safeRenderHtml(renderFn: RenderFn, doc : IDocument = document): HTMLElement | Comment {
-//   const htmlComponentOrComment = safeRenderHtmlOrComponent(renderFn, doc);
-
-//   if (isHtmlOrComment(htmlComponentOrComment)) return htmlComponentOrComment;
-
-//   return safeRenderHtml(htmlComponentOrComment.renderFn, doc);
-// }
-
-/**
- * Returns a placeholder comment if the renderFn returns null (when using a show.when structure)
- * @param renderFn
- * @returns
- */
-// export function safeRenderHtmlOrComponent(
-//   renderFn: RenderFn,
-//   doc: IDocument = document
-// ): SimpleComponent | HTMLElement | Comment {
-//   const node = renderFn();
-
-//   if (!node) return buildPlaceholderComment();
-
-//   if (isPrimitive(node)) return doc.createTextNode(node.toString());
-
-//   return node;
-// }
-
-// function buildPlaceholderComment(doc: IDocument = document) {
-//   const commentText = `placeholder--${crypto.randomUUID()}`;
-//   const comment = doc.createComment(commentText);
-//   return comment;
-// }
-
 export function render(
   component: VComponent,
   parent: HTMLElement
 ): MaybeArray<HTMLElement | Comment> {
-  console.info('Calling init from render');
   component.init({ html: parent });
   const html = component.renderOnce();
   parent.append(...toArray(html));

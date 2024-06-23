@@ -9,7 +9,7 @@ import { type AddStylesArgs, addStylesToElement } from './styles';
 import { addClassToElement } from './classes';
 import { objectKeys } from '../utils/object';
 
-type HTMLInputElementOptions = {
+export type HTMLInputElementOptions = {
   placeholder: string;
 };
 export const input = <T extends string | number>(

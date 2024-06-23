@@ -3,7 +3,7 @@ import { isReactive, toValue } from '../reactive/toValue';
 import { type MaybeReactive, type MaybeReactiveProps } from '../reactive/types';
 import { getReactiveElements } from '../reactive/utils';
 import { type MaybeArray, toArray } from '../utils/array';
-import { addClassToElement } from './classes';
+import { addClassToElement, mergeClasses } from './classes';
 import { type AddStylesArgs, addStylesToElement } from './styles';
 import { type PrimitiveType } from '../utils/primitive';
 import { SimpleVComponent } from '../component/v-component';
@@ -61,7 +61,9 @@ export class VDomComponent<T extends TagName> implements VComponent {
   }
 
   addClass(newClasses?: AddClassesArgs) {
-    if (newClasses) this.classes = newClasses;
+    // TODO: mergeClasses was necessary to avoid overriding current classes
+    // beware of empty array for newClasses param
+    if (newClasses) this.classes = mergeClasses(newClasses, this.classes || []);
     return this;
   }
 
@@ -181,6 +183,7 @@ export const _createDomElement = <T extends TagName>(
     doc: buildDomDocument(),
   }
 ): VDomComponent<T> => {
+  console.log(props);
   const { children, classes, type, handlers, styles } = props;
 
   const vdom = new VDomComponent(

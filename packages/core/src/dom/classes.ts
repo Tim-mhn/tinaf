@@ -19,11 +19,13 @@ export function formatClassesToArray(classOrClasses: string | string[]) {
   return classes;
 }
 
-function getFormattedClasses(classes: MaybeArray<MaybeReactive<string>>) {
+export function getFormattedClasses(
+  classes: MaybeArray<MaybeReactive<string>>
+) {
   const classesArr = toArray(classes);
 
   const stringClasses = classesArr.map(toValue);
-  let formattedClasses = formatClassesToArray(stringClasses);
+  const formattedClasses = formatClassesToArray(stringClasses);
   return formattedClasses;
 }
 
@@ -59,11 +61,27 @@ export function addClassToElement(
   element: HTMLElement,
   classes: AddClassesArgs
 ) {
-  const reactiveClassesArray = isClassesRecord(classes)
-    ? transformRecordIntoReactiveClassesArray(classes)
-    : classes;
+  const reactiveClassesArray = toReactiveClassesArray(classes);
 
   addDynamicClassesToElement(element, reactiveClassesArray);
+}
+
+function toReactiveClassesArray(classes: AddClassesArgs) {
+  return toArray(
+    isClassesRecord(classes)
+      ? transformRecordIntoReactiveClassesArray(classes)
+      : classes
+  );
+}
+
+export function mergeClasses(
+  classes: AddClassesArgs,
+  newClasses: AddClassesArgs
+) {
+  const reactiveClassesArr1 = toReactiveClassesArray(classes);
+  const reactiveClassesArr2 = toReactiveClassesArray(newClasses);
+
+  return [...reactiveClassesArr1, ...reactiveClassesArr2];
 }
 
 function transformRecordIntoReactiveClassesArray(
@@ -85,7 +103,7 @@ function addDynamicClassesToElement(
   const classesArr = toArray(classes);
   const reactiveClasses = getReactiveElements(classesArr);
 
-  let formattedClasses = getFormattedClasses(classes);
+  const formattedClasses = getFormattedClasses(classes);
   element.classList.add(...formattedClasses);
 
   watchAllSources(reactiveClasses).subscribe(() => {

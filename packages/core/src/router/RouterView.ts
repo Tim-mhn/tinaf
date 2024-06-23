@@ -1,4 +1,4 @@
-import { component, buildSwitchComponent } from '../component';
+import { buildSwitchComponent, componentV2 } from '../component';
 import { injectApp, logger } from '../common';
 import { ROUTER_PROVIDER_KEY } from './provider.key';
 import type { Router } from './router';
@@ -7,7 +7,7 @@ import { computed } from '../reactive';
 export const ROUTER_VIEW_DEPTH_KEY = Symbol('router-view-depth');
 
 // TODO: need to add a onDestroy to remove that subscription
-export const RouterView = component(() => {
+export const RouterView = componentV2(() => {
   const tinafApp = injectApp();
 
   const router = tinafApp.get<Router>(ROUTER_PROVIDER_KEY);
@@ -41,7 +41,7 @@ export const RouterView = component(() => {
    */
   const switchComponentBasedOnRoute = buildSwitchComponent(
     routePattern,
-    (routePattern) => {
+    (_routePattern) => {
       const path = router.route.value.path;
 
       const pathComponent = router.getComponentForPath(path, {

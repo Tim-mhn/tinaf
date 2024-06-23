@@ -1,11 +1,10 @@
 import type { Product } from 'src/models/product';
-import { component, onDestroy } from 'tinaf/component';
-import { div, input, span } from 'tinaf/dom';
+import {  componentV2, onDestroy } from 'tinaf/component';
 import { inputReactive } from 'tinaf/reactive';
 import { PRODUCTS } from '../data/products.mock';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
-export const SearchBar = component<{
+export const SearchBar = componentV2<{
   updateProducts: (products: Product[]) => void;
 }>(({ updateProducts }) => {
   const searchInput = inputReactive('');
@@ -31,12 +30,9 @@ export const SearchBar = component<{
     sub.unsubscribe();
   });
 
-  return div(
-    input(searchInput, { placeholder: 'What are you looking for ?' }).addClass(
-      'outline-none w-full'
-    ),
-    span(searchInput)
-  ).addClass(
-    'p-4 border rounded-sm h-9 flex grow items-center justify-center  border-slate-800'
-  );
+  return <div className='p-4 border rounded-sm h-9 flex grow items-center justify-center  border-slate-800'>
+    <input placeholder='What are you looking for ?' className='outline-none w-full' value={searchInput} />
+  </div>
+   
+  
 });

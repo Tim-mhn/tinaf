@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { map, merge } from 'rxjs';
 import type { ReactiveValue } from '../reactive/reactive';
 import { isReactive, toValue } from '../reactive/toValue';
