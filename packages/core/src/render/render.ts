@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ReactiveValue } from '../reactive/reactive';
 import { type MaybeReactive } from '../reactive/types';
-import { type PrimitiveType, isPrimitive } from '../utils/primitive';
+import { type PrimitiveType } from '../utils/primitive';
 import { type VComponent } from '../component/component';
 import { type MaybeArray, toArray } from '../utils/array';
 import type { IDocument, IWindow } from './window';
@@ -109,6 +109,9 @@ export const buildDomWindow = (): IWindow => {
     },
     onLoad(callback: () => void) {
       window.addEventListener('load', callback);
+    },
+    load() {
+      window.dispatchEvent(new Event('load'));
     },
   };
 };

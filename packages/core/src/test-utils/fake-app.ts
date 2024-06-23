@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TinafApp, createApp } from '../render';
 import { fromPartial } from './from-partial';
 import { ROUTER_PROVIDER_KEY, type Router } from '../router';

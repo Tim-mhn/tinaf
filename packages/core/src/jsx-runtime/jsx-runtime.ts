@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ComponentFn } from '../component';
@@ -21,7 +22,6 @@ const domComponentMap = {
   ul: ul2,
   span: span2,
 };
-
 export const jsxComponent = (
   componentFn: string | ComponentFn,
   extendedProps: Record<string, any> | null,

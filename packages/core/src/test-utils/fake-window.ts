@@ -3,7 +3,7 @@ import type { TinafApp } from '../render';
 import type { IWindow } from '../render/window';
 
 export class FakeWindow implements IWindow {
-  private app: TinafApp;
+  private app!: TinafApp;
 
   attachApp(app: TinafApp): void {
     this.app = app;

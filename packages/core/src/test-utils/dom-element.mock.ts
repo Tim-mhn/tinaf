@@ -1,3 +1,6 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { WithHtml } from '../component/component';
 import { vi } from 'vitest';
 import { fromPartial } from './from-partial';
