@@ -1,6 +1,6 @@
 {
   "name": "tinaf",
-  "version": "0.0.19",
+  "version": "0.0.21",
   "description": "",
   "type": "module",
   "types": "index.d.ts",
@@ -16,6 +16,10 @@
     "./dom": {
       "import": "./dist/dom.js",
       "types": "./dist/src/dom/index.d.ts"
+    },
+    "./common-hooks": {
+      "import": "./dist/common-hooks.js",
+      "types": "./dist/src/common-hooks/index.d.ts"
     },
     "./component": {
       "import": "./dist/component.js",
