@@ -1,6 +1,6 @@
 {
   "name": "tinaf",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "",
   "type": "module",
   "types": "index.d.ts",
@@ -11,7 +11,7 @@
   "exports": {
     "./render": {
       "import": "./dist/render.js",
-      "types": "./dist/src/render.d.ts"
+      "types": "./dist/src/render/index.d.ts"
     },
     "./dom": {
       "import": "./dist/dom.js",
