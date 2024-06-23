@@ -20,12 +20,6 @@ describe('dom element', () => {
     });
 
     expect(mockDocument.createElement).toHaveBeenCalled();
-
-    //   fakeWindow.
-
-    // const parent = buildMockParent()
-
-    // i.init(parent)
   });
 
   describe('options', () => {

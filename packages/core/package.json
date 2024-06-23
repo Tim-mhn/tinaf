@@ -28,6 +28,14 @@
     "./router": {
       "import": "./dist/router.js",
       "types": "./dist/src/router/index.d.ts"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/jsx-runtime.js",
+      "types": "./dist/src/jsx-runtime/index.d.ts"
+    },
+    "./plugin": {
+      "import": "./dist/plugin.js",
+      "types": "./dist/src/plugin/index.d.ts"
     }
   },
   "scripts": {

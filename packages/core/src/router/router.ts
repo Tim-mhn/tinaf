@@ -75,8 +75,6 @@ export class Router {
     this.resetDepth = resetDepth;
     if (this._initialized) return;
 
-    console.count('router init');
-
     this._initialized = true;
 
     this._routeChangerHandler.onRouteChange(() => {
@@ -178,7 +176,7 @@ function buildMatchingRoute(
       matchingPath: '';
     }
   | { route: RouterConfig[number]; matchingPath: string; match: true } {
-  for (let route of routes) {
+  for (const route of routes) {
     const regexString = route.path
       .split('/')
       .map((path) => {

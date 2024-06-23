@@ -6,7 +6,6 @@ import type { TinafApp } from '../render';
 
 export function injectApp(): TinafApp {
   if (process.env.NODE_ENV === 'test') {
-    console.debug('Injecting fake tinaf app');
     return injectFakeTinafApp();
   }
   return window.__TINAF__;

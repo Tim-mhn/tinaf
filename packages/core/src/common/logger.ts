@@ -1,7 +1,7 @@
 class Logger {
   private PREFIX = '[TINAF]';
-  warn(message: string | number | object) {
-    console.warn(`${this.PREFIX} ${this._stringifyMessage(message)}`);
+  warn(message: string | number | object, ...args: unknown[]) {
+    console.warn(`${this.PREFIX} ${this._stringifyMessage(message)}`, ...args);
   }
 
   log(message: string | number | object) {

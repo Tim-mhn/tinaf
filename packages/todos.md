@@ -10,6 +10,14 @@
 
 - Routing: Nested RouterView ✔
 
+- JSX:
+  - working poc with no props
+  - make work with props
+  - make work with children
+  - create plugin
+  - make work with dom element: transform <div> <Foo /> </div> -> div(Foo())
+  - make work with styles and event listeners ?
+
 /dashboard/orders
 
 <Header />
@@ -23,6 +31,8 @@
 # Ideas
 
 - Forms: Build a good Form API (Angular style ?)
+
+- Http client or hook
 
 - Routing: passing a string route that is not resolved should pass it as is in the <a> href attribute
 

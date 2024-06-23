@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import path, { resolve } from 'node:path';
+import { resolve } from 'node:path';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -11,6 +11,8 @@ export default defineConfig({
         resolve(__dirname, 'src/component/component.exports.ts'),
         resolve(__dirname, 'src/reactive/reactive.exports.ts'),
         resolve(__dirname, 'src/router/router.exports.ts'),
+        resolve(__dirname, 'src/jsx-runtime/jsx-runtime.exports.ts'),
+        resolve(__dirname, 'src/plugin/plugin.exports.ts'),
       ],
       fileName: (_format, entryName) => {
         console.log({ entryName });
@@ -25,4 +27,12 @@ export default defineConfig({
       tsconfigPath: resolve(__dirname, './tsconfig.json'),
     }),
   ],
+
+  esbuild: {
+    jsx: 'transform',
+    jsxDev: false,
+    jsxImportSource: '@',
+    jsxInject: `import { jsxComponent } from './src/jsx/runtime'`,
+    jsxFactory: 'jsxComponent',
+  },
 });
