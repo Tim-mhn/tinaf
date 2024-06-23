@@ -1,5 +1,5 @@
 import {
-  componentV2,
+  component,
 } from 'tinaf/component';
 import { div } from 'tinaf/dom';
 import { Header } from './Header/Header';
@@ -8,10 +8,10 @@ import { RouterView } from 'tinaf/router';
 import { Link } from './ui/Link';
 import { Example } from './tests/Example';
 
-const MainContainer = componentV2(({ children }) => {
+const MainContainer = component(({ children }) => {
   return div(...(children || [])).addClass('p-8 gap-8 flex flex-col ');
 });
-export const App = componentV2(() => {
+export const App = component(() => {
   return <div className="flex flex-col w-screen h-screen text-slate-800">
     <Header />
 

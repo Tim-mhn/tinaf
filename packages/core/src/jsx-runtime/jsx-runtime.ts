@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
-  SimpleVComponent,
-  SimpleVComponent,
-} from 'src/component/v-component';
+import type { SimpleVComponent } from '../component/v-component';
 import type { ComponentFn } from '../component';
 import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
-import type { VDomComponent } from 'src/dom/create-dom-element';
+import type { VDomComponent } from '../dom/create-dom-element';
 
 interface HTMLElementTags {
   // a: AnchorHTMLAttributes<HTMLAnchorElement>;

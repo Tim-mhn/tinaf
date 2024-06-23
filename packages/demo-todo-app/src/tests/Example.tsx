@@ -1,14 +1,14 @@
-import { component, componentV2 } from "tinaf/component";
+import { component } from "tinaf/component";
 import { div } from "tinaf/dom";
 
 import { reactive } from 'tinaf/reactive'
-const Foo = componentV2< { text: string }>(({ text, children }) => {
+const Foo = component< { text: string }>(({ text, children }) => {
     return div(text, ...(children || []))
 })
 
 
 
-const Bar = componentV2<{ title: string}> (({ title, children}) => {
+const Bar = component<{ title: string}> (({ title, children}) => {
 
 
 
@@ -23,7 +23,7 @@ const Bar = componentV2<{ title: string}> (({ title, children}) => {
 
 
 
-export const Example = componentV2(() => {
+export const Example = component(() => {
 
     const title = reactive("test title")
 

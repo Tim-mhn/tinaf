@@ -1,5 +1,5 @@
 import type { Product } from 'src/models/product';
-import {  componentV2, forLoop } from 'tinaf/component';
+import {  component, forLoop } from 'tinaf/component';
 import { ul, } from 'tinaf/dom';
 import {
   maybeComputed,
@@ -9,7 +9,7 @@ import {
 import { injectRouter } from 'tinaf/router';
 
 // #F3F3F5
-const ProductCard = componentV2<{ product: Product; onClick: () => void }>(
+const ProductCard = component<{ product: Product; onClick: () => void }>(
   ({ product, onClick }) => {
     const { title, image, price } = toReactiveProps(product);
 
@@ -35,7 +35,7 @@ const ProductCard = componentV2<{ product: Product; onClick: () => void }>(
   })
 
   
-export const ProductList = componentV2<{ products: Product[] }>(
+export const ProductList = component<{ products: Product[] }>(
   ({ products }) => {
     const router = injectRouter();
 

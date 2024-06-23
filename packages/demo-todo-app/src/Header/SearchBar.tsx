@@ -1,10 +1,10 @@
 import type { Product } from 'src/models/product';
-import {  componentV2, onDestroy } from 'tinaf/component';
+import {  component, onDestroy } from 'tinaf/component';
 import { inputReactive } from 'tinaf/reactive';
 import { PRODUCTS } from '../data/products.mock';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
-export const SearchBar = componentV2<{
+export const SearchBar = component<{
   updateProducts: (products: Product[]) => void;
 }>(({ updateProducts }) => {
   const searchInput = inputReactive('');

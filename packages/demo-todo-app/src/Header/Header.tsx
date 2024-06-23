@@ -1,7 +1,7 @@
-import {  componentV2 } from 'tinaf/component';
+import {  component } from 'tinaf/component';
 import { injectRouter } from 'tinaf/router';
 
-const HeaderTitle = componentV2(() => {
+const HeaderTitle = component(() => {
   const router = injectRouter();
 
   return <div className="flex items-center gap-3">
@@ -11,7 +11,7 @@ const HeaderTitle = componentV2(() => {
 })
 
 
-export const Header = componentV2(() => {
+export const Header = component(() => {
   return <div className='flex items-center gap-32 border-b border-b-primary p-6 h-20'>
     <HeaderTitle />
   </div>

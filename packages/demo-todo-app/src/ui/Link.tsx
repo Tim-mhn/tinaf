@@ -1,7 +1,7 @@
-import {  componentV2 } from 'tinaf/component';
+import {  component } from 'tinaf/component';
 import {  RouterLink } from 'tinaf/router';
 
-export const Link = componentV2<{ to: string }>(({ to, children = [] }) => {
+export const Link = component<{ to: string }>(({ to, children = [] }) => {
   // RouterLink({
   //   to,
   //   children,
