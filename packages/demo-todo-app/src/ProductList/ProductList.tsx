@@ -41,15 +41,17 @@ export const ProductList = componentV2<{ products: Product[] }>(
 
     const goToProductPage = (p: Product) => router.navigate(`/product/${p.id}`);
 
-    return ul(
-      forLoop(
-        products,
-        (product) =>
-          ProductCard({ product, onClick: () => goToProductPage(product) }),
-        (p) => p.id
-      )
-    ).addClass(
-      'grid border border-black gap-y-8 grid-flow-row-dense grid-cols-1 md:grid-cols-3 lg:grid-cols-5 h-fit'
-    );
-  }
-);
+    return <ul className="grid border border-black gap-y-8 grid-flow-row-dense grid-cols-1 md:grid-cols-3 lg:grid-cols-5 h-fit">
+
+      {
+         forLoop(
+          products,
+          (product) =>
+            ProductCard({ product, onClick: () => goToProductPage(product) }),
+          (p) => p.id
+        )
+      }
+
+    </ul>
+  
+    })

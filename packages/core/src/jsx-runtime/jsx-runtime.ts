@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ComponentFn } from '../component';
-import { button2, div2, img2, input2, li2, ul2 } from '../dom';
+import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
 
 declare global {
   module JSX {
@@ -19,6 +19,7 @@ const domComponentMap = {
   img: img2,
   li: li2,
   ul: ul2,
+  span: span2,
 };
 
 export const jsxComponent = (

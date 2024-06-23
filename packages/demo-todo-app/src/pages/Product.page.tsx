@@ -1,10 +1,10 @@
 import { getProduct } from '../data/products.mock';
-import { component } from 'tinaf/component';
+import { component, componentV2 } from 'tinaf/component';
 import { div, img, span } from 'tinaf/dom';
 import { computed, toReactiveProps, toValue } from 'tinaf/reactive';
 import { injectRouter } from 'tinaf/router';
 
-export const ProductPage = component(() => {
+export const ProductPage = componentV2(() => {
   const router = injectRouter();
 
   const productId = computed(
@@ -16,10 +16,18 @@ export const ProductPage = component(() => {
 
   const { title, description, image, price, rating } = toReactiveProps(product);
 
-  return div(
-    div(title).addClass('text-4xl text-semibold'),
-    div(description).addClass('text-md font-light'),
-    img({ src: toValue(image) }).addClass('h-[360px] w-[360px] object-contain'),
-    div(span(price), span('€')).addClass('text-xl text-semibold')
-  ).addClass('flex flex-col items-center gap-8');
+  return <div className="flex flex-col items-center gap-8">
+
+
+    <div className="text-4xl font-semibold">{title}</div>
+
+    <div className="text-md font-light">{description}</div>
+
+    <img className="h-[360px] w-[360px] object-contain" src={toValue(image)} />
+
+    <div className="text-xl font-semibold">
+      <span>{price}</span>
+      <span>€</span>
+    </div>
+  </div>
 });

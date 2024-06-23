@@ -68,3 +68,9 @@ export const ul2 = (args: CreateDom2Props) =>
     type: 'ul',
     ...args,
   });
+
+export const span2 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'span',
+    ...args,
+  });
