@@ -13,6 +13,7 @@ export default defineConfig({
         resolve(__dirname, 'src/router/router.exports.ts'),
         resolve(__dirname, 'src/jsx-runtime/jsx-runtime.exports.ts'),
         resolve(__dirname, 'src/plugin/plugin.exports.ts'),
+        resolve(__dirname, 'src/common-hooks/common-hooks.exports.ts'),
       ],
       fileName: (_format, entryName) => {
         console.log({ entryName });
