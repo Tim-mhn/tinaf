@@ -25,6 +25,8 @@ type Listener = Exclude<
   undefined
 >;
 
+export type EventHandlerKey = `on${Capitalize<Listener>}`;
+
 type EventHandler = (e?: Event) => void;
 export type EventHandlers = {
   [K in Listener]?: EventHandler;

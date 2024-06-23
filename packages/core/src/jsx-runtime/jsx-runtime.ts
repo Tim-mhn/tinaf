@@ -3,7 +3,12 @@
 import type { SimpleVComponent } from '../component/v-component';
 import type { ComponentFn } from '../component';
 import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
-import type { VDomComponent } from '../dom/create-dom-element';
+import type {
+  AddClassesArgs,
+  EventHandlerKey,
+  VDomComponent,
+} from '../dom/create-dom-element';
+import type { InputReactive } from 'src/reactive';
 
 interface HTMLElementTags {
   // a: AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -20,7 +25,7 @@ interface HTMLElementTags {
   // blockquote: BlockquoteHTMLAttributes<HTMLElement>;
   // body: HTMLAttributes<HTMLBodyElement>;
   // br: HTMLAttributes<HTMLBRElement>;
-  button: Parameters<typeof button2>[0];
+  button: HtmlAttributes;
   // canvas: CanvasHTMLAttributes<HTMLCanvasElement>;
   // caption: HTMLAttributes<HTMLElement>;
   // cite: HTMLAttributes<HTMLElement>;
@@ -34,7 +39,7 @@ interface HTMLElementTags {
   // details: DetailsHtmlAttributes<HTMLDetailsElement>;
   // dfn: HTMLAttributes<HTMLElement>;
   // dialog: DialogHtmlAttributes<HTMLDialogElement>;
-  div: Parameters<typeof div2>[0];
+  div: HtmlAttributes;
   // dl: HTMLAttributes<HTMLDListElement>;
   // dt: HTMLAttributes<HTMLElement>;
   // em: HTMLAttributes<HTMLElement>;
@@ -57,13 +62,13 @@ interface HTMLElementTags {
   // html: HTMLAttributes<HTMLHtmlElement>;
   // i: HTMLAttributes<HTMLElement>;
   // iframe: IframeHTMLAttributes<HTMLIFrameElement>;
-  img: Parameters<typeof img2>[0];
-  input: Parameters<typeof input2>[0];
+  img: ImageHtmlAttributes;
+  input: InputHtmlAttributes;
   // ins: InsHTMLAttributes<HTMLModElement>;
   // kbd: HTMLAttributes<HTMLElement>;
   // label: LabelHTMLAttributes<HTMLLabelElement>;
   // legend: HTMLAttributes<HTMLLegendElement>;
-  li: Parameters<typeof li2>[0];
+  li: HtmlAttributes;
   // link: LinkHTMLAttributes<HTMLLinkElement>;
   // main: HTMLAttributes<HTMLElement>;
   // map: MapHTMLAttributes<HTMLMapElement>;
@@ -95,7 +100,7 @@ interface HTMLElementTags {
   // slot: HTMLSlotElementAttributes;
   // small: HTMLAttributes<HTMLElement>;
   // source: SourceHTMLAttributes<HTMLSourceElement>;
-  span: Parameters<typeof span2>[0];
+  span: HtmlAttributes;
   // strong: HTMLAttributes<HTMLElement>;
   // style: StyleHTMLAttributes<HTMLStyleElement>;
   // sub: HTMLAttributes<HTMLElement>;
@@ -114,7 +119,7 @@ interface HTMLElementTags {
   // tr: HTMLAttributes<HTMLTableRowElement>;
   // track: TrackHTMLAttributes<HTMLTrackElement>;
   // u: HTMLAttributes<HTMLElement>;
-  ul: Parameters<typeof ul2>[0];
+  ul: HtmlAttributes;
   // var: HTMLAttributes<HTMLElement>;
   // video: VideoHTMLAttributes<HTMLVideoElement>;
   // wbr: HTMLAttributes<HTMLElement>;
@@ -125,6 +130,20 @@ declare global {
     interface IntrinsicElements extends HTMLElementTags {}
   }
 }
+
+type HtmlAttributes = Partial<
+  {
+    className: AddClassesArgs;
+    // styles
+  } & Record<EventHandlerKey, () => void>
+>;
+
+type InputHtmlAttributes = HtmlAttributes &
+  Partial<{
+    value: InputReactive<string | number>;
+  }>;
+
+type ImageHtmlAttributes = HtmlAttributes & Parameters<typeof img2>[0];
 
 const domComponentMap: Partial<
   Record<
@@ -151,6 +170,8 @@ export const jsxComponent = (
   | VDomComponent<keyof typeof domComponentMap> => {
   // TODO: unify API for classes.
   // We have 'classes' for dom elements and 'className' for components
+
+  // TODO: add other handlers
   const { className, onClick, ...props } = extendedProps || {};
 
   if (typeof componentFn === 'string' && componentFn in domComponentMap) {
