@@ -1,4 +1,4 @@
-# TINAF
+# T.I.N.A.F.
 
 <a href="https://www.npmjs.com/package/tinaf"><img src="https://img.shields.io/npm/v/tinaf.svg?style=flat&colorA=18181B&colorB=28CF8D" alt="Version"></a>
 
