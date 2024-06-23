@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ReactiveValue } from '../reactive/reactive';
 import { type MaybeReactive } from '../reactive/types';
@@ -43,7 +44,7 @@ export function isSimpleComponent(
 ): node is SimpleComponent {
   try {
     return isComponent(node) && node['__type'] === 'component';
-  } catch (err) {
+  } catch (_err) {
     throw new Error(`Cannot use 'in' in isSimpleComponent for node: ${node}`);
   }
 }
@@ -89,7 +90,7 @@ declare global {
 }
 
 export function createApp(
-  app: () => VComponent,
+  app: (params: {}) => VComponent,
   _window?: IWindow,
   _doc?: IDocument
 ) {

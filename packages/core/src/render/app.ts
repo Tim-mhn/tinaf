@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import { InjectionsManager } from '../common/injections.manager';
 import type { VComponent } from '../component';
 import { render } from './render';
@@ -5,7 +6,7 @@ import type { IDocument, IWindow } from './window';
 
 export class TinafApp {
   constructor(
-    private app: () => VComponent,
+    private app: ({}) => VComponent,
     private window: IWindow,
     private _doc: IDocument
   ) {}
@@ -27,7 +28,7 @@ export class TinafApp {
     this.window.onLoad(() => {
       const container = this._doc.getElementById(id) as HTMLElement;
 
-      render(this.app(), container);
+      render(this.app({}), container);
     });
   }
 }

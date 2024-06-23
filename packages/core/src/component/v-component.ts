@@ -10,102 +10,13 @@ import {
   popLastOnInitCallback,
 } from './lifecycle-hooks';
 
-/**
- * @deprecated use SimpleVComponent_v2 instead
- */
 export class SimpleVComponent<Props extends ComponentProps = NoProps>
   implements VComponent
 {
   constructor(
-    private props: RenderFnInputParams<Props>,
+    private props: RenderFnParams<Props & { className?: AddClassesArgs }>,
     public renderFn: (
-      ...params: RenderFnParams<Props>
-    ) => HTMLElement | Comment | VComponent
-  ) {}
-
-  readonly __type = 'V_COMPONENT';
-
-  child!: HTMLElement | Comment | VComponent;
-  html!: MaybeArray<HTMLElement | Comment>;
-  parent!: WithHtml;
-
-  private get renderFnParamsWithChildren() {
-    const params: RenderFnParams<Props> = (this.props || []).map(
-      ({ children, ...p }) => {
-        return {
-          ...p,
-          children:
-            children ||
-            ([] satisfies RenderFnParams<Props>[number]['children']),
-        };
-      }
-    ) as RenderFnParams<Props>;
-
-    return params;
-  }
-
-  private classes?: AddClassesArgs;
-  addClass(newClass?: AddClassesArgs) {
-    if (!newClass) return this;
-    this.classes = newClass;
-    return this;
-  }
-
-  private onDestroyCallback: () => void = () => undefined;
-
-  init(parent: WithHtml) {
-    this.parent = parent;
-    this.child = this.renderFn(...this.renderFnParamsWithChildren);
-
-    this._registerOnDestroyCallback();
-
-    if (isVComponent(this.child)) {
-      debugger;
-      this.child.init(this.parent);
-      this.child.addClass(this.classes);
-    } else {
-      this.html = this.child;
-    }
-
-    this._executeOnInitCallback();
-  }
-
-  private _executeOnInitCallback() {
-    const lastOnInitCallback = popLastOnInitCallback();
-    if (lastOnInitCallback) lastOnInitCallback();
-  }
-
-  private _registerOnDestroyCallback() {
-    const lastOnDestroyCallback = popLastOnDestroyCallback();
-    if (lastOnDestroyCallback) this.onDestroyCallback = lastOnDestroyCallback;
-  }
-
-  renderOnce(): MaybeArray<HTMLElement | Comment> {
-    if (isVComponent(this.child)) {
-      const html = this.child.renderOnce();
-      this.html = html;
-      return html;
-    }
-
-    return this.child;
-  }
-
-  destroy(): void {
-    this.onDestroyCallback();
-
-    if (isVComponent(this.child)) {
-      this.child.destroy?.();
-    }
-  }
-}
-
-export class SimpleVComponent_v2<Props extends ComponentProps = NoProps>
-  implements VComponent
-{
-  constructor(
-    private props: _RenderFnParams<Props & { className?: AddClassesArgs }>,
-    public renderFn: (
-      props: _RenderFnParams<Props & { className?: AddClassesArgs }>
+      props: RenderFnParams<Props & { className?: AddClassesArgs }>
     ) => TinafElement
   ) {
     console.log(props);
@@ -182,41 +93,17 @@ export class SimpleVComponent_v2<Props extends ComponentProps = NoProps>
 
 export type ComponentFn = ReturnType<typeof component>;
 
-/**
- * @deprecated use componentV2 instead
- * @param renderFn
- * @returns
- */
 export function component<Props extends ComponentProps = NoProps>(
-  renderFn: (
-    ...params: RenderFnParams<Props>
-  ) => HTMLElement | Comment | VComponent
+  renderFn: (p: RenderFnParams<Props>) => TinafElement
 ) {
-  return (...propsParams: RenderFnInputParams<Props>) =>
-    new SimpleVComponent(propsParams, renderFn);
-}
-
-// NOTE: componentV2 is a temporary solution to allow for className prop and make it easier to use in JSX
-export function componentV2<Props extends ComponentProps = NoProps>(
-  renderFn: (p: _RenderFnParams<Props>) => HTMLElement | Comment | VComponent
-) {
-  return (extendedProps: _RenderFnParams<Props & { className?: string }>) => {
-    return new SimpleVComponent_v2(extendedProps, renderFn);
+  return (extendedProps: RenderFnParams<Props & { className?: string }>) => {
+    return new SimpleVComponent(extendedProps, renderFn);
   };
 }
 
-// This is like RenderFnParams but children are optional
-type RenderFnInputParams<Props extends ComponentProps> = Props extends NoProps
-  ? [] | [{ children: (VComponent | string)[] | string }]
-  : [_RenderFnParams<Props>];
-
 type NoProps = Record<string, never>;
 
-type RenderFnParams<Props extends ComponentProps> = Props extends NoProps
-  ? [{ children: (VComponent | string)[] | string }]
-  : [_RenderFnParams<Props>];
-
-type _RenderFnParams<Props extends object> = {
+type RenderFnParams<Props extends object> = {
   children?: (VComponent | string)[] | string;
 } & {
   [K in keyof Omit<Props, 'children'>]: Props[K] extends (...args: any[]) => any

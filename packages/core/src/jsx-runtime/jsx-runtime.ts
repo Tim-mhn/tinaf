@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   SimpleVComponent,
-  SimpleVComponent_v2,
+  SimpleVComponent,
 } from 'src/component/v-component';
 import type { ComponentFn } from '../component';
 import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
@@ -150,7 +150,7 @@ export const jsxComponent = (
   ..._children: any[]
 ):
   | SimpleVComponent
-  | SimpleVComponent_v2
+  | SimpleVComponent
   | VDomComponent<keyof typeof domComponentMap> => {
   // TODO: unify API for classes.
   // We have 'classes' for dom elements and 'className' for components
