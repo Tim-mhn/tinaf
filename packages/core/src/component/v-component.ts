@@ -99,7 +99,7 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   }
 }
 
-class SimpleVComponent_v2<Props extends ComponentProps = NoProps>
+export class SimpleVComponent_v2<Props extends ComponentProps = NoProps>
   implements VComponent
 {
   constructor(

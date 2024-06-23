@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { objectEntries, objectKeys } from '../utils/object';
 import { isReactive, toValue } from '../reactive/toValue';
 import { type MaybeReactive, type MaybeReactiveProps } from '../reactive/types';
@@ -13,6 +14,7 @@ import { watchAllSources } from '../reactive/watch';
 import type { IDocument } from '../render/window';
 import { buildDomDocument } from '../render/render';
 import { Subscription } from 'rxjs';
+import type { PartialExcept } from '../utils/partial-except';
 
 type TagName = keyof HTMLElementTagNameMap;
 
@@ -178,13 +180,13 @@ export class VDomComponent<T extends TagName> implements VComponent {
   readonly __type = 'V_COMPONENT';
 }
 export const _createDomElement = <T extends TagName>(
-  props: CreateDomElementProps<T>,
+  props: PartialExcept<CreateDomElementProps<T>, 'type'>,
   injections: { doc: IDocument } = {
     doc: buildDomDocument(),
   }
 ): VDomComponent<T> => {
   console.log(props);
-  const { children, classes, type, handlers, styles } = props;
+  const { children = [], classes, type, handlers, styles } = props;
 
   const vdom = new VDomComponent(
     injections.doc,

@@ -7,8 +7,8 @@
     "outDir": "./dist",
     "composite": true,
     
-    "jsx": "react-jsx",
     "jsxImportSource": "tinaf",
+    "jsxFactory": "jsxComponent",
     "paths": {
         "tinaf": ["../core/"]
       },

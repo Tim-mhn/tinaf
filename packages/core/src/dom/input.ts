@@ -15,12 +15,12 @@ export type HTMLInputElementOptions = {
 export const input = <T extends string | number>(
   value: InputReactive<T>,
   options: Partial<HTMLInputElementOptions> = {}
-) => {
+): VInputComponent<T> => {
   return new VInputComponent(value, options);
 };
 
 // TODO: make the inputs correctly reactive and stop breaking state & UI
-class VInputComponent<T extends string | number> implements VComponent {
+export class VInputComponent<T extends string | number> implements VComponent {
   private _html!: HTMLInputElement;
 
   readonly __type = 'V_COMPONENT';
