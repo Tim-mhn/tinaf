@@ -1,20 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Observable,
   Subject,
   combineLatest,
   filter,
-  from,
   map,
   skip,
   startWith,
 } from 'rxjs';
-import type {
-  MaybeDeepReactive,
-  MaybeReactive,
-  MaybeReactiveProps,
-} from './types';
-import { isReactive, toValue } from './toValue';
-import { objectKeys } from '../utils/object';
+import type { MaybeReactive } from './types';
+import { isReactive } from './toValue';
 export interface ReactiveValue<T> {
   value: T;
   valueChanges$: Observable<T>;
@@ -110,29 +105,4 @@ export function maybeComputed<T>(
   if (reactiveSources.length === 0) return getterFn();
 
   return computed(getterFn, reactiveSources);
-}
-
-export function toReactiveProps<T extends object>(
-  obj: MaybeReactive<T> | MaybeReactiveProps<T>
-) {
-  if (!isReactive(obj)) return obj;
-
-  // FIXME: type assertion should not be needed
-  return objectKeys(toValue(obj as MaybeDeepReactive<T>)).reduce(
-    (prev, key) => {
-      const reactiveProp = computed(
-        () => toValue(obj as MaybeDeepReactive<T>)[key],
-        [obj]
-      );
-      return {
-        ...prev,
-        [key]: reactiveProp,
-      };
-    },
-    {} as Partial<{
-      [K in keyof T]: MaybeReactive<T[K]>;
-    }>
-  ) as {
-    [K in keyof T]: MaybeReactive<T[K]>;
-  };
 }

@@ -7,8 +7,6 @@ import type {
   AddClassesArgs,
   ComponentChildren,
   EventHandlerKey,
-  EventHandlers,
-  Listener,
   VDomComponent,
 } from '../dom/create-dom-element';
 import type { InputReactive } from 'src/reactive';
@@ -167,8 +165,7 @@ export const jsxComponent = (
   | SimpleVComponent
   | SimpleVComponent
   | VDomComponent<keyof typeof domComponentMap> => {
-  // TODO: add other handlers
-  const { className, onClick, ...props } = extendedProps || {};
+  const { className, ...props } = extendedProps || {};
 
   const handlers = extractEventHandlers(extendedProps);
 

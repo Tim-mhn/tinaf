@@ -1,4 +1,5 @@
-import { Subscription, tap } from 'rxjs';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Subscription } from 'rxjs';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
 import { watchList } from '../reactive/watch-list';
 import { toArray, type MaybeArray } from '../utils/array';

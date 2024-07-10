@@ -4,6 +4,7 @@
     "Renderable",
     "Tinaf"
   ],
+  "typescript.preferences.importModuleSpecifier": "relative",
   // "tailwindCSS.experimental.classRegex": ["tw`([^`]*)"],
   "tailwindCSS.experimental.classRegex": ["class: '(.*)"],
 

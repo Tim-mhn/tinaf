@@ -1,7 +1,7 @@
 import { getProduct } from '../data/products.mock';
 import { component, type VComponent } from 'tinaf/component';
 import { div, img, span } from 'tinaf/dom';
-import { computed, toReactiveProps, toValue } from 'tinaf/reactive';
+import { computed, toReactiveProps } from 'tinaf/reactive';
 import { injectRouter, type PageComponent} from 'tinaf/router';
 
 export const ProductPage: PageComponent = component(() => {
@@ -14,7 +14,8 @@ export const ProductPage: PageComponent = component(() => {
 
   const product = computed(() => getProduct(productId.value), [productId]);
 
-  const { title, description, image, price, rating } = toReactiveProps(product);
+  const { title, description, image, price, rating: { rate, count } } = toReactiveProps(product, { deep: true});
+
 
   return <div className="flex flex-col items-center gap-8">
 
@@ -23,12 +24,20 @@ export const ProductPage: PageComponent = component(() => {
 
     <div className="text-md font-light">{description}</div>
 
-    <img className="h-[360px] w-[360px] object-contain" src={toValue(image)} />
+    <img className="h-[360px] w-[360px] object-contain" src={image} />
 
     <div className="text-xl font-semibold">
       <span>{price}</span>
       <span>€</span>
+
+      <div className="text-sm font-light">
+      <span>{rate}/5</span>
+      <span>({count} reviews)</span>
     </div>
+    
+    </div>
+    
+    
   </div>
 });
 
