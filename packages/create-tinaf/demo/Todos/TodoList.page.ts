@@ -20,21 +20,23 @@ export const TodoListPage = component(() => {
     todos.update(filteredTodos);
   };
 
-  return div(
-    div(
-      Input(todoInput, { placeholder: 'Add todo' }),
-      button('+')
-        .on({ click: () => addTodo(todoInput.value) })
-        .addClass(
-          'rounded-full flex items-center justify-center p-2 bg-green-500 hover:bg-green-600 h-8 w-8 text-white text-lg'
-        )
-    ).addClass('flex items-center gap-4'),
-    div(
-      forLoop(
-        todos,
-        (todo) => Todo({ todo, onRemoveTodo: () => removeTodo(todo) }),
-        (todo) => todo // key function
-      )
-    ).addClass('flex flex-col gap-1')
-  ).addClass('flex flex-col gap-8');
+  return <div className="flex flex-col gap-8">
+    <div className="flex items-center gap-4">
+      <Input reactiveInput={todoInput} placeholder="Add todo" />
+
+      <button @click={() => addTodo(todoInput.value)} className="rounded-full flex items-center justify-center p-2 bg-green-500 hover:bg-green-600 h-8 w-8 text-white text-lg">+</button>
+    </div>
+  </div>
 });
+
+
+/**
+ *     // div(
+    //   forLoop(
+    //     todos,
+    //     (todo) => Todo({ todo, onRemoveTodo: () => removeTodo(todo) }),
+    //     (todo) => todo // key function
+    //   )
+    // ).addClass('flex flex-col gap-1')
+
+ */

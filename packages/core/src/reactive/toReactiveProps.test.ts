@@ -25,6 +25,9 @@ describe('toReactiveProps', () => {
       () => ({
         a: 1,
         b: 2,
+        c: {
+          d: '',
+        },
       }),
       [reactive('')]
     );

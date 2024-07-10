@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "outDir": "dist",
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    /* Modules */
+    "module": "ESNext" /* Specify what module code is generated. */,
+    "moduleResolution": "Bundler",
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+
+    /* Type Checking */
+    "strict": true /* Enable all strict type-checking options. */,
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "preserveSymlinks": true,
+    "verbatimModuleSyntax": true,
+
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "composite": true,
+    "jsx": "preserve",
+    "jsxImportSource": "tinaf",
+    "jsxFactory": "jsxComponent"
+  }
+}

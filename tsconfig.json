@@ -17,6 +17,7 @@
     "verbatimModuleSyntax": true,
 
     "baseUrl": ".",
+    
   },
   
   "exclude": ["**/*.spec.ts", "**/*.spec.js"],

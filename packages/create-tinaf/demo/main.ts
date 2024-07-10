@@ -11,7 +11,7 @@ const App = component(() => {
     div('Welcome to TINAF starting app').addClass(
       'flex w-full p-4  items-center justify-start font-light text-3xl border-b border-slate-800'
     ),
-    div(RouterView()).addClass('flex-grow px-4 py-16 flex flex-col '),
+    div(RouterView({})).addClass('flex-grow px-4 py-16 flex flex-col '),
     Links()
   ).addClass('h-screen w-screen text-slate-800 bg-white flex flex-col');
 });

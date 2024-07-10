@@ -6,7 +6,13 @@ import { DynamicCard } from './components/Card';
 import { Hr } from '../shared/Hr';
 
 export const HomePage = component(() => {
-  return div(Counter(), Hr(), InputExample(), Hr(), DynamicCard()).addClass(
-    'flex  flex-col gap-16'
+  return (
+    <div className="flex flex-col gap-16">
+      <Counter />
+      <Hr />
+      <InputExample />
+      <Hr />
+      <DynamicCard />
+    </div>
   );
 });
