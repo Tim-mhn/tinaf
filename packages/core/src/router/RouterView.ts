@@ -54,7 +54,7 @@ export const RouterView = component(() => {
         );
       }
 
-      const res = pathComponent?.() || null;
+      const res = pathComponent?.({}) || null;
 
       return res;
     },

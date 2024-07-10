@@ -6,7 +6,7 @@
     "declarationDir": "./dist/types",
     "outDir": "./dist",
     "composite": true,
-    
+    "jsx": "preserve",
     "jsxImportSource": "tinaf",
     "jsxFactory": "jsxComponent",
     "paths": {
