@@ -1,12 +1,16 @@
 import { Link } from '../ui/Link';
 import { component, onDestroy, onInit } from 'tinaf/component';
 import { div } from 'tinaf/dom';
-import { RouterView, type RouterConfig } from 'tinaf/router';
+import {
+  RouterView,
+  type RouterConfig,
+  type PageComponent,
+} from 'tinaf/router';
 
-const DashboardContainer = component(() => {
+const DashboardContainer: PageComponent = component(() => {
   return div(
     div('Dashboard'),
-    RouterView(),
+    RouterView({}),
     div(
       Link({
         to: '/dashboard/orders',
@@ -20,7 +24,7 @@ const DashboardContainer = component(() => {
   );
 });
 
-const Orders = component(() => {
+const Orders: PageComponent = component(() => {
   onInit(() => {
     console.log('Orders component initialized');
   });

@@ -1,4 +1,4 @@
-import { component } from "tinaf/component";
+import { component, type VComponent } from "tinaf/component";
 import { div } from "tinaf/dom";
 
 import { reactive } from 'tinaf/reactive'
