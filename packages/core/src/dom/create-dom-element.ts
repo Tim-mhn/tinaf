@@ -41,7 +41,7 @@ type CreateDomElementProps<T extends TagName> = {
   type: T;
   children: ComponentChildren;
   handlers?: EventHandlers;
-  classes?: AddClassesArgs;
+  className?: AddClassesArgs;
   styles?: AddStylesArgs;
 };
 
@@ -50,7 +50,7 @@ export class VDomComponent<T extends TagName> implements VComponent {
     private _doc: IDocument,
     private type: T,
     private children: ComponentChildren,
-    private classes?: AddClassesArgs,
+    private className?: AddClassesArgs,
     private styles?: AddStylesArgs,
     private handlers?: EventHandlers
   ) {}
@@ -66,9 +66,10 @@ export class VDomComponent<T extends TagName> implements VComponent {
   }
 
   addClass(newClasses?: AddClassesArgs) {
-    // TODO: mergeClasses was necessary to avoid overriding current classes
+    // TODO: mergeClasses was necessary to avoid overriding current className
     // beware of empty array for newClasses param
-    if (newClasses) this.classes = mergeClasses(newClasses, this.classes || []);
+    if (newClasses)
+      this.className = mergeClasses(newClasses, this.className || []);
     return this;
   }
 
@@ -164,7 +165,7 @@ export class VDomComponent<T extends TagName> implements VComponent {
 
     this._addOptionsToElement(this.html);
 
-    if (this.classes) addClassToElement(this.html, this.classes);
+    if (this.className) addClassToElement(this.html, this.className);
     if (this.handlers) addEventListenersToElement(this.html, this.handlers);
     if (this.styles) addStylesToElement(this.html, this.styles);
     return this.html;
@@ -189,13 +190,13 @@ export const _createDomElement = <T extends TagName>(
   }
 ): VDomComponent<T> => {
   console.log(props);
-  const { children = [], classes, type, handlers, styles } = props;
+  const { children = [], className, type, handlers, styles } = props;
 
   const vdom = new VDomComponent(
     injections.doc,
     type,
     children,
-    classes,
+    className,
     styles,
     handlers
   );

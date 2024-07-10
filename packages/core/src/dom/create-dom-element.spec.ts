@@ -47,8 +47,6 @@ describe('dom element', () => {
     });
 
     it('should accept options with raw values', () => {
-      const src = reactive('https://example.com/image.jpg');
-
       const mockDocument = createMockDocument();
       const imgComponent = img(
         {

@@ -24,7 +24,7 @@ export const li = createDomElement('li');
 type CreateDom2Props = Partial<
   Pick<
     Parameters<typeof _createDomElement>[0],
-    'children' | 'classes' | 'handlers'
+    'children' | 'className' | 'handlers'
   >
 >;
 
@@ -45,15 +45,15 @@ export const input2 = (
     CreateDom2Props & { value?: InputReactive<string | number> }
 ): VInputComponent<string | number> => {
   console.log(args);
-  const { value, children: _noChildrenForInput, classes, ...props } = args;
+  const { value, children: _noChildrenForInput, className, ...props } = args;
 
   if (!value) {
     logger.warn(`No value provided for input component`, args);
     return input(inputReactive<string | number>(''), args).addClass(
-      classes || ''
+      className || ''
     );
   }
-  return input(value, props).addClass(classes || '');
+  return input(value, props).addClass(className || '');
 };
 
 export const img2 = (args: CreateDom2Props & Parameters<typeof img>[0]) => {

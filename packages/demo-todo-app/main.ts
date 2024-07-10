@@ -7,6 +7,8 @@ import { DashboardRoutes } from './src/dashboard/routes';
 
 const app = createApp(App);
 
+ProductPage({});
+
 const router = createRouter([
   {
     path: '/product/:productId',

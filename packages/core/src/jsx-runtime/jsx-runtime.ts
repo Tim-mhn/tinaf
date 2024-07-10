@@ -5,6 +5,7 @@ import type { ComponentFn } from '../component';
 import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
 import type {
   AddClassesArgs,
+  ComponentChildren,
   EventHandlerKey,
   VDomComponent,
 } from '../dom/create-dom-element';
@@ -145,32 +146,24 @@ type InputHtmlAttributes = HtmlAttributes &
 
 type ImageHtmlAttributes = HtmlAttributes & Parameters<typeof img2>[0];
 
-const domComponentMap: Partial<
-  Record<
-    keyof HTMLElementTagNameMap,
-    (...params: any[]) => VDomComponent<keyof HTMLElementTagNameMap>
-  >
-> = {
+const domComponentMap = {
   div: div2,
   button: button2,
-  input: input2 as any,
+  input: input2,
   img: img2,
   li: li2,
   ul: ul2,
   span: span2,
-};
+} as const;
 
 export const jsxComponent = (
   componentFn: keyof typeof domComponentMap | ComponentFn,
   extendedProps: Record<string, any> | null,
-  ..._children: any[]
+  ..._children: ComponentChildren
 ):
   | SimpleVComponent
   | SimpleVComponent
   | VDomComponent<keyof typeof domComponentMap> => {
-  // TODO: unify API for classes.
-  // We have 'classes' for dom elements and 'className' for components
-
   // TODO: add other handlers
   const { className, onClick, ...props } = extendedProps || {};
 
@@ -185,7 +178,7 @@ export const jsxComponent = (
     return domComponent({
       ...props,
       children: _children,
-      classes: className,
+      className,
       handlers: { click: onClick },
     }) as any;
   }
