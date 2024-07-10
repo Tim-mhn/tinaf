@@ -36,9 +36,10 @@ export type AddClassesArgs =
   | MaybeArray<MaybeReactive<string>>
   | Record<string, MaybeReactive<boolean>>;
 
+export type ComponentChildren = (VComponent | MaybeReactive<PrimitiveType>)[];
 type CreateDomElementProps<T extends TagName> = {
   type: T;
-  children: (VComponent | MaybeReactive<PrimitiveType>)[];
+  children: ComponentChildren;
   handlers?: EventHandlers;
   classes?: AddClassesArgs;
   styles?: AddStylesArgs;
@@ -48,7 +49,7 @@ export class VDomComponent<T extends TagName> implements VComponent {
   constructor(
     private _doc: IDocument,
     private type: T,
-    private children: (VComponent | MaybeReactive<PrimitiveType>)[],
+    private children: ComponentChildren,
     private classes?: AddClassesArgs,
     private styles?: AddStylesArgs,
     private handlers?: EventHandlers

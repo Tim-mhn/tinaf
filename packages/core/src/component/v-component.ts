@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { mergeClasses } from '../dom/classes';
-import type { AddClassesArgs } from '../dom/create-dom-element';
+import type {
+  AddClassesArgs,
+  ComponentChildren,
+} from '../dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
 import { type MaybeArray } from '../utils/array';
 import { type TinafElement, type VComponent, type WithHtml } from './component';
@@ -103,13 +106,17 @@ export function component<Props extends ComponentProps = NoProps>(
 
 type NoProps = Record<string, never>;
 
-type RenderFnParams<Props extends object> = {
-  children?: (VComponent | string)[] | string;
-} & {
-  [K in keyof Omit<Props, 'children'>]: Props[K] extends (...args: any[]) => any
-    ? Props[K]
-    : MaybeReactive<Props[K]>;
-};
+type RenderFnParams<Props extends object> = Props extends NoProps
+  ? { children?: ComponentChildren }
+  : {
+      children?: ComponentChildren;
+    } & {
+      [K in keyof Omit<Props, 'children'>]: Props[K] extends (
+        ...args: any[]
+      ) => any
+        ? Props[K]
+        : MaybeReactive<Props[K]>;
+    };
 
 type ComponentProps = {
   [key: string]: any;

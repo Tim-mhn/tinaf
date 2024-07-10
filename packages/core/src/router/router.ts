@@ -1,10 +1,14 @@
+import type { ComponentChildren } from '../dom/create-dom-element';
 import type { VComponent } from '../component';
 import { Reactive, reactive } from '../reactive';
 import type { Maybe } from '../utils/types';
 
+export type PageComponent = (maybeChildren: {
+  children?: ComponentChildren[];
+}) => VComponent;
 export type RouterConfig = Array<{
   path: string;
-  component: () => VComponent;
+  component: PageComponent;
   children?: RouterConfig;
 }>;
 
@@ -90,7 +94,7 @@ export class Router {
     let routes: RouterConfig = this.config;
     let currentDepth = 0;
 
-    let component: Maybe<() => VComponent> = null;
+    let component: Maybe<PageComponent> = null;
     while (currentDepth <= depth) {
       const { route, match, matchingPath } = buildMatchingRoute(routes, _path);
 

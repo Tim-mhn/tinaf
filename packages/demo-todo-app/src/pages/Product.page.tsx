@@ -1,10 +1,10 @@
 import { getProduct } from '../data/products.mock';
-import { component } from 'tinaf/component';
+import { component, type VComponent } from 'tinaf/component';
 import { div, img, span } from 'tinaf/dom';
 import { computed, toReactiveProps, toValue } from 'tinaf/reactive';
-import { injectRouter } from 'tinaf/router';
+import { injectRouter, type PageComponent} from 'tinaf/router';
 
-export const ProductPage = component(() => {
+export const ProductPage: PageComponent = component(() => {
   const router = injectRouter();
 
   const productId = computed(
@@ -31,3 +31,7 @@ export const ProductPage = component(() => {
     </div>
   </div>
 });
+
+
+
+
