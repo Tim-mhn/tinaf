@@ -1,10 +1,11 @@
 import { component, forLoop } from 'tinaf/component';
-import { button, div } from 'tinaf/dom';
 import { inputReactive, reactiveList } from 'tinaf/reactive';
 import { Todo } from './components/Todo';
 import { Input } from '../shared/Input';
+import type { PageComponent} from 'tinaf/router'
 
-export const TodoListPage = component(() => {
+
+export const TodoListPage: PageComponent = component(() => {
   const todos = reactiveList<string>(['Buy milk', 'Do laundry']);
 
   const todoInput = inputReactive('');
@@ -22,9 +23,9 @@ export const TodoListPage = component(() => {
 
   return <div className="flex flex-col gap-8">
     <div className="flex items-center gap-4">
-      <Input reactiveInput={todoInput} placeholder="Add todo" />
+      <Input reactiveText={todoInput} placeholder="Add todo" />
 
-      <button @click={() => addTodo(todoInput.value)} className="rounded-full flex items-center justify-center p-2 bg-green-500 hover:bg-green-600 h-8 w-8 text-white text-lg">+</button>
+      <button onClick={() => addTodo(todoInput.value)} className="rounded-full flex items-center justify-center p-2 bg-green-500 hover:bg-green-600 h-8 w-8 text-white text-lg">+</button>
     </div>
   </div>
 });

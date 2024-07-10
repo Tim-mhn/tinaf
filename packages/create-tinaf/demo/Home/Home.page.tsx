@@ -4,8 +4,8 @@ import { Counter } from './components/Counter';
 import { InputExample } from './components/InputExample';
 import { DynamicCard } from './components/Card';
 import { Hr } from '../shared/Hr';
-
-export const HomePage = component(() => {
+import type { PageComponent} from 'tinaf/router'
+export const HomePage: PageComponent = component(() => {
   return (
     <div className="flex flex-col gap-16">
       <Counter />
