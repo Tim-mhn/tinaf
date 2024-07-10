@@ -8,8 +8,6 @@ const regexString = path
   })
   .join('/');
 
-console.log({ path });
-
 function findRouteMatch(urlPath: string) {
   const regexp = new RegExp(`^${regexString}`);
   const match = urlPath.match(regexp);
@@ -18,9 +16,6 @@ function findRouteMatch(urlPath: string) {
     console.log('no match');
     return;
   }
-  console.log(match);
-
-  console.log(urlPath.replace(match[0], ''));
 }
 
 findRouteMatch('/product/12345/details');

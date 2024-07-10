@@ -18,7 +18,7 @@ import type { PartialExcept } from '../utils/partial-except';
 
 type TagName = keyof HTMLElementTagNameMap;
 
-type Listener = Exclude<
+export type Listener = Exclude<
   {
     [K in keyof HTMLElement]: K extends `on${infer E}` ? E : never;
   }[keyof HTMLElement],
@@ -189,7 +189,6 @@ export const _createDomElement = <T extends TagName>(
     doc: buildDomDocument(),
   }
 ): VDomComponent<T> => {
-  console.log(props);
   const { children = [], className, type, handlers, styles } = props;
 
   const vdom = new VDomComponent(

@@ -17,13 +17,9 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   implements VComponent
 {
   constructor(
-    private props: RenderFnParams<Props & { className?: AddClassesArgs }>,
-    public renderFn: (
-      props: RenderFnParams<Props & { className?: AddClassesArgs }>
-    ) => TinafElement
-  ) {
-    console.log(props);
-  }
+    private props: RenderFnParams<Props>,
+    public renderFn: (props: RenderFnParams<Props>) => TinafElement
+  ) {}
 
   readonly __type = 'V_COMPONENT';
   readonly __subtype = 'V3';
@@ -105,12 +101,14 @@ export function component<Props extends ComponentProps = NoProps>(
 }
 
 type NoProps = Record<string, never>;
+type DefaultComponentProps = {
+  children?: ComponentChildren;
+  className?: AddClassesArgs;
+};
 
 type RenderFnParams<Props extends object> = Props extends NoProps
-  ? { children?: ComponentChildren }
-  : {
-      children?: ComponentChildren;
-    } & {
+  ? DefaultComponentProps
+  : DefaultComponentProps & {
       [K in keyof Omit<Props, 'children'>]: Props[K] extends (
         ...args: any[]
       ) => any

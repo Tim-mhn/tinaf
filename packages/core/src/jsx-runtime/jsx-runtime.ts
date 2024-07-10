@@ -7,9 +7,12 @@ import type {
   AddClassesArgs,
   ComponentChildren,
   EventHandlerKey,
+  EventHandlers,
+  Listener,
   VDomComponent,
 } from '../dom/create-dom-element';
 import type { InputReactive } from 'src/reactive';
+import { extractEventHandlers } from './utils';
 
 interface HTMLElementTags {
   // a: AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -167,11 +170,11 @@ export const jsxComponent = (
   // TODO: add other handlers
   const { className, onClick, ...props } = extendedProps || {};
 
+  const handlers = extractEventHandlers(extendedProps);
+
   if (typeof componentFn === 'string' && componentFn in domComponentMap) {
     const domComponent =
       domComponentMap[componentFn as keyof typeof domComponentMap];
-
-    console.log(extendedProps);
 
     if (!domComponent) throw new Error('Component not found');
 
@@ -179,7 +182,7 @@ export const jsxComponent = (
       ...props,
       children: _children,
       className,
-      handlers: { click: onClick },
+      handlers,
     }) as any;
   }
 
@@ -194,8 +197,6 @@ export const jsxComponent = (
     className,
     children: children,
   });
-
-  console.groupEnd();
 
   return component as any;
 };
