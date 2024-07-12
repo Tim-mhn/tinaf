@@ -90,7 +90,9 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   }
 }
 
-export type ComponentFn = ReturnType<typeof component>;
+export type ComponentFn<Props extends ComponentProps = NoProps> = ReturnType<
+  typeof component<Props>
+>;
 
 export function component<Props extends ComponentProps = NoProps>(
   renderFn: (p: RenderFnParams<Props>) => TinafElement

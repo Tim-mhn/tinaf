@@ -5,8 +5,9 @@ import { watchList } from '../reactive/watch-list';
 import { toArray, type MaybeArray } from '../utils/array';
 import type { VComponent, WithHtml } from './component';
 import { isVComponent } from './is-component';
-import { SimpleVComponent } from './v-component';
+import { SimpleVComponent, component, type ComponentFn } from './v-component';
 import type { AddClassesArgs } from '../dom/create-dom-element';
+import type { T } from 'vitest/dist/reporters-yx5ZTtEV.js';
 
 class ForLoopComponent<T> implements VComponent {
   constructor(
@@ -124,10 +125,7 @@ class ForLoopComponent<T> implements VComponent {
         .sort((a, b) => b.index - a.index);
 
       childrenToAdd.forEach(({ value, index: childIndex }) => {
-        const { html, vnode, key } = this._renderChildHtmlAndInit(
-          value,
-          this.parent
-        );
+        const { html } = this._renderChildHtmlAndInit(value, this.parent);
 
         toArray(html).forEach((childHtml, index) =>
           parent.html.insertBefore(
@@ -146,8 +144,28 @@ class ForLoopComponent<T> implements VComponent {
   }
 }
 
-export const forLoop = <T>(
+const forLoop = <T>(
   items: MaybeReactive<T[]>,
   renderFn: (item: T) => HTMLElement | Comment | VComponent,
   keyFunction: (item: T) => string | number = (item) => JSON.stringify(item)
 ) => new ForLoopComponent(items, renderFn, keyFunction);
+// TODO: <For> is an interface for the forLoop component. Maybe we could drop entirely forLoop
+/**
+ * Creates a list of elements from a reactive list
+ */
+export function For<T>({
+  each,
+  keyFunction,
+  children,
+}: {
+  each: MaybeReactive<T[]>;
+  keyFunction: (item: T) => string | number;
+  children?: [(item: T) => HTMLElement | Comment | VComponent];
+}) {
+  const [renderFn] = children || [];
+
+  if (!renderFn)
+    throw new Error('[TINAF] <For /> component is missing renderFn ');
+
+  return forLoop(each, renderFn, keyFunction);
+}

@@ -32,6 +32,8 @@ export const SearchBar = component<{
 
   return <div className='p-4 border rounded-sm h-9 flex grow items-center justify-center  border-slate-800'>
     <input placeholder='What are you looking for ?' className='outline-none w-full' value={searchInput} />
+
+
   </div>
    
   

@@ -1,6 +1,5 @@
 import type { Product } from 'src/models/product';
-import {  component, forLoop } from 'tinaf/component';
-import { ul, } from 'tinaf/dom';
+import {  component, For } from 'tinaf/component';
 import {
   maybeComputed,
   toReactiveProps,
@@ -41,17 +40,19 @@ export const ProductList = component<{ products: Product[] }>(
 
     const goToProductPage = (p: Product) => router.navigate(`/product/${p.id}`);
 
-    return <ul className="grid border border-black gap-y-8 grid-flow-row-dense grid-cols-1 md:grid-cols-3 lg:grid-cols-5 h-fit">
+    return <div>
+    <ul className="grid border border-black gap-y-8 grid-flow-row-dense grid-cols-1 md:grid-cols-3 lg:grid-cols-5 h-fit">
 
-      {
-         forLoop(
-          products,
-          (product) =>
-            ProductCard({ product, onClick: () => goToProductPage(product) }),
-          (p) => p.id
-        )
-      }
-
+      <For each={products} keyFunction={(p) => p.id}>
+      {(product: Product) => ProductCard({ product, onClick: () => goToProductPage(product) }) }
+      </For>
     </ul>
+
+
   
-    })
+
+    </div>
+
+  })
+  
+    
