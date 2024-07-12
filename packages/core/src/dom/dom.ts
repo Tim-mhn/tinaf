@@ -44,7 +44,6 @@ export const input2 = (
   args: Partial<HTMLInputElementOptions> &
     CreateDom2Props & { value?: InputReactive<string | number> }
 ): VInputComponent<string | number> => {
-  console.log(args);
   const { value, children: _noChildrenForInput, className, ...props } = args;
 
   if (!value) {

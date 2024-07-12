@@ -12,8 +12,6 @@ const Bar = component<{ title: string}> (({ title, children}) => {
 
 
 
-    console.log({ children})
-
 
     return div(
         div(title),
