@@ -26,21 +26,19 @@ Here is how to get started (if you don't want to follow the starter app `create-
     <script type="module" src="./main.ts"></script>
 </head>
 <body>
-    <div id="app" > </div>
+    <div id="container" > </div>
 </body>
 
 
 // App.tsx
-export const App = component(() => {
-    return <div>Hello World</div>
-})
+export const App = component(() => <div>Hello World</div>)
 
 // main.ts
-import { renderApp } from "tinaf/render";
+import { createApp } from "tinaf/render";
 import { App } from './App'
 
 const app = createApp(App)
-renderApp('app')
+app.render('container')
 ```
 
 ### Reactivity system
