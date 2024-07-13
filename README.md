@@ -72,10 +72,8 @@ import { useInterval } from "tinaf/common-hooks";
 
 const Counter = component(() => {
     const count = reactive(0);
-    
     // increments the value by 1 every second
     useInterval(() => count.update(count.value + 1, 1000)
-
     return <div>{count}</div>
 })
 ```
@@ -101,7 +99,7 @@ const DemoCard = component(() => {
 ```
 
 ### Control-flow (for-loop & if/else)
-
+#### For loop
 To render a list of components, use the `<For />` component
 
 ```
@@ -116,7 +114,24 @@ const FruitsList = component(() => {
 })
 ```
 
-TODO: add example for if/else
+#### If/Else
+To conditionnally render a component or a fallback, use the `<Show />` component (heaviliy inspired from Solid's [<Show />](https://docs.solidjs.com/concepts/control-flow/conditional-rendering)
+
+```
+import { component, Show } from "tinaf/component";
+import { bool } from "tinaf/reactive";
+
+export const ShowExample = component(() => {
+    const [isHappy, toggleMood] = bool(true)
+
+    return <div> 
+      <Show when={condition} fallback={<div> sad! </div>} >
+        <div> happy ! </div>
+      </Show>
+      <button onClick={toggleMood} > click to toggle mood </button>
+    </div>
+})
+```
 
 ### Styling
 
