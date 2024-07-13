@@ -68,11 +68,13 @@ Let's create a component that uses a reactive value
 ```
 import { component } from "tinaf/component";
 import { reactive } from "tinaf/reactive";
+import { useInterval } from "tinaf/common-hooks";
 
 const Counter = component(() => {
     const count = reactive(0);
-    // updates the value by 1 every second
-    setInterval(() => count.update(count.value + 1), 1000)
+    
+    // increments the value by 1 every second
+    useInterval(() => count.update(count.value + 1, 1000)
 
     return <div>{count}</div>
 })
