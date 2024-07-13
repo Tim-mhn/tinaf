@@ -13,9 +13,9 @@ Run this command and follow the prompts
 
 ## How it works
 
-This library is based on a custom JSX, with strong inspiration from SolidJS.
+This library is based on a custom JSX implementation, with strong inspiration from SolidJS.
 
-Here is how to get started, if you don't want to follow the starter app `create-tinaf`
+Here is how to get started (if you don't want to follow the starter app `create-tinaf`)
 
 ### Hello World (with Vite)
 
