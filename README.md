@@ -115,7 +115,7 @@ const FruitsList = component(() => {
 ```
 
 #### If/Else
-To conditionnally render a component or a fallback, use the `<Show />` component (heaviliy inspired from Solid's [<Show />](https://docs.solidjs.com/concepts/control-flow/conditional-rendering)
+To conditionnally render a component or a fallback, use the `<Show />` component (heaviliy inspired from Solid's [Show](https://docs.solidjs.com/concepts/control-flow/conditional-rendering)
 
 ```
 import { component, Show } from "tinaf/component";
