@@ -100,7 +100,9 @@ export class VDomComponent<T extends TagName> implements VComponent {
     });
   }
 
+  parent!: WithHtml;
   init(parent: WithHtml) {
+    this.parent = parent;
     this._rerenderOnChanges(parent);
 
     this.children.forEach((child) => {

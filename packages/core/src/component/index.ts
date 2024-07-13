@@ -1,4 +1,4 @@
-export { when } from './conditional-render';
+export { Show } from './Show';
 export { For } from './for-loop';
 export { component, type ComponentFn } from './v-component';
 export { type VComponent } from './component';

@@ -77,7 +77,6 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
       this.html = html;
       return html;
     }
-
     return this.child;
   }
 

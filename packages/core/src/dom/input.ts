@@ -58,7 +58,10 @@ export class VInputComponent<T extends string | number> implements VComponent {
     private handlers?: EventHandlers
   ) {}
 
+  parent!: WithHtml;
+
   init(parent: WithHtml) {
+    this.parent = parent;
     this.reactiveValue.nonUiValueChanges$.subscribe(() => {
       const index = [...parent.html.childNodes].findIndex(
         (n) => n === this.html

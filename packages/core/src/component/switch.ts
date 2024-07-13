@@ -36,7 +36,9 @@ class SwitchComponent<T> implements VComponent {
 
   private sub = new Subscription();
 
+  parent!: WithHtml;
   init(parent: WithHtml) {
+    this.parent = parent;
     const value = toValue(this.reactiveValue);
     const component = this.switchFn(value);
 

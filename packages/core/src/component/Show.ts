@@ -2,8 +2,14 @@ import { Subscription } from 'rxjs';
 import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
 import type { MaybeArray } from '../utils/array';
-import type { VComponent, WithHtml } from './component';
+import type { HTML, TinafElement, VComponent, WithHtml } from './component';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
+import {
+  destroyChildren,
+  initChildren,
+  renderChildren,
+} from '../render-utils/render-children';
+import { logger } from '../common';
 
 function buildPlaceholderComment() {
   const commentText = `placeholder--${crypto.randomUUID()}`;
@@ -15,35 +21,39 @@ function buildPlaceholderComment() {
 class ConditionallyRenderedComponent implements VComponent {
   constructor(
     private condition: MaybeReactive<boolean>,
-    private cmp: VComponent,
-    private fallback?: VComponent
+    private children: TinafElement[] = [],
+    private fallback?: VComponent // TODO: handle list of children  for fallback
   ) {}
 
   readonly __type = 'V_COMPONENT';
-  private _html!: MaybeArray<HTMLElement | Comment>;
+  private _html!: MaybeArray<HTML>;
   get html() {
     return this._html;
   }
   renderOnce() {
     if (toValue(this.condition)) {
-      this._html = this.cmp.renderOnce();
       this.fallback?.destroy?.();
+      this._html = renderChildren(this.children);
       return this._html;
     }
+    console.groupEnd();
 
-    this.cmp.destroy?.();
+    destroyChildren(this.children);
 
     if (!this.fallback) {
       this._html = buildPlaceholderComment();
+      console.log('no fallback and condition false returning placeholder');
       return this._html;
     }
+
+    console.log('condition false, returning fallback');
 
     this._html = this.fallback.renderOnce();
     return this._html;
   }
 
   private _initChild(parent: WithHtml) {
-    if (toValue(this.condition)) this.cmp.init(parent);
+    if (toValue(this.condition)) initChildren(this.children, parent);
     else if (this.fallback) this.fallback.init(parent);
   }
 
@@ -55,7 +65,10 @@ class ConditionallyRenderedComponent implements VComponent {
 
   private subs = new Subscription();
 
+  parent!: WithHtml;
   init(parent: WithHtml) {
+    this.parent = parent;
+    this._initChild(parent);
     if (!isReactive(this.condition)) return;
 
     const sub = this.condition.valueChanges$.subscribe(() => {
@@ -75,27 +88,44 @@ class ConditionallyRenderedComponent implements VComponent {
     this.subs.add(sub);
 
     if (!this.classes) return;
+    logger.warn('addClass has no effect with <Show />');
 
-    this.cmp.addClass(this.classes);
-    this.fallback?.addClass?.(this.classes);
+    // this.children.addClass(this.classes);
+    // this.fallback?.addClass?.(this.classes);
   }
 
   destroy(): void {
     this.subs.unsubscribe();
-    this.cmp.destroy?.();
+    destroyChildren(this.children);
     this.fallback?.destroy?.();
-  }
-
-  else(fallback: VComponent) {
-    return new ConditionallyRenderedComponent(
-      this.condition,
-      this.cmp,
-      fallback
-    );
   }
 }
 
-export const when = (condition: MaybeReactive<boolean>) => ({
-  render: (cmp: VComponent) =>
-    new ConditionallyRenderedComponent(condition, cmp),
-});
+export const Show = ({
+  when,
+  children,
+  fallback,
+}: {
+  children?: TinafElement[];
+  when: MaybeReactive<boolean>;
+  fallback?: VComponent; // TODO: handle any TinafElement and potentially list
+}) => {
+  return new ConditionallyRenderedComponent(when, children, fallback);
+};
+
+/**
+ * const Fallback = component(() => { .. })
+ * return <Show when={condition} fallback={Fallback}>
+ *  hello there !
+ * </Show>
+ *
+ * return <Show when={condition}>
+ *
+ * <div> hello there ! </div>
+ *
+ * <Else>
+ *    <div> else</div>
+ * </Else>
+ *
+ * </Show>
+ */

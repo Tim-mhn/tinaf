@@ -7,6 +7,7 @@ import { Header } from './Header/Header';
 import { RouterView, type PageComponent } from 'tinaf/router';
 import { Link } from './ui/Link';
 import { Example } from './tests/Example';
+import { ShowExample } from './examples/ShowExample';
 
 const MainContainer = component(({ children }) => {
   return div(...(children || [])).addClass('p-8 gap-8 flex flex-col ');
@@ -14,6 +15,7 @@ const MainContainer = component(({ children }) => {
 export const App: PageComponent = component(() => {
   return <div className="flex flex-col w-screen h-screen text-slate-800">
     <Header />
+
 
     <Example />
 
@@ -30,5 +32,8 @@ export const App: PageComponent = component(() => {
       <Link to="/">To home</Link>
       <Link to="/dashboard/orders">To orders</Link>
     </div>
+
+    <ShowExample />
+
   </div>
 });

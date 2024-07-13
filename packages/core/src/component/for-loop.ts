@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
 import { watchList } from '../reactive/watch-list';
 import { toArray, type MaybeArray } from '../utils/array';
-import type { VComponent, WithHtml } from './component';
+import type { HTML, TinafElement, VComponent, WithHtml } from './component';
 import { isVComponent } from './is-component';
 import { SimpleVComponent, component, type ComponentFn } from './v-component';
 import type { AddClassesArgs } from '../dom/create-dom-element';
@@ -12,12 +12,12 @@ import type { T } from 'vitest/dist/reporters-yx5ZTtEV.js';
 class ForLoopComponent<T> implements VComponent {
   constructor(
     private items: MaybeReactive<T[]>,
-    private renderFn: (item: T) => HTMLElement | Comment | VComponent,
+    private renderFn: (item: T) => TinafElement,
     private keyFunction: (item: T) => string | number
   ) {}
 
   readonly __type = 'V_COMPONENT';
-  private _html!: (HTMLElement | Comment)[];
+  private _html!: HTML[];
   get html() {
     return this._html;
   }
@@ -27,11 +27,11 @@ class ForLoopComponent<T> implements VComponent {
     parent: WithHtml
   ):
     | {
-        html: MaybeArray<HTMLElement | Comment>;
+        html: MaybeArray<HTML>;
         vnode: VComponent;
         key: string | number;
       }
-    | { html: MaybeArray<HTMLElement | Comment>; vnode: null; key: null } {
+    | { html: MaybeArray<HTML>; vnode: null; key: null } {
     const child = this.renderFn(value);
     if (isVComponent(child)) {
       (child as any as SimpleVComponent).init(parent);
@@ -86,7 +86,7 @@ class ForLoopComponent<T> implements VComponent {
     return this;
   }
 
-  private parent!: WithHtml;
+  parent!: WithHtml;
 
   private sub = new Subscription();
 
@@ -146,7 +146,7 @@ class ForLoopComponent<T> implements VComponent {
 
 const forLoop = <T>(
   items: MaybeReactive<T[]>,
-  renderFn: (item: T) => HTMLElement | Comment | VComponent,
+  renderFn: (item: T) => TinafElement,
   keyFunction: (item: T) => string | number = (item) => JSON.stringify(item)
 ) => new ForLoopComponent(items, renderFn, keyFunction);
 // TODO: <For> is an interface for the forLoop component. Maybe we could drop entirely forLoop
@@ -160,7 +160,7 @@ export function For<T>({
 }: {
   each: MaybeReactive<T[]>;
   keyFunction?: (item: T) => string | number;
-  children?: [(item: T) => HTMLElement | Comment | VComponent];
+  children?: [(item: T) => TinafElement];
 }) {
   const [renderFn] = children || [];
 
