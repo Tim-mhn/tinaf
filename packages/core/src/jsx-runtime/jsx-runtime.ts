@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { SimpleVComponent } from '../component/v-component';
-import { forLoop, type ComponentFn } from '../component';
+import { type ComponentFn } from '../component';
 import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
 import type {
   AddClassesArgs,

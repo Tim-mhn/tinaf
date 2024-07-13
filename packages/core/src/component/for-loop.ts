@@ -159,7 +159,7 @@ export function For<T>({
   children,
 }: {
   each: MaybeReactive<T[]>;
-  keyFunction: (item: T) => string | number;
+  keyFunction?: (item: T) => string | number;
   children?: [(item: T) => HTMLElement | Comment | VComponent];
 }) {
   const [renderFn] = children || [];
