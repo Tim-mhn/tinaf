@@ -9,13 +9,15 @@
 ## Get started with the starter app
 
 Run this command and follow the prompts
-`npx create-tinaf`
+`npx create-tinaf` or `yarn create tinaf`
 
 ## How it works
 
-This is fully JS/TS based. Here is how it works.
+This library is based on a custom JSX, with strong inspiration from SolidJS.
 
-### Hello world
+Here is how to get started, if you don't want to follow the starter app `create-tinaf`
+
+### Hello World (with Vite)
 
 ```
 
@@ -27,18 +29,23 @@ This is fully JS/TS based. Here is how it works.
     <div id="app" > </div>
 </body>
 
+
+// App.tsx
+export const App = component(() => {
+    return <div>Hello World</div>
+})
+
 // main.ts
 import { renderApp } from "tinaf/render";
-import { div } from "tinaf/dom";
+import { App } from './App'
 
-const App = div('Hello world')
-
-renderApp('app', App())
+const app = createApp(App)
+renderApp('app')
 ```
 
 ### Reactivity system
 
-Reactive values are created with `reactive`. The system is based on the great [RxJS](https://github.com/ReactiveX/rxjs)
+Reactive values are created with `reactive`. The system is based on [RxJS](https://github.com/ReactiveX/rxjs) and inspired from Vue's refs system.
 
 ```
 import { reactive } from "tinaf/reactive";
@@ -69,144 +76,69 @@ const Counter = component(() => {
     // updates the value by 1 every second
     setInterval(() => count.update(count.value + 1), 1000)
 
-    return div(count)
+    return <div>{count}</div>
 })
 ```
 
 ### Component props
 
-**NB: this is not availale since the rewrite of the reactivity system**
-
-Use the `componentWithProps` function
-
 ```
-import { componentWithProps } from "tinaf/component";
+// DemoCard.tsx
+import { component } from "tinaf/component";
 
 const Card = component<{ title: string; subtitle: string}>(( { title, subtitle}) => {
-    return div(
-        div(title),
-        div(subtitle)
-    )
+    return <div>
+            <h1> {title} </h1>
+            <h2> {subtitle} </h2>
+        </div>
 })
 
 
-const MyCard = component(() => {
-    return Card({ title: "Hello world", subtitle: "How are you ?"})
+const DemoCard = component(() => {
+    return <Card title="TINAF" subtitle="The new framework in town" />
 })
 
 ```
 
-### Control-flow (conditional rendering)
+### Control-flow (for-loop & if/else)
 
-Traditional _if/else_ syntax does not work, like it would in React or Solid :(
-To achieve this, use the `show` function
+To render a list of components, use the `<For />` component
 
 ```
-import { when } from 'tinaf/component';
+import { For } from 'tinaf/component';
 
-const ShowWhenExample = component(() => {
-    // 'bool' is a helper around 'reactive' similar to React's useState
-    const [show, toggleShow] = bool(true);
+const FruitsList = component(() => {
+    const fruits = ['apple', 'pear', 'banana'];
 
-    return when(show).render(div('hello'))
-})
-
-const ExampleWithFallback = component(() => {
-    const [show, toggleShow] = bool(true);
-
-    const hello = div('hello')
-    const fallback = div('this is a fallback')
-
-    return when(show).render(hello).else(fallback))
+    return <ul>
+        <For each={fruits}>{ (fruit: string) => <li> {fruit} </li> } </For>
+    </ul>
 })
 ```
+
+TODO: add example for if/else
 
 ### Styling
 
-Add (dynamic) classes using `addClasses`
-
-```
-const Example = component(() => {
-
-   const [active, _] = bool(true);
-
-   const backgroundClass = computed(() => active.value ? 'bg-blue-300' : 'bg-red-300', [active])
-
-   return div('Hello').addClasses([backgroundClass, 'text-sm', 'border', 'border-slate-300'])
-})
-```
-
-Add (dynamic) styles using `addStyles`
-
-```
-const Example = component(() => {
-
-   const [active, _] = bool(true);
-
-   const backgroundColor = computed(() => active.value ? 'blue' : 'red', [active])
-
-   return div('Hello').addStyles({
-      background: backgroundColor,
-      border: '1px solid black'
-   })
-})
-```
+TODO: add examples with dynamic classes or styles
 
 ### Event Handling
 
 Use the `on` method
 
 ```
-
-const Example = button('Click to log').on({
-    click: console.log
-})
-```
-
-### Wrapping-up
-
-```
-import { component, componentWithProps } from "tinaf/component";
-import { div, button } from "tinaf/dom";
-import { reactive, computed, bool } from "tinaf/reactive";
-
-const Card = component<{ title: string; subtitle: string}>(({ title, subtitle}) => {
-
-    return div(
-        div(title).addClasses('text-lg font-bold'),
-        div(subtitle).addClasses('text-md font-light')
-    ).addClasses('flex flex-col gap-2 border border-slate-300 rounded-lg')
-})
-
-const Button = component(() => {
-  const [active, toggleActive] = bool(true);
-
-   const buttonText = computed(() => active.value ? 'Deactivate' : 'Activate', [active]);
-   const buttonClasses = computed(() => active.value ? 'bg-green-300 border-green-300' : 'bg-slate-300 border-slate-400')
-
-   return button(buttonText)
-       .addClasses(['border', 'rounded-sm', buttonClasses])
-       .on({
-          click: toggleActive
-       })
-})
-
 const Example = component(() => {
-   return div(
-      Card({ title: 'Hello', subtitle: 'How are you ?'}),
-      Button(),
-   ).addClasses('flex gap-4')
-
+    const handleClick = () => console.log('clicked !')
+    return <button @click={handleClick}> Click me ! </button>
 })
-
 ```
 
-## Routing 
+## Routing
 
 See more info [here](https://github.com/Tim-mhn/tinaf/blob/main/docs/routing.md)
 
 ## Inspirations
 
-- <b>React</b> with JSX, even though this is just JS/TS and not JSX/TSX
+- <b>React & Solid</b> with JSX
 - <b>Vue</b> and its Ref system
 - <b>Angular</b> and its heavy use of RxJS
