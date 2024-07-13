@@ -1,4 +1,4 @@
-import { Reactive, type ReactiveValue } from './reactive';
+import { Reactive } from './reactive';
 
 export const reactiveList = <T>(initialValue: T[] = []) => {
   return new ReactiveList(initialValue);

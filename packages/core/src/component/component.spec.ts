@@ -21,8 +21,8 @@ describe('onDestroy', () => {
       return 'B' as any;
     });
 
-    const A = ComponentA();
-    const B = ComponentB();
+    const A = ComponentA({});
+    const B = ComponentB({});
 
     const parent = buildMockParent();
     A.init(parent);
@@ -64,10 +64,10 @@ describe('onDestroy', () => {
       return 'D' as any;
     });
 
-    const A = ComponentA();
-    const B = ComponentB();
-    const C = ComponentC();
-    const D = ComponentD();
+    const A = ComponentA({});
+    const B = ComponentB({});
+    const C = ComponentC({});
+    const D = ComponentD({});
 
     const parent = buildMockParent();
     A.init(parent);
@@ -104,8 +104,8 @@ describe('onInit', () => {
       return 'B' as any;
     });
 
-    const A = ComponentA();
-    const B = ComponentB();
+    const A = ComponentA({});
+    const B = ComponentB({});
 
     const parent = buildMockParent();
     A.init(parent);
@@ -144,9 +144,9 @@ describe('onInit', () => {
       return 'D' as any;
     });
 
-    const A = ComponentA();
-    const B = ComponentB();
-    const C = ComponentC();
+    const A = ComponentA({});
+    const B = ComponentB({});
+    const C = ComponentC({});
     const D = ComponentD();
 
     const parent = buildMockParent();
