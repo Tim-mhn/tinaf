@@ -129,7 +129,7 @@ Use the `on` method
 ```
 const Example = component(() => {
     const handleClick = () => console.log('clicked !')
-    return <button @click={handleClick}> Click me ! </button>
+    return <button onClick={handleClick}> Click me ! </button>
 })
 ```
 
