@@ -1,22 +1,14 @@
-// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TinafApp, createApp } from '../render';
-import { fromPartial } from './from-partial';
 import { ROUTER_PROVIDER_KEY, type Router } from '../router';
 import type { IDocument } from '../render/window';
 import { createFakeElement } from './dom-element.mock';
 import { vi } from 'vitest';
 import type { VComponent } from '../component';
 import { FakeWindow } from './fake-window';
+import { provideFakeTinafApp } from './inject-app.mock';
 
-let fakeTinafApp = fromPartial<TinafApp>({});
-export const provideFakeTinafApp = (fakeApp: TinafApp) => {
-  fakeTinafApp = fakeApp;
-};
-
-export const injectFakeTinafApp = () => fakeTinafApp;
-
-// FIXME: use one version of fakeApp
+// // FIXME: use one version of fakeApp
 const createFakeApp = () => createApp(() => '' as any, {} as any, {} as any);
 
 export const createMockDocument = (): IDocument => ({

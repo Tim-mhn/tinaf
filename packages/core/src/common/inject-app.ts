@@ -1,7 +1,7 @@
 import {
   injectFakeTinafApp,
   provideFakeTinafApp,
-} from '../test-utils/fake-app';
+} from '../test-utils/inject-app.mock';
 import type { TinafApp } from '../render';
 
 export function injectApp(): TinafApp {

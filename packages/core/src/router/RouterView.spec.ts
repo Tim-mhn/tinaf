@@ -23,7 +23,7 @@ describe('RouterView', () => {
 
     setupFakeApp({ router });
 
-    const routerView = RouterView();
+    const routerView = RouterView({});
 
     const parent = buildMockParent();
     routerView.init(parent);

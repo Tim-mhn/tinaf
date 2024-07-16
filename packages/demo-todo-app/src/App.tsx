@@ -9,6 +9,7 @@ import { Link } from './ui/Link';
 import { Example } from './tests/Example';
 import { ShowExample } from './examples/ShowExample';
 import { inputReactive } from 'tinaf/reactive';
+import { useTimeout } from '../../core/src/common-hooks';
 
 const MainContainer = component(({ children }) => {
   return div(...(children || [])).addClass('p-8 gap-8 flex flex-col ');
@@ -16,7 +17,10 @@ const MainContainer = component(({ children }) => {
 export const App: PageComponent = component(() => {
 
 
-  const placeholder = inputReactive("hello")
+  // const placeholder = inputReactive("hello")
+
+
+  // useTimeout(() => placeholder.update("world"), 1000)
 
 
   return <div className="flex flex-col w-screen h-screen text-slate-800">
@@ -28,7 +32,7 @@ export const App: PageComponent = component(() => {
     <MainContainer>
       <RouterView />
 
-      <input className="border" placeholder={placeholder} />
+      {/* <input className="border" placeholder={placeholder} /> */}
 
 
     </MainContainer>

@@ -7,7 +7,6 @@ import type { HTML, TinafElement, VComponent, WithHtml } from './component';
 import { isVComponent } from './is-component';
 import { SimpleVComponent, component, type ComponentFn } from './v-component';
 import type { AddClassesArgs } from '../dom/create-dom-element';
-import type { T } from 'vitest/dist/reporters-yx5ZTtEV.js';
 
 class ForLoopComponent<T> implements VComponent {
   constructor(
