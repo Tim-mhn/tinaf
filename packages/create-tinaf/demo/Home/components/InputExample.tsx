@@ -7,7 +7,7 @@ export const InputExample = component(() => {
   const text = inputReactive('');
 
   return div(
-    Input(text, { placeholder: 'Type something' }),
+    Input( { placeholder: 'Type something', reactiveText: text }),
     span(text)
   ).addClass('flex items-center gap-4');
 });

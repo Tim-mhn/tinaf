@@ -36,17 +36,14 @@ class ConditionallyRenderedComponent implements VComponent {
       this._html = renderChildren(this.children);
       return this._html;
     }
-    console.groupEnd();
 
     destroyChildren(this.children);
 
     if (!this.fallback) {
       this._html = buildPlaceholderComment();
-      console.log('no fallback and condition false returning placeholder');
       return this._html;
     }
 
-    console.log('condition false, returning fallback');
 
     this._html = this.fallback.renderOnce();
     return this._html;
@@ -113,19 +110,3 @@ export const Show = ({
   return new ConditionallyRenderedComponent(when, children, fallback);
 };
 
-/**
- * const Fallback = component(() => { .. })
- * return <Show when={condition} fallback={Fallback}>
- *  hello there !
- * </Show>
- *
- * return <Show when={condition}>
- *
- * <div> hello there ! </div>
- *
- * <Else>
- *    <div> else</div>
- * </Else>
- *
- * </Show>
- */

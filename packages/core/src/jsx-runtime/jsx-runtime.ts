@@ -168,11 +168,6 @@ export const jsxComponent = (
   | VDomComponent<keyof typeof domComponentMap> => {
   const { className, ...props } = extendedProps || {};
 
-  console.group('jsxComponent');
-  console.log(componentFn);
-  console.log(extendedProps);
-  console.log(_children);
-  console.groupEnd();
 
   const handlers = extractEventHandlers(extendedProps);
 
