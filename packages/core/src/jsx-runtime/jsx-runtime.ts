@@ -11,6 +11,7 @@ import type {
 } from '../dom/create-dom-element';
 import type { InputReactive } from 'src/reactive';
 import { extractEventHandlers } from './utils';
+import type { HTMLInputElementOptions } from '../dom/input';
 
 interface HTMLElementTags {
   // a: AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -143,8 +144,8 @@ type HtmlAttributes = Partial<
 type InputHtmlAttributes = HtmlAttributes &
   Partial<{
     value: InputReactive<string | number>;
-    placeholder?: string;
-  }>;
+  }> &
+  HTMLInputElementOptions;
 
 type ImageHtmlAttributes = HtmlAttributes & Parameters<typeof img2>[0];
 
@@ -167,7 +168,6 @@ export const jsxComponent = (
   | SimpleVComponent
   | VDomComponent<keyof typeof domComponentMap> => {
   const { className, ...props } = extendedProps || {};
-
 
   const handlers = extractEventHandlers(extendedProps);
 

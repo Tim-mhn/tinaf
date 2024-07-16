@@ -3,14 +3,9 @@ import { type ReactiveValue } from './reactive';
 /*
  * each value is either a regular object or a reactive value. There can't be more than 1-level deep reactive * * values
  */
-export type MaybeReactiveProps<T extends object> = T extends Record<
-  string,
-  never
->
-  ? Record<string, never>
-  : {
-      [K in keyof T]: MaybeReactive<T[K]>;
-    };
+export type MaybeReactiveProps<T extends object> = {
+  [K in keyof T]: MaybeReactive<T[K]>;
+};
 
 export type MaybeDeepReactive<T> = IsPrimitive<T> extends true
   ? MaybeReactive<T>

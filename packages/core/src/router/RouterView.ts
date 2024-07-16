@@ -7,6 +7,8 @@ import { computed } from '../reactive';
 export const ROUTER_VIEW_DEPTH_KEY = Symbol('router-view-depth');
 
 // TODO: need to add a onDestroy to remove that subscription
+console.log(component);
+console.log(typeof component);
 export const RouterView = component(() => {
   const tinafApp = injectApp();
 

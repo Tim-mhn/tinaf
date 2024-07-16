@@ -1,5 +1,5 @@
 import type { VComponent, WithHtml } from '../component/component';
-import { InputReactive } from '../reactive';
+import { InputReactive, toValue, type MaybeReactiveProps } from '../reactive';
 import {
   type AddClassesArgs,
   type EventHandlers,
@@ -8,13 +8,20 @@ import {
 import { type AddStylesArgs, addStylesToElement } from './styles';
 import { addClassToElement } from './classes';
 import { objectKeys } from '../utils/object';
+import { Subscription } from 'rxjs';
+import {
+  getReactiveElements,
+  getReactiveElementsFromObject,
+} from '../reactive/utils';
 
-export type HTMLInputElementOptions = {
-  placeholder: string;
-};
+export type HTMLInputElementOptions = Partial<
+  MaybeReactiveProps<{
+    placeholder: string;
+  }>
+>;
 export const input = <T extends string | number>(
   value: InputReactive<T>,
-  options: Partial<HTMLInputElementOptions> = {}
+  options: HTMLInputElementOptions = {}
 ): VInputComponent<T> => {
   return new VInputComponent(value, options);
 };
@@ -52,7 +59,7 @@ export class VInputComponent<T extends string | number> implements VComponent {
 
   constructor(
     private reactiveValue: InputReactive<T>,
-    private options: Partial<HTMLInputElementOptions> = {},
+    private options: HTMLInputElementOptions = {},
     private classes?: AddClassesArgs,
     private styles?: AddStylesArgs,
     private handlers?: EventHandlers
@@ -60,15 +67,39 @@ export class VInputComponent<T extends string | number> implements VComponent {
 
   parent!: WithHtml;
 
+  private subs = new Subscription();
+
   init(parent: WithHtml) {
     this.parent = parent;
-    this.reactiveValue.nonUiValueChanges$.subscribe(() => {
-      const index = [...parent.html.childNodes].findIndex(
-        (n) => n === this.html
-      );
-      parent.html.removeChild(this.html);
-      this._html = this.renderOnce();
-      parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
+    const valueChangesSub = this.reactiveValue.nonUiValueChanges$.subscribe(
+      () => {
+        const index = [...parent.html.childNodes].findIndex(
+          (n) => n === this.html
+        );
+        parent.html.removeChild(this.html);
+        this._html = this.renderOnce();
+        parent.html.insertBefore(this.html, [...parent.html.childNodes][index]);
+      }
+    );
+
+    this.subs.add(valueChangesSub);
+
+    this._updateDomOnOptionsChanges();
+  }
+
+  // this only updates the placeholder for the moment
+  private _updateDomOnOptionsChanges() {
+    const reactiveElements = getReactiveElementsFromObject(this.options);
+
+    objectKeys(reactiveElements).forEach((key) => {
+      const reactiveOption = reactiveElements[key];
+      if (!reactiveOption) return;
+
+      const sub = reactiveOption.valueChanges$.subscribe(() => {
+        this._html[key] = toValue(reactiveOption) || '';
+      });
+
+      this.subs.add(sub);
     });
   }
 
@@ -82,7 +113,7 @@ export class VInputComponent<T extends string | number> implements VComponent {
 
     objectKeys(this.options).forEach((key) => {
       const value = this.options[key];
-      if (value) input[key] = value;
+      if (value) input[key] = toValue(value);
     });
 
     const initialValue = this.reactiveValue.value;
@@ -110,5 +141,9 @@ export class VInputComponent<T extends string | number> implements VComponent {
     this._html = html;
 
     return html;
+  }
+
+  destroy() {
+    this.subs.unsubscribe();
   }
 }
