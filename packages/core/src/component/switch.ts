@@ -1,12 +1,12 @@
-import { isReactive, toValue, type ReactiveValue } from '../reactive';
+import { isReactive, toValue, type MaybeReactive } from '../reactive';
 import type { VComponent, WithHtml } from './component';
-import { Subscription, distinctUntilChanged, skip, startWith, tap } from 'rxjs';
+import { Subscription, distinctUntilChanged, skip, startWith } from 'rxjs';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 import type { AddClassesArgs } from '../dom/create-dom-element';
 
 class SwitchComponent<T> implements VComponent {
   constructor(
-    private reactiveValue: ReactiveValue<T>,
+    private reactiveValue: MaybeReactive<T>,
     private switchFn: (value: T) => VComponent | null,
     private comparisonFn?: (a: T, b: T) => boolean,
     private onDestroy?: () => void
@@ -99,7 +99,7 @@ class SwitchComponent<T> implements VComponent {
 }
 
 export function buildSwitchComponent<T>(
-  reactiveValue: ReactiveValue<T>,
+  reactiveValue: MaybeReactive<T>,
   switchFn: (value: T) => VComponent | null,
   {
     comparisonFn,

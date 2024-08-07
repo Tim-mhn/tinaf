@@ -3,8 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { component } from './v-component';
 import { reactiveList } from '../reactive';
 import { For } from './for-loop';
-import { buildMockParent } from '../test-utils/dom-element.mock';
-import { render } from '../render';
+import { fakeMount } from '../test-utils/fake-mount';
 
 function setup({ list }: { list: ReturnType<typeof reactiveList<string>> }) {
   const renderFn = vi.fn((item: string) => item);
@@ -13,18 +12,19 @@ function setup({ list }: { list: ReturnType<typeof reactiveList<string>> }) {
     return <For each={list}>{renderFn}</For>;
   });
 
-  const mockParent = buildMockParent();
 
-  let cmp!: ReturnType<typeof TestComponent>;
 
+  let cmpChildren: ReturnType<typeof fakeMount>['children'];
   const mount = () => {
-    cmp = TestComponent({});
 
-    render(cmp, mockParent.html);
+    const { children } = fakeMount(TestComponent)
+
+    cmpChildren = children;
+
   };
 
   const hasChildren = (children: any[]) => {
-    expect(cmp.parent.html.childNodes).toEqual(children);
+    expect(cmpChildren).toEqual(children);
   };
 
   const shouldHaveRenderedNChildren = (n: number) => {

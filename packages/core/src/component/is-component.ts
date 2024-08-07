@@ -2,6 +2,7 @@ import type { MaybeReactive } from '../reactive';
 import type { VComponent } from './component';
 
 export function isVComponent(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cmp: VComponent | MaybeReactive<any> | HTMLElement | Comment
 ): cmp is VComponent {
   return (

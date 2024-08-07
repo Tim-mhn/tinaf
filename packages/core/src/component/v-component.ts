@@ -5,7 +5,7 @@ import type {
   ComponentChildren,
 } from '../dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
-import { type MaybeArray } from '../utils/array';
+import { toArray, type MaybeArray } from '../utils/array';
 import { type TinafElement, type VComponent, type WithHtml } from './component';
 import { isVComponent } from './is-component';
 import {
@@ -49,12 +49,12 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
 
     this._registerOnDestroyCallback();
 
-    if (isVComponent(this.child)) {
-      this.child.init(this.parent);
-      this.child.addClass(this.classesUnion);
-    } else {
-      this.html = this.child;
-    }
+    this.children.forEach((child) => {
+      if (isVComponent(child)) {
+        child.init(this.parent);
+        child.addClass(this.classesUnion);
+      }
+    });
 
     this._executeOnInitCallback();
   }
@@ -71,13 +71,21 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
     if (lastOnDestroyCallback) this.onDestroyCallback = lastOnDestroyCallback;
   }
 
+  private get children() {
+    return toArray(this.child);
+  }
   renderOnce(): MaybeArray<HTMLElement | Comment> {
-    if (isVComponent(this.child)) {
-      const html = this.child.renderOnce();
-      this.html = html;
-      return html;
-    }
-    return this.child;
+    const newHtml = this.children.map((child) => {
+      if (isVComponent(child)) {
+        return child.renderOnce();
+      }
+
+      return child;
+    });
+
+    this.html = newHtml.flat();
+
+    return this.html;
   }
 
   destroy(): void {
