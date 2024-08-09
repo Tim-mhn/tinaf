@@ -5,7 +5,8 @@ export const onDestroy = (callback: () => void) => {
 
 export const popLastOnDestroyCallback = () => onDestroyCallbacksStack.pop();
 
-const onInitCallbacksStack: (() => void)[] = [];
+type MaybePromise<T> = T | Promise<T>;
+const onInitCallbacksStack: (() => MaybePromise<void>)[] = [];
 
 export const onInit = (callback: () => void) => {
   onInitCallbacksStack.push(callback);
