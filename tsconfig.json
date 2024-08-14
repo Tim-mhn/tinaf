@@ -17,10 +17,15 @@
     "verbatimModuleSyntax": true,
 
     "baseUrl": ".",
+
+    "paths": {
+      "tinaf/*": ["../core/dist/*"]
+    }
     
   },
   
   "exclude": ["**/*.spec.ts", "**/*.spec.js"],
+  
   
   
   "references": [

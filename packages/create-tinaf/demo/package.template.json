@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tinaf": "^0.0.24"
+    "tinaf": "^0.0.26"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",

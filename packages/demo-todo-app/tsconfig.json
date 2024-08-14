@@ -10,7 +10,7 @@
     "jsxImportSource": "tinaf",
     "jsxFactory": "jsxComponent",
     "paths": {
-        "tinaf": ["../core/"]
+        "tinaf": ["../core/dist"]
       },
     },
     
