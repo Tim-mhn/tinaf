@@ -2,7 +2,6 @@ import type { Product } from 'src/models/product';
 import {  component, For } from 'tinaf/component';
 import {
   computed,
-  maybeComputed,
   toReactiveProps,
   toValue,
 } from 'tinaf/reactive';

@@ -2052,7 +2052,7 @@ __metadata:
     postcss: "npm:^8.4.32"
     prompts: "npm:^2.4.2"
     tailwindcss: "npm:^3.4.0"
-    tinaf: "npm:^0.0.24"
+    tinaf: "npm:^0.0.26"
     typescript: "npm:^5.4.5"
     unbuild: "npm:^2.0.0"
     vite: "npm:^5.0.10"
@@ -5957,12 +5957,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"tinaf@npm:^0.0.24":
-  version: 0.0.24
-  resolution: "tinaf@npm:0.0.24"
+"tinaf@npm:^0.0.26":
+  version: 0.0.26
+  resolution: "tinaf@npm:0.0.26"
   dependencies:
     rxjs: "npm:^7.8.1"
-  checksum: 10c0/504383d6011e240dd09350c8b70da82b8cabbde9f3b0a726506e2d81d984e7bf7ebfa837f5fa48c826a56c397db5d73bf3b78508e03225c53d3513bde01f936f
+  checksum: 10c0/da97285b1f79aa9e8e0b257c50d197414bb47fe4116af070d845c72a1c35175947358ef6d2f06d61d9f3c20f41ba2635c9607c7823a01faf90618c174d4de5c5
   languageName: node
   linkType: hard
 

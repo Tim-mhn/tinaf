@@ -120,6 +120,7 @@ export class Router {
     const UNUSED_PARAM = '';
     this._history.pushState({}, UNUSED_PARAM, url);
     this._routeChangerHandler.publishRouteChange();
+    console.log('navigating ...');
   }
 
   private _findDynamicParams(pattern: string, route: string) {
