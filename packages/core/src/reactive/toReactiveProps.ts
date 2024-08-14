@@ -48,8 +48,7 @@ function recursivelyBuildReactiveProps<T extends object>(
     } else {
       const reactiveProp = computed(
         // @ts-expect-error
-        () => toValue(obj as MaybeDeepReactive<T>)[key],
-        [obj]
+        () => toValue(obj as MaybeDeepReactive<T>)[key]
       );
       // @ts-expect-error
       reactiveProps[key] = reactiveProp;

@@ -27,7 +27,7 @@ export const RouterView = component(() => {
     });
 
     return route?.path || '';
-  }, [router.route]);
+  });
 
   const decrementDepth = () => {
     const currentDepth = tinafApp.get<number>(ROUTER_VIEW_DEPTH_KEY, 0);
