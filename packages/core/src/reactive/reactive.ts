@@ -8,12 +8,12 @@ import {
   skip,
   startWith,
 } from 'rxjs';
-import type { MaybeReactive } from './types';
-import { isReactive } from './toValue';
 export interface ReactiveValue<T> {
   value: T;
   valueChanges$: Observable<T>;
 }
+
+let observables: ReactiveValue<any>[] = [];
 
 export class Reactive<T> implements ReactiveValue<T> {
   private _value: T;
@@ -30,6 +30,7 @@ export class Reactive<T> implements ReactiveValue<T> {
   }
 
   get value() {
+    observables.push(this);
     return this._value;
   }
 }
@@ -42,17 +43,19 @@ export function reactive<T>(initialValue: T) {
 class Computed<T> implements ReactiveValue<T> {
   valueChanges$: Observable<T>;
 
-  constructor(public getterFn: () => T, sources: ReactiveValue<any>[]) {
-    if (sources.length === 0)
-      throw new Error(
-        'Computed value was created without any source. Please include at least 1 source'
-      );
+  constructor(public getterFn: () => T) {
+    getterFn();
+
+    const sources = [...observables];
+
     this.valueChanges$ = combineLatest(
       sources.map((s) => s.valueChanges$.pipe(startWith('')))
     ).pipe(
       skip(1),
       map(() => getterFn())
     );
+
+    observables = [];
   }
 
   get value() {
@@ -93,16 +96,6 @@ export function inputReactive<T extends string | number>(initialValue: T) {
   return new InputReactive(initialValue);
 }
 
-export function computed<T>(getterFn: () => T, sources: ReactiveValue<any>[]) {
-  return new Computed(getterFn, sources);
-}
-
-export function maybeComputed<T>(
-  getterFn: () => T,
-  sources: MaybeReactive<any>[]
-) {
-  const reactiveSources = sources.filter(isReactive);
-  if (reactiveSources.length === 0) return getterFn();
-
-  return computed(getterFn, reactiveSources);
+export function computed<T>(getterFn: () => T) {
+  return new Computed(getterFn);
 }

@@ -1,6 +1,7 @@
 import type { Product } from 'src/models/product';
 import {  component, For } from 'tinaf/component';
 import {
+  computed,
   maybeComputed,
   toReactiveProps,
   toValue,
@@ -12,7 +13,7 @@ const ProductCard = component<{ product: Product; onClick: () => void }>(
   ({ product, onClick }) => {
     const { title, image, price } = toReactiveProps(product);
 
-    const priceText = maybeComputed(() => `${toValue(price)} EUR`, [price]);
+    const priceText = computed(() => `${toValue(price)} EUR`);
 
     return <li className="flex flex-col justify-center items-center">
 

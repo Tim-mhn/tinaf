@@ -8,7 +8,7 @@ export class BooleanReactive extends Reactive<boolean> {
   }
 
   public not() {
-    return computed(() => !this.value, [this]);
+    return computed(() => !this.value);
   }
 }
 
@@ -22,7 +22,7 @@ export function bool(initialValue: boolean): [Reactive<boolean>, () => void] {
 
 export function not(condition: MaybeReactive<boolean>) {
   if (isReactive(condition)) {
-    return computed(() => !condition.value, [condition]);
+    return computed(() => !condition.value);
   }
 
   return !condition;

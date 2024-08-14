@@ -7,7 +7,7 @@ export const Counter = component(() => {
 
   const increment = () => count.update(count.value + 1);
 
-  const countSentence = computed(() => `Count is ${count.value}`, [count]);
+  const countSentence = computed(() => `Count is ${count.value}`);
 
   return div(
     button('Increment')

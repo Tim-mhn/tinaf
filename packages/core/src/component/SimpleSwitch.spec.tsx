@@ -20,7 +20,7 @@ describe('Switch/Match', () => {
       );
     });
 
-    const { children, cmp } = fakeMount(TestComponent);
+    const { children } = fakeMount(TestComponent);
     expect(children).toEqual(['a']);
   });
 

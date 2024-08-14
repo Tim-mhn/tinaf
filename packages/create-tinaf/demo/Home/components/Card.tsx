@@ -4,7 +4,6 @@ import { button, div } from 'tinaf/dom';
 import {
   computed,
   inputReactive,
-  maybeComputed,
   not,
   reactive,
   toValue,
@@ -16,7 +15,7 @@ type CardProps = {
   theme: 'light' | 'dark';
 };
 const Card = component<CardProps>(({ title, description, theme }) => {
-  const isLight = maybeComputed(() => toValue(theme) === 'light', [theme]);
+  const isLight = computed(() => toValue(theme) === 'light');
   const isDark = not(isLight);
 
   return div(

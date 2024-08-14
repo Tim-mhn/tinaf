@@ -7,6 +7,7 @@ import { vi } from 'vitest';
 import type { VComponent } from '../component';
 import { FakeWindow } from './fake-window';
 import { provideFakeTinafApp } from './inject-app.mock';
+import { buildTestRouter } from '../router/test-utils';
 
 // // FIXME: use one version of fakeApp
 const createFakeApp = () => createApp(() => '' as any, {} as any, {} as any);
@@ -19,7 +20,9 @@ export const createMockDocument = (): IDocument => ({
 });
 
 const createFakeTextNode = (): Text => ({});
-export const setupFakeApp = ({ router }: { router: Router }) => {
+export const setupFakeApp = ({
+  router = buildTestRouter([]),
+}: { router?: Router } = {}) => {
   const fakeApp = createFakeApp();
   fakeApp.provide(ROUTER_PROVIDER_KEY, router);
   provideFakeTinafApp(fakeApp);
