@@ -30,7 +30,7 @@ const Bar = component(() => "Bar")
 }]
 ```
 
-### 2. Create the router 
+### 2. Create the router
 
 ```
 import { createRouter } from 'tinaf/router';
@@ -166,10 +166,10 @@ const ProductPage = component(() => {
     const router = injectRouter();
 
     const productId = computed(
-      () => router.route.value.params.productId, [router.route]
+      () => router.route.value.params.productId,
     );
 
-   const product = computed(() => getProduct(productId.value), [productId]);
+   const product = computed(() => getProduct(productId.value));
 
    const { title } = toReactiveProps(product);
 

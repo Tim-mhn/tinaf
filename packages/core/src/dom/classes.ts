@@ -92,7 +92,7 @@ function transformRecordIntoReactiveClassesArray(
 
     if (!isReactive(condition)) return toValue(condition) ? className : '';
 
-    return computed(() => (condition.value ? className : ''), [condition]);
+    return computed(() => (condition.value ? className : ''));
   });
 }
 

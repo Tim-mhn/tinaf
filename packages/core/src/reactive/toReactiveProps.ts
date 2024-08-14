@@ -38,7 +38,7 @@ function recursivelyBuildReactiveProps<T extends object>(
     const v = objValue[key];
 
     if (typeof v === 'object' && v !== null) {
-      const localReactive = computed(() => (toValue(obj) as T)[key], [obj]);
+      const localReactive = computed(() => (toValue(obj) as T)[key]);
       const nestedReactiveProps = toReactiveProps(localReactive, {
         deep: true,
       });
@@ -72,7 +72,7 @@ function buildSimpleReactiveProps<T extends object>(
   const reactiveProps: Partial<O<T>> = {};
 
   for (const key of objectKeys(toValue(obj))) {
-    const reactiveProp = computed(() => toValue(obj)[key], [obj]);
+    const reactiveProp = computed(() => toValue(obj)[key]);
 
     reactiveProps[key] = reactiveProp;
   }

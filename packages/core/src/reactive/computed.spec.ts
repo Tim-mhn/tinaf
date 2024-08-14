@@ -6,7 +6,7 @@ describe('Computed', () => {
   it('emits a value change when its single source changes', () => {
     const source = reactive(1);
 
-    const double = computed(() => source.value * 2, [source]);
+    const double = computed(() => source.value * 2);
 
     let emitted = false;
     double.valueChanges$.pipe(take(1)).subscribe(() => {
@@ -17,20 +17,12 @@ describe('Computed', () => {
     expect(emitted).toBeTruthy();
   });
 
-  it('throws an error if no sources are passed', () => {
-    const source = reactive(1);
-
-    const createComputedValueFn = () => computed(() => source.value * 2, []);
-
-    expect(createComputedValueFn).toThrow();
-  });
-
   it('emits a value whenever one of the sources changes', () => {
     const a = reactive(1);
     const b = reactive(1);
     const c = reactive(1);
 
-    const sum = computed(() => a.value + b.value + c.value, [a, b, c]);
+    const sum = computed(() => a.value + b.value + c.value);
 
     const emissions: number[] = [];
 
@@ -47,5 +39,23 @@ describe('Computed', () => {
     // Emission #2: 2 + 5 + 1 = 8;
     // Emission #3: 2 + 5 + 10 = 17
     expect(emissions).toEqual([4, 8, 17]);
+  });
+
+  it('emits a value when it has a Computed has a single source and the source changes ', () => {
+    const source = reactive(1);
+    const double = computed(() => source.value * 2);
+
+    const quadruple = computed(() => double.value * 2);
+
+    let emitted = false;
+    let val: number = 0;
+    quadruple.valueChanges$.pipe(take(1)).subscribe((emittedValue) => {
+      emitted = true;
+      val = emittedValue;
+    });
+    source.update(2);
+
+    expect(emitted).toBeTruthy();
+    expect(val).toEqual(8);
   });
 });

@@ -12,7 +12,7 @@ export const ProductPage: PageComponent = component(() => {
     [router.route]
   );
 
-  const product = computed(() => getProduct(productId.value), [productId]);
+  const product = computed(() => getProduct(productId.value));
 
   const { title, description, image, price, rating: { rate, count } } = toReactiveProps(product, { deep: true});
 

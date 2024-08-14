@@ -54,11 +54,11 @@ count.update(3);
 console.log(count.value); // 3
 ```
 
-Create computed values with `computed`. You have to pass the array of reactive values it depends on.
+Create computed values with `computed`.
 
 ```
 const count = reactive(1);
-const double = computed(() => count.value * 2, [count])
+const double = computed(() => count.value * 2)
 ```
 
 ### Component
@@ -99,7 +99,9 @@ const DemoCard = component(() => {
 ```
 
 ### Control-flow (for-loop & if/else)
+
 #### For loop
+
 To render a list of components, use the `<For />` component
 
 ```
@@ -115,6 +117,7 @@ const FruitsList = component(() => {
 ```
 
 #### If/Else
+
 To conditionnally render a component or a fallback, use the `<Show />` component (heaviliy inspired from Solid's [Show](https://docs.solidjs.com/concepts/control-flow/conditional-rendering)
 
 ```
@@ -124,7 +127,7 @@ import { bool } from "tinaf/reactive";
 export const ShowExample = component(() => {
     const [isHappy, toggleMood] = bool(true)
 
-    return <div> 
+    return <div>
       <Show when={condition} fallback={<div> sad! </div>} >
         <div> happy ! </div>
       </Show>

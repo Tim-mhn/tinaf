@@ -48,7 +48,7 @@ Create computed values with `computed`. You have to pass the array of reactive v
 
 ```
 const count = reactive(1);
-const double = computed(() => count.value * 2, [count])
+const double = computed(() => count.value * 2)
 ```
 
 ### Component
@@ -125,7 +125,7 @@ const Example = component(() => {
 
    const [active, _] = bool(true);
 
-   const backgroundClass = computed(() => active.value ? 'bg-blue-300' : 'bg-red-300', [active])
+   const backgroundClass = computed(() => active.value ? 'bg-blue-300' : 'bg-red-300')
 
    return div('Hello').addClasses([backgroundClass, 'text-sm', 'border', 'border-slate-300'])
 })
@@ -138,7 +138,7 @@ const Example = component(() => {
 
    const [active, _] = bool(true);
 
-   const backgroundColor = computed(() => active.value ? 'blue' : 'red', [active])
+   const backgroundColor = computed(() => active.value ? 'blue' : 'red')
 
    return div('Hello').addStyles({
       background: backgroundColor,
@@ -176,7 +176,7 @@ const Card = component<{ title: string; subtitle: string}>(({ title, subtitle}) 
 const Button = component(() => {
   const [active, toggleActive] = bool(true);
 
-   const buttonText = computed(() => active.value ? 'Deactivate' : 'Activate', [active]);
+   const buttonText = computed(() => active.value ? 'Deactivate' : 'Activate');
    const buttonClasses = computed(() => active.value ? 'bg-green-300 border-green-300' : 'bg-slate-300 border-slate-400')
 
    return button(buttonText)
