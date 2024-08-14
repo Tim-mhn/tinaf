@@ -5957,7 +5957,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"tinaf@npm:^0.0.26, tinaf@workspace:*, tinaf@workspace:packages/core":
+"tinaf@npm:^0.0.26":
+  version: 0.0.26
+  resolution: "tinaf@npm:0.0.26"
+  dependencies:
+    rxjs: "npm:^7.8.1"
+  checksum: 10c0/da97285b1f79aa9e8e0b257c50d197414bb47fe4116af070d845c72a1c35175947358ef6d2f06d61d9f3c20f41ba2635c9607c7823a01faf90618c174d4de5c5
+  languageName: node
+  linkType: hard
+
+"tinaf@workspace:*, tinaf@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "tinaf@workspace:packages/core"
   dependencies:
