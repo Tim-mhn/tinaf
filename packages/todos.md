@@ -37,3 +37,5 @@
 - Routing: passing a string route that is not resolved should pass it as is in the <a> href attribute
 
 - Routing: avoid rerendering the components when route changes but it's the same route pattern. ✔
+
+- Routing: prevent '/' from matching any route
