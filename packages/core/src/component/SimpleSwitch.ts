@@ -43,7 +43,6 @@ export function Switch<T extends PrimitiveType>(
 
           // TODO: need to add props as type of VComponent ?
           if (childMatchesCondition) {
-            console.log({ child });
             return child;
           }
         }

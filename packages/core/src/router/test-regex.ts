@@ -13,7 +13,6 @@ function findRouteMatch(urlPath: string) {
   const match = urlPath.match(regexp);
 
   if (!match) {
-    console.log('no match');
     return;
   }
 }
