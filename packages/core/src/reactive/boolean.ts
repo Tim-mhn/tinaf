@@ -20,7 +20,7 @@ export function bool(initialValue: boolean): [Reactive<boolean>, () => void] {
   return [rx, toggle];
 }
 
-export function not(condition: MaybeReactive<boolean>) {
+export function not(condition: MaybeReactive<boolean | undefined> | undefined) {
   if (isReactive(condition)) {
     return computed(() => !condition.value);
   }

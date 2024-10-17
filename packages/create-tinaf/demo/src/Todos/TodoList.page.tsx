@@ -1,4 +1,4 @@
-import { component, forLoop } from 'tinaf/component';
+import { component, For } from 'tinaf/component';
 import { inputReactive, reactiveList } from 'tinaf/reactive';
 import { Todo } from './components/Todo';
 import { Input } from '../shared/Input';
@@ -25,19 +25,24 @@ export const TodoListPage: PageComponent = component(() => {
     <div className="flex items-center gap-4">
       <Input reactiveText={todoInput} placeholder="Add todo" />
 
-      <button onClick={() => addTodo(todoInput.value)} className="rounded-full flex items-center justify-center p-2 bg-green-500 hover:bg-green-600 h-8 w-8 text-white text-lg">+</button>
+      <button onClick={() => addTodo(todoInput.value)} className="rounded-full flex items-center justify-center p-2 bg-green-500 hover:bg-green-600 h-6 w-6 text-white text-md">+</button>
+
+
+      
     </div>
+
+    <ul>
+
+  <For each={todos}>
+    { (todo: string) => <li className="flex gap-8 items-center">
+      
+      <div>{todo}</div>
+      <button onClick={() => removeTodo(todo)} className="rounded-full flex items-center justify-center p-2 bg-red-500 hover:bg-red-600 h-6 w-6 text-white text-md">-</button>
+      </li> }
+  </For>
+
+  </ul>
   </div>
 });
 
 
-/**
- *     // div(
-    //   forLoop(
-    //     todos,
-    //     (todo) => Todo({ todo, onRemoveTodo: () => removeTodo(todo) }),
-    //     (todo) => todo // key function
-    //   )
-    // ).addClass('flex flex-col gap-1')
-
- */

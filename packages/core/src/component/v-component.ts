@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { logMethod } from '../common/logger';
 import { mergeClasses } from '../dom/classes';
 import type {
   AddClassesArgs,
@@ -61,7 +62,10 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
 
   private _executeOnInitCallback() {
     const lastOnInitCallback = popLastOnInitCallback();
-    if (lastOnInitCallback) lastOnInitCallback();
+    if (lastOnInitCallback) {
+      const cbResult = lastOnInitCallback();
+      if (isPromise(cbResult)) cbResult.then();
+    }
   }
 
   private onDestroyCallback: () => void = () => undefined;
@@ -74,6 +78,7 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   private get children() {
     return toArray(this.child);
   }
+
   renderOnce(): MaybeArray<HTMLElement | Comment> {
     const newHtml = this.children.map((child) => {
       if (isVComponent(child)) {
@@ -100,6 +105,10 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
 export type ComponentFn<Props extends ComponentProps = NoProps> = ReturnType<
   typeof component<Props>
 >;
+
+const isPromise = (obj: unknown): obj is Promise<unknown> => {
+  return !!obj && obj instanceof Promise;
+};
 
 export function component<Props extends ComponentProps = NoProps>(
   renderFn: (p: RenderFnParams<Props>) => TinafElement

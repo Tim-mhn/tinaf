@@ -1,6 +1,6 @@
 {
-    "extends": ["../../tsconfig.json"],
-    "compilerOptions": {
+  "extends": ["../../tsconfig.json"],
+  "compilerOptions": {
     "baseUrl": ".",
     "declaration": true,
     "declarationDir": "./dist/types",
@@ -9,12 +9,11 @@
     "jsx": "preserve",
     "jsxImportSource": "~",
     "types": ["node"],
-
-    
     "paths": {
-        "~/*": ["src/*"]
-    }
+      "~/*": ["src/*"]
     },
-    "include": ["src"],
-    "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "dist", "node_modules"]
+    "experimentalDecorators": true
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts", "dist", "node_modules"]
 }

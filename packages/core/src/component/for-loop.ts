@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Subscription } from 'rxjs';
 import { type MaybeReactive, isReactive, toValue } from '../reactive';
@@ -16,6 +17,8 @@ class ForLoopComponent<T> implements VComponent {
   ) {}
 
   readonly __type = 'V_COMPONENT';
+  readonly __subtype = 'For';
+
   private _html!: HTML[];
   get html() {
     return this._html;

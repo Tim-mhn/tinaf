@@ -43,6 +43,11 @@ function safelyInsertNode(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   newNode: any
 ) {
+  if (!newNode)
+    throw new Error(
+      '[TINAF] Error while adding new node. newNode is undefined',
+      { cause: { parent } }
+    );
   try {
     parent.html.insertBefore(
       newNode,

@@ -151,7 +151,7 @@ export class VDomComponent<T extends TagName> implements VComponent {
   renderOnce(): HTMLElementTagNameMap[T] {
     this._html = this._doc.createElement(this.type);
 
-    this.html.setAttribute('x-id', crypto.randomUUID());
+    // this.html.setAttribute('x-id', crypto.randomUUID());
     this.children?.forEach((child) => {
       if (isVComponent(child)) {
         // NOTE: this function breaks state when rerendering a div parent with children with inner state !!

@@ -10,6 +10,7 @@ import {
   renderChildren,
 } from '../render-utils/render-children';
 import { logger } from '../common';
+import { logMethod } from '../common/logger';
 
 function buildPlaceholderComment() {
   const commentText = `placeholder--${crypto.randomUUID()}`;
@@ -26,10 +27,14 @@ class ConditionallyRenderedComponent implements VComponent {
   ) {}
 
   readonly __type = 'V_COMPONENT';
+
+  private readonly __subtype = 'Show';
+
   private _html!: MaybeArray<HTML>;
   get html() {
     return this._html;
   }
+
   renderOnce() {
     if (toValue(this.condition)) {
       this.fallback?.destroy?.();
@@ -37,15 +42,20 @@ class ConditionallyRenderedComponent implements VComponent {
       return this._html;
     }
 
-    destroyChildren(this.children);
+    try {
+      destroyChildren(this.children);
+    } catch (err) {
+      console.error(err);
+    }
 
     if (!this.fallback) {
       this._html = buildPlaceholderComment();
+
       return this._html;
     }
 
-
     this._html = this.fallback.renderOnce();
+
     return this._html;
   }
 
@@ -66,10 +76,13 @@ class ConditionallyRenderedComponent implements VComponent {
   init(parent: WithHtml) {
     this.parent = parent;
     this._initChild(parent);
+
     if (!isReactive(this.condition)) return;
 
     const sub = this.condition.valueChanges$.subscribe(() => {
       const oldNodes = this._html;
+
+      this._initChild(parent);
 
       const newNodes = this.renderOnce();
 
@@ -78,8 +91,6 @@ class ConditionallyRenderedComponent implements VComponent {
         newNodes,
         parent,
       });
-
-      this._initChild(parent);
     });
 
     this.subs.add(sub);
@@ -109,4 +120,3 @@ export const Show = ({
 }) => {
   return new ConditionallyRenderedComponent(when, children, fallback);
 };
-
