@@ -19,7 +19,7 @@ export const createMockDocument = (): IDocument => ({
   createElement: vi.fn(createFakeElement),
 });
 
-// @ts-expect-error
+// @ts-expect-error just for mock test data
 const createFakeTextNode = (): Text => ({});
 export const setupFakeApp = ({
   router = buildTestRouter([]),

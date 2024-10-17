@@ -25,6 +25,10 @@
       "import": "./dist/component.js",
       "types": "./dist/src/component/index.d.ts"
     },
+    "./http": {
+      "import": "./dist/http.js",
+      "types": "./dist/src/http/index.d.ts"
+    },
     "./reactive": {
       "import": "./dist/reactive.js",
       "types": "./dist/src/reactive/index.d.ts"

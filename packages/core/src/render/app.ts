@@ -4,6 +4,10 @@ import type { VComponent } from '../component';
 import { render } from './render';
 import type { IDocument, IWindow } from './window';
 
+export type InjectionProvider<T> = {
+  key: string;
+  value: T;
+};
 export class TinafApp {
   constructor(
     private app: ({}) => VComponent,
@@ -15,6 +19,11 @@ export class TinafApp {
 
   provide<T>(key: string | symbol, value: T) {
     this.appInjections.provide(key, value);
+    return this;
+  }
+
+  use<T>(provider: InjectionProvider<T>) {
+    this.appInjections.provide(provider.key, provider.value);
     return this;
   }
 

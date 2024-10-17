@@ -1,119 +1,42 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { Reactive, reactive } from '../reactive/reactive';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeMount } from '../test-utils/fake-mount';
 import { flushPromises } from '../test-utils/flush-promises';
-import { component, onInit } from '../component';
+import { component } from '../component';
 import { setupFakeApp } from '../test-utils/fake-app';
+import type { TinafApp } from '../render';
+import { createQueryClientProvider, QueryClient, useQuery, type QueryFn } from './use-query';
 
-type QueryFn<T> = () => T | Promise<T>;
-
-
-async function toPromise<T>(value: T | Promise<T>) {
-  return value;
-}
-
-class QueryClient<T>{
-
-
-
-  private keyToState = new Map<string, { data: Reactive<T>, error: Reactive<unknown>, isPending: Reactive<boolean>, isFetching: boolean }>();
-
-
-
-
-  prepare(queryKey: string) {
-
-    const state = this.keyToState.get(queryKey);
-
-    if (state) return state
-
-    const newState = {
-      data: reactive(undefined),
-      error: reactive(undefined),
-      isPending: reactive(false),
-      isFetching: false
-    };
-
-    this.keyToState.set(queryKey, newState);
-
-    return newState
-    
-  }
-  getData<T>(queryFn: QueryFn<T>, queryKey: string) {
-    console.log('queryClient.getData')
-
-
-    const state = this.keyToState.get(queryKey)
-
-    if (!state) throw new Error(`query client state not found for key ${queryKey}`, )
-
-    if (state.isFetching) {
-      state.isPending.update(true);
-      toPromise(queryFn())
-        .then((data) => {
-          console.log('update query data with ', data)
-          state.data.update(data);
-        })
-        .catch((err) => state.error.update(err))
-        .finally(() => state.isPending.update(false));
-
-        state.isFetching = true;
-    }
-
-    return state
-  }
-
-  reset() {
-    // this.queryData.update(undefined);
-    // this.isFetching = false;
-    // this.pendingState.update(false);
-    // this.error.update(undefined);
-    this.keyToState.clear()
-  }
-}
-
-const queryClient = new QueryClient();
-function useQuery<T>({
-  queryFn,
-  queryKey,
-}: {
-  queryFn: QueryFn<T>;
-  queryKey: string;
-}) {
-
-
-  const { isPending, data, error } = queryClient.prepare(queryKey);
-
-
-
-  const execute = async () => {
-    queryClient.getData(queryFn, queryKey)
-    }
-
-  onInit(() => execute());
-
-  return {
-    data,
-    error,
-    isPending,
-    execute,
-  };
-}
 
 describe('useQuery', () => {
+  let queryClient! :QueryClient 
+
+  let app!: TinafApp;
+
+  beforeEach(() => {
+    app = setupFakeApp();
+    const queryClientProvider = createQueryClientProvider()
+    app.use(queryClientProvider)
+    queryClient= queryClientProvider.value
+
+  });
+
   afterEach(() => {
     queryClient.reset();
   });
 
-  async function setup<T>({ queryFn }: { queryFn: QueryFn<T> }) {
+  async function setup<T>({ queryFn, initialValue }: { queryFn: QueryFn<T>, initialValue?: T }) {
     let data!: ReturnType<typeof useQuery<T>>['data'];
     let error!: ReturnType<typeof useQuery<T>>['error'];
 
+
     const TestComponent = component(() => {
-      const { data: _data, error: _error } = useQuery({
-        queryFn,
-        queryKey: 'a',
-      });
+      const { data: _data, error: _error } = useQuery(
+        {
+          queryFn,
+          queryKey: 'a',
+          initialValue
+        },
+      );
 
       data = _data;
       error = _error;
@@ -132,28 +55,35 @@ describe('useQuery', () => {
   describe('state', () => {
     it('returns the data of the query fn', async () => {
       const queryFn = vi.fn(async () => {
-        console.log('data')
-      return 'data'
-    });
+        return 'data';
+      });
       const { data } = await setup({ queryFn });
 
-      console.log('checking data')
 
       expect(data.value).toBe('data');
     });
 
-    it.skip('if it fails, it returns an error', async () => {
-      const queryFn = vi.fn().mockRejectedValue('an error occurred');
+    it('allows to pass an initial value', async () => {
 
-      const { data, error } = await setup({ queryFn });
-      expect(data.value).toBeUndefined();
-      expect(error.value).toBe('an error occurred');
-    });
+      const queryClient = new QueryClient();
+      
+      const { data } = useQuery({ queryKey: 'my-query', queryFn: vi.fn(), initialValue: 'initial value' },{
+        queryClient
+      });
 
-    it.skip('is pending when the query is being executed until the queryFn completes', async () => {
+      expect(data.value).toEqual('initial value')
+    })
+
+    it('is pending when the query is being executed until the queryFn completes', async () => {
+
+      const queryClient = new QueryClient();
+
       const queryFn = vi.fn().mockResolvedValue('data');
 
-      const { isPending, execute } = useQuery({ queryFn, queryKey: 'b' });
+      const { isPending, execute } = useQuery(
+        { queryFn, queryKey: 'c' },
+        { queryClient}
+      );
 
       expect(isPending.value).toBe(false);
 
@@ -164,17 +94,24 @@ describe('useQuery', () => {
       await flushPromises();
 
       expect(isPending.value).toBe(false);
+
+      await flushPromises();
+
     });
   });
 
+    it('if it fails, it returns an error', async () => {
+      const queryFn = vi.fn().mockRejectedValue('an error occurred');
+
+      const { data, error } = await setup({ queryFn });
+      expect(data.value).toBeUndefined();
+      expect(error.value).toBe('an error occurred');
+    });
+
+
+
   describe('state management', () => {
-    it.skip('shared data across components to deduplicate function calls when they share the same query key', async () => {
-      const app = setupFakeApp();
-
-      const queryClient = {};
-
-      app.provide('query-client', queryClient);
-
+    it('shared data across components to deduplicate function calls when they share the same query key', async () => {
       const queryFn = vi.fn(async () => 'data');
 
       const ComponentA = component(() => {
@@ -197,6 +134,7 @@ describe('useQuery', () => {
         return 'b' as any;
       });
 
+      // @ts-expect-error children not yet correctly typed
       const Container = component(({ children }) => {
         return children;
       });
@@ -216,13 +154,7 @@ describe('useQuery', () => {
       expect(queryFn).toHaveBeenCalledTimes(1);
     });
 
-    it.skip('does not share data across components when the query keys are different', async () => {
-      const app = setupFakeApp();
-
-      const queryClient = {};
-
-      app.provide('query-client', queryClient);
-
+    it('does not share data across components when the query keys are different', async () => {
       const queryFn = vi.fn(async () => 'data');
 
       const ComponentA = component(() => {
@@ -245,6 +177,7 @@ describe('useQuery', () => {
         return 'b' as any;
       });
 
+      // @ts-expect-error children not yet correctly typed
       const Container = component(({ children }) => {
         return children;
       });
