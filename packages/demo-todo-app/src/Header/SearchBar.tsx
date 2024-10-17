@@ -1,8 +1,8 @@
 import type { Product } from 'src/models/product';
 import {  component, onDestroy } from 'tinaf/component';
 import { inputReactive } from 'tinaf/reactive';
-import { PRODUCTS } from '../data/products.mock';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { PRODUCTS } from '../api/products';
 
 export const SearchBar = component<{
   updateProducts: (products: Product[]) => void;
@@ -31,7 +31,7 @@ export const SearchBar = component<{
   });
 
   return <div className='p-4 border rounded-sm h-9 flex grow items-center justify-center  border-slate-800'>
-    <input placeholder='What are you looking for ?' className='outline-none w-full' value={searchInput} />
+    <input  placeholder='What are you looking for ?' className='outline-none w-full' value={searchInput} />
 
 
   </div>

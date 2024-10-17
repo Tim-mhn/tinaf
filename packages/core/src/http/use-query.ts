@@ -9,33 +9,47 @@ async function toPromise<T>(value: T | Promise<T>) {
   return value;
 }
 
-type QueryState<T> = {
-  data: Reactive<T | undefined>;
+type QueryState<T, InitialValue extends T | undefined = undefined> = {
+  data: Reactive<T | InitialValue>;
   error: Reactive<unknown | undefined>;
   isPending: Reactive<boolean>;
   isFetching: boolean;
 };
+
+type QueryClientPrepareResponse<
+  T,
+  InitialValue extends T | undefined
+> = undefined extends InitialValue
+  ? QueryState<T, undefined>
+  : QueryState<T, InitialValue>;
 export class QueryClient {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private keyToState = new Map<string, QueryState<any>>();
 
   private _id = crypto.randomUUID();
 
-  prepare<T>(queryKey: string, initialValue?: T) {
-    const state = this.keyToState.get(queryKey) as QueryState<T> | undefined;
+  prepare<T, InitialValue extends T | undefined>(
+    queryKey: string,
+    initialValue?: InitialValue
+  ): QueryClientPrepareResponse<T, InitialValue> {
+    const state = this.keyToState.get(queryKey) as
+      | QueryState<T, InitialValue>
+      | undefined;
 
-    if (state) return state;
+    if (state) return state as QueryClientPrepareResponse<T, InitialValue>;
 
-    const newState: QueryState<T> = {
-      data: reactive<T | undefined>(initialValue),
+    const newState: QueryState<T, InitialValue> = {
+      // @ts-expect-error initialValue
+      data: reactive<T | InitialValue>(initialValue),
       error: reactive<unknown | undefined>(undefined),
       isPending: reactive(false),
       isFetching: false,
     };
 
+    // @ts-expect-error newState
     this.keyToState.set(queryKey, newState);
 
-    return newState;
+    return newState as QueryClientPrepareResponse<T, InitialValue>;
   }
   getData<T>(queryFn: QueryFn<T>, queryKey: string) {
     const state = this.keyToState.get(queryKey);
@@ -75,7 +89,7 @@ function injectQueryClient() {
   return queryClient;
 }
 
-export function useQuery<T>(
+export function useQuery<T, InitialValue extends T | undefined = undefined>(
   {
     queryFn,
     queryKey,
@@ -83,13 +97,13 @@ export function useQuery<T>(
   }: {
     queryFn: QueryFn<T>;
     queryKey: string;
-    initialValue?: T;
+    initialValue?: InitialValue;
   },
   injections: { queryClient?: QueryClient } = {}
 ) {
   const queryClient = injections?.queryClient || injectQueryClient();
 
-  const { isPending, data, error } = queryClient.prepare<T>(
+  const { isPending, data, error } = queryClient.prepare<T, InitialValue>(
     queryKey,
     initialValue
   );

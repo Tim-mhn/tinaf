@@ -6,7 +6,7 @@ import { bool } from "tinaf/reactive";
 const Card = component<{ title : string, subtitle : string }>((props) => {
 
 
-    useInterval(() => console.log('hello'), 1000)
+    // useInterval(() => console.log('hello'), 1000)
     return <div className="rounded-md border border-slate-200 p-2 text-md text-slate-800 flex flex-col w-fit">
         <div className="font-semibold text-lg"> {props.title} </div>
         <div> {props.subtitle} </div>

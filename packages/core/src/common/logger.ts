@@ -30,3 +30,24 @@ class Logger {
 }
 
 export const logger = new Logger();
+
+export const logMethod =
+  (prefix: string): MethodDecorator =>
+  (
+    target: object,
+    methodName: string | symbol,
+    descriptor: PropertyDescriptor
+  ) => {
+    const targetMethod = descriptor.value;
+
+    descriptor.value = function (...args: never[]) {
+      console.group(`${prefix}.${methodName.toString()}`);
+
+      const res = targetMethod.apply(this, args);
+
+      console.groupEnd();
+      return res;
+    };
+
+    return descriptor;
+  };

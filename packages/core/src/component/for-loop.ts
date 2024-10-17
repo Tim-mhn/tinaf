@@ -17,6 +17,8 @@ class ForLoopComponent<T> implements VComponent {
   ) {}
 
   readonly __type = 'V_COMPONENT';
+  readonly __subtype = 'For';
+
   private _html!: HTML[];
   get html() {
     return this._html;

@@ -38,6 +38,7 @@ describe('useQuery', () => {
         },
       );
 
+      // @ts-expect-error _data
       data = _data;
       error = _error;
 

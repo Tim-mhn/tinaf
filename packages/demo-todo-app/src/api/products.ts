@@ -269,8 +269,20 @@ export const PRODUCTS: Product[] = [
   },
 ] as const;
 
+const randomInt = ({ min, max }: { min: number; max: number }) =>
+  min + Math.floor(Math.random() * (max - min));
+const wait = () =>
+  new Promise<void>((resolve) => {
+    const ms = randomInt({ min: 200, max: 3000 });
+    setTimeout(() => resolve(), ms);
+  });
 export function getProduct(productId: string) {
   const p = PRODUCTS.find((p) => p.id === Number.parseInt(productId));
   if (!p) throw new Error(`product ${productId} not found`);
   return p;
+}
+
+export async function getAllProducts() {
+  await wait();
+  return PRODUCTS;
 }

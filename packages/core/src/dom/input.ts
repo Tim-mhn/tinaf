@@ -109,7 +109,7 @@ export class VInputComponent<T extends string | number> implements VComponent {
   private _renderOnce(): HTMLInputElement {
     const input = document.createElement('input');
 
-    input.setAttribute('x-id', crypto.randomUUID());
+    // input.setAttribute('x-id', crypto.randomUUID());
 
     objectKeys(this.options).forEach((key) => {
       const value = this.options[key];

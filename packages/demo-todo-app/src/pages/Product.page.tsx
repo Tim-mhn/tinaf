@@ -1,8 +1,8 @@
-import { getProduct } from '../data/products.mock';
 import { component, type VComponent } from 'tinaf/component';
 import { div, img, span } from 'tinaf/dom';
 import { computed, toReactiveProps } from 'tinaf/reactive';
 import { injectRouter, type PageComponent} from 'tinaf/router';
+import { getProduct } from '../api/products';
 
 export const ProductPage: PageComponent = component(() => {
   const router = injectRouter();

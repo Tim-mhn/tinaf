@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { logMethod } from '../common/logger';
 import { mergeClasses } from '../dom/classes';
 import type {
   AddClassesArgs,
@@ -77,6 +78,7 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
   private get children() {
     return toArray(this.child);
   }
+
   renderOnce(): MaybeArray<HTMLElement | Comment> {
     const newHtml = this.children.map((child) => {
       if (isVComponent(child)) {
