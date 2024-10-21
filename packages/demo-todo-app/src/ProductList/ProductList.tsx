@@ -2,10 +2,9 @@ import type { Product } from 'src/models/product';
 import { component, For, Show } from 'tinaf/component';
 import {
   computed,
-  reactive,
+
   toReactiveProps,
   toValue,
-  not,
 } from 'tinaf/reactive';
 import { injectRouter } from 'tinaf/router';
 import { Skeleton } from '../ui/Skeleton';
@@ -42,6 +41,7 @@ const ProductListSkeleton = component(() => {
 
   const fakeCards = Array.from({ length: fakeCardsCount }).fill('');
 
+  return <div>loading ...</div>
   return (
       <For each={fakeCards}>{() => <Skeleton className="h-[250px] w-[250px]" />}</For>
   );
@@ -56,15 +56,21 @@ export const ProductList = component<{
   const goToProductPage = (p: Product) => router.navigate(`/product/${p.id}`);
 
 
+
+  const showProducts = computed(() => !toValue(pending) && toValue(products).length > 0)
+
   return (
     <div>
       <ul className="grid border border-black gap-y-8 grid-flow-row-dense grid-cols-1 md:grid-cols-3 lg:grid-cols-5 h-fit">
-        <Show when={not(pending)} fallback={<ProductListSkeleton />}>
+
+
+        <Show when={showProducts} fallback={<ProductListSkeleton />}>
           <For each={products} keyFunction={(p) => p.id}>
             {(product: Product) =>
               ProductCard({ product, onClick: () => goToProductPage(product) })
             }
           </For>
+
         </Show>
 
       </ul>

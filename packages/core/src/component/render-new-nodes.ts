@@ -11,6 +11,11 @@ export function removeOldNodesAndRenderNewNodes({
   oldNodes: MaybeArray<HTMLElement | Comment>;
   newNodes: MaybeArray<HTMLElement | Comment>;
 }) {
+  if (!parent.html) {
+    console.warn('no html');
+    return;
+  }
+
   const allChildren = [...parent.html.childNodes];
 
   const firstNode = toArray(oldNodes)[0];
