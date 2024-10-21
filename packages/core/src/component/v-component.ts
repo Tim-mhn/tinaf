@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { logMethod } from '../common/logger';
 import { mergeClasses } from '../dom/classes';
 import type {
   AddClassesArgs,
