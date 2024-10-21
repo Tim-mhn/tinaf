@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { CurrentLocation, Router, RouterConfig } from './router';
 import { fromPartial } from '../test-utils/from-partial';
 import { flushPromises } from '../test-utils/flush-promises';

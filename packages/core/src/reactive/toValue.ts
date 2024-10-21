@@ -32,7 +32,7 @@ export function toValue<T>(
   if (Array.isArray(maybeRx)) return maybeRx as any;
 
   if (maybeRx && typeof maybeRx === 'object') {
-    let tmp: Partial<T> = {};
+    const tmp: Partial<T> = {};
 
     // FIXME: avoid the nasty 'as any' over here :----/
 

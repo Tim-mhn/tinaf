@@ -10,7 +10,6 @@ import { addClassToElement } from './classes';
 import { objectKeys } from '../utils/object';
 import { Subscription } from 'rxjs';
 import {
-  getReactiveElements,
   getReactiveElementsFromObject,
 } from '../reactive/utils';
 
