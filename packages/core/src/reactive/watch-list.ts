@@ -1,4 +1,4 @@
-import { Observable, map, pairwise, startWith } from 'rxjs';
+import { Observable, map, pairwise, startWith, tap } from 'rxjs';
 import { toValue } from './toValue';
 import { type ReactiveValue } from './reactive';
 
@@ -63,7 +63,7 @@ export function getAdditionalCommonElements<T>({
 
   const additionalCommonElements: { value: T; index: number }[] = [];
 
-  for (let element of uniqueCommonElements) {
+  for (const element of uniqueCommonElements) {
     const countInPreviousArray = previousArray.filter(
       (e) => e === element
     ).length;

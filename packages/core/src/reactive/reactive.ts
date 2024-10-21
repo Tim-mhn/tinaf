@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Observable,
+  ReplaySubject,
   Subject,
   combineLatest,
   filter,
@@ -21,7 +22,7 @@ export class Reactive<T> implements ReactiveValue<T> {
     this._value = initialValue;
   }
 
-  private _valueChanges$ = new Subject<T>();
+  private _valueChanges$ = new ReplaySubject<T>(1);
   public valueChanges$ = this._valueChanges$.asObservable();
 
   update(newValue: T) {

@@ -10,7 +10,6 @@ import {
   renderChildren,
 } from '../render-utils/render-children';
 import { logger } from '../common';
-import { logMethod } from '../common/logger';
 
 function buildPlaceholderComment() {
   const commentText = `placeholder--${crypto.randomUUID()}`;

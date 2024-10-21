@@ -110,6 +110,30 @@ describe('useQuery', () => {
     });
 
 
+    it('emits the latest value of data in case we subscribe lately to the data', async () => {
+      const queryClient = new QueryClient();
+
+      
+
+      const {  data, execute } = useQuery(
+        { queryFn: () => 'data', queryKey: 'a' },
+        { queryClient}
+      );
+
+      let value: string | undefined;
+      execute()
+
+      await flushPromises()
+
+      data.valueChanges$.subscribe(v => value = v)
+
+
+      
+      expect(value).toBe('data');
+
+    })
+
+
 
   describe('state management', () => {
     it('shared data across components to deduplicate function calls when they share the same query key', async () => {

@@ -8,6 +8,7 @@ import type { HTML, TinafElement, VComponent, WithHtml } from './component';
 import { isVComponent } from './is-component';
 import { SimpleVComponent, component, type ComponentFn } from './v-component';
 import type { AddClassesArgs } from '../dom/create-dom-element';
+import { logger } from '../common';
 
 class ForLoopComponent<T> implements VComponent {
   constructor(
@@ -33,7 +34,7 @@ class ForLoopComponent<T> implements VComponent {
         vnode: VComponent;
         key: string | number;
       }
-    | { html: MaybeArray<HTML>; vnode: null; key: null } {
+    | { html: MaybeArray<HTML>; vnode: null; key: string | number } {
     const child = this.renderFn(value);
     if (isVComponent(child)) {
       (child as any as SimpleVComponent).init(parent);
@@ -46,7 +47,7 @@ class ForLoopComponent<T> implements VComponent {
     return {
       html: child,
       vnode: null,
-      key: null,
+      key: this.keyFunction(value),
     };
   }
 
@@ -56,29 +57,27 @@ class ForLoopComponent<T> implements VComponent {
       .flat();
 
     const newHtml = htmlElementsAndVNodes.map(({ html }) => html).flat();
-    const vnodesWithKeys = htmlElementsAndVNodes
-      .filter(({ vnode }) => isVComponent(vnode))
-      .map(
-        ({ vnode, key }) =>
-          ({ vnode, key } as { vnode: VComponent; key: string | number })
-      );
-
-    return { newHtml, vnodesWithKeys };
+    const childVNodes = htmlElementsAndVNodes.map(({ key, vnode }) => ({
+      key,
+      isVNode: isVComponent(vnode),
+      vnode,
+    }));
+    return { newHtml, childVNodes };
   }
 
-  private vnodes: Record<string | number, VComponent> = {};
+  private vnodes: Record<string | number, VComponent | null | undefined> = {};
 
   renderOnce() {
     try {
-      const { newHtml, vnodesWithKeys } = this._renderChildrenAndInit();
+      const { newHtml, childVNodes } = this._renderChildrenAndInit();
       this._html = newHtml;
-      vnodesWithKeys.forEach(({ key, vnode }) => {
+
+      childVNodes.forEach(({ key, vnode }) => {
         this._registerVNode(vnode, { key });
       });
 
       return newHtml;
     } catch (err) {
-      console.error(err);
       throw new Error('error in renderOnce');
     }
   }
@@ -101,26 +100,42 @@ class ForLoopComponent<T> implements VComponent {
   }
 
   private _registerVNode(
-    vnode: VComponent | undefined,
+    vnode: VComponent | null | undefined,
     { key }: { key: string | number }
   ) {
-    if (vnode) this.vnodes[key] = vnode;
+    this.vnodes[key] = vnode;
+  }
+
+  private _vNodeExists(value: T) {
+    const key = this.keyFunction(value);
+    return key in this.vnodes;
   }
 
   init(parent: WithHtml) {
+    console.group(`<For>.init`);
     this.parent = parent;
+
     if (!isReactive(this.items)) return;
 
     const updateUiSub = watchList(this.items).subscribe((changes) => {
       const childrenToRemove = changes
-        .filter(({ change }) => change === 'removed')
+        .filter(
+          ({ change, value }) =>
+            change === 'removed' && this._vNodeExists(value)
+        )
         .map(({ index, value }) => {
           this._destroyVNode(value);
 
           return parent.html.childNodes[index];
         });
 
-      childrenToRemove.forEach((child) => parent.html.removeChild(child));
+      childrenToRemove.forEach((child) => {
+        try {
+          parent.html.removeChild(child);
+        } catch (err) {
+          logger.warn(`[<For />] Error removing child ${child?.textContent}`);
+        }
+      });
 
       const childrenToAdd = changes
         .filter(({ change }) => change === 'added')
@@ -132,16 +147,23 @@ class ForLoopComponent<T> implements VComponent {
         toArray(html).forEach((childHtml, index) =>
           parent.html.insertBefore(
             childHtml,
-            [...parent.html.childNodes][childIndex + index + 1]
+            [...parent.html.childNodes][childIndex + index]
           )
         );
       });
     });
 
     this.sub.add(updateUiSub);
+
+    console.groupEnd();
   }
 
   destroy(): void {
+    Object.keys(this.vnodes).forEach((nodeKey) => {
+      const vnode = this.vnodes[nodeKey];
+      vnode?.destroy?.();
+      delete this.vnodes[nodeKey];
+    });
     this.sub.unsubscribe();
   }
 }

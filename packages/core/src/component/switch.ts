@@ -3,13 +3,6 @@ import type { VComponent, WithHtml } from './component';
 import { Subscription, distinctUntilChanged, skip, startWith } from 'rxjs';
 import { removeOldNodesAndRenderNewNodes } from './render-new-nodes';
 import type { AddClassesArgs } from '../dom/create-dom-element';
-import { logMethod } from '../common/logger';
-
-function buildPlaceholderComment() {
-  const commentText = `placeholder--${crypto.randomUUID()}`;
-  const comment = document.createComment(commentText);
-  return comment;
-}
 
 class SwitchComponent<T> implements VComponent {
   constructor(

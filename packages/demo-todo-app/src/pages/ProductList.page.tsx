@@ -13,8 +13,12 @@ export const ProductListPage = component(() => {
     initialValue: [] as Product[],
   });
 
+  console.log({ products})
+
   return <div>
-    <SearchBar updateProducts={(ps) => products.update(ps)} />
+    <SearchBar updateProducts={(ps) => {
+        products.update(ps)
+    }} />
     <ProductList  products={products} pending={isPending} />
   
   </div>

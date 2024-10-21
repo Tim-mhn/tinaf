@@ -1,11 +1,6 @@
 {
-  "cSpell.words": [
-    "initialising",
-    "Renderable",
-    "Tinaf"
-  ],
+  "cSpell.words": ["behaviour", "initialising", "Renderable", "Tinaf"],
   "typescript.preferences.importModuleSpecifier": "relative",
   // "tailwindCSS.experimental.classRegex": ["tw`([^`]*)"],
-  "tailwindCSS.experimental.classRegex": ["class: '(.*)"],
-
+  "tailwindCSS.experimental.classRegex": ["class: '(.*)"]
 }

@@ -9,7 +9,7 @@ function setup({ list }: { list: ReturnType<typeof reactiveList<string>> }) {
   const renderFn = vi.fn((item: string) => item);
 
   const TestComponent = component(() => {
-    return <For each={list}>{renderFn}</For>;
+    return <For each={list} keyFunction={i => i}>{renderFn}</For>;
   });
 
 
@@ -57,9 +57,20 @@ describe('<For />', () => {
 
     hasChildren(['a', 'b', 'c']);
 
-    items.update(['a', 'b']);
+    items.update(['b']);
 
-    hasChildren(['a', 'b']);
+    hasChildren(['b']);
+
+    items.update(['a', 'b', 'c'])
+
+    hasChildren(['a', 'b', 'c']);
+
+    // items.update([ 'c'])
+
+
+    // hasChildren(['c'])
+
+
 
   });
 });
