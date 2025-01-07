@@ -2,7 +2,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { SimpleVComponent } from '../component/v-component';
 import { type ComponentFn } from '../component';
-import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
+import {
+  a2,
+  button2,
+  div2,
+  img2,
+  input2,
+  li2,
+  span2,
+  strong,
+  ul2,
+} from '../dom';
 import type {
   AddClassesArgs,
   ComponentChildren,
@@ -14,7 +24,7 @@ import { extractEventHandlers } from './utils';
 import type { HTMLInputElementOptions } from '../dom/input';
 
 interface HTMLElementTags {
-  // a: AnchorHTMLAttributes<HTMLAnchorElement>;
+  a: AnchorHtmlAttributes;
   // abbr: HTMLAttributes<HTMLElement>;
   // address: HTMLAttributes<HTMLElement>;
   // area: AreaHTMLAttributes<HTMLAreaElement>;
@@ -122,6 +132,7 @@ interface HTMLElementTags {
   // tr: HTMLAttributes<HTMLTableRowElement>;
   // track: TrackHTMLAttributes<HTMLTrackElement>;
   // u: HTMLAttributes<HTMLElement>;
+  strong: HtmlAttributes;
   ul: HtmlAttributes;
   // var: HTMLAttributes<HTMLElement>;
   // video: VideoHTMLAttributes<HTMLVideoElement>;
@@ -149,7 +160,10 @@ type InputHtmlAttributes = HtmlAttributes &
 
 type ImageHtmlAttributes = HtmlAttributes & Parameters<typeof img2>[0];
 
+type AnchorHtmlAttributes = HtmlAttributes & Parameters<typeof a2>[0];
+
 const domComponentMap = {
+  a: a2,
   div: div2,
   button: button2,
   input: input2,
@@ -157,6 +171,7 @@ const domComponentMap = {
   li: li2,
   ul: ul2,
   span: span2,
+  strong: strong,
 } as const;
 
 export const jsxComponent = (
