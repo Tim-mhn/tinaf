@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from 'tinaf/router';
 
 const Header = component(() => {
   return (
-    <div className="flex  gap-32 justify-between items-center px-16 border-b border-gray-700 py-4 text-white">
+    <div className="flex w-full md:w-fit  gap-32 justify-between items-center px-16 border-b border-gray-700 py-4 text-white">
       <RouterLink
         classes="hover:underline underline-offset-4 cursor-pointer text-4xl"
         to="/"

@@ -98,11 +98,16 @@ const Sidebar = component(() => {
 
 const MobileMenu = component(() => {
   return (
-    <div>
+    <div className=" bg-neutral-900 ">
       <DropdownMenu
         className="py-2 text-gray-400"
         trigger={({ toggleMenu }) => (
-          <button onClick={(e: Event) => toggleMenu(e)}>Menu</button>
+          <button
+            className="hover:text-gray-300"
+            onClick={(e?: Event) => toggleMenu(e)}
+          >
+            Menu
+          </button>
         )}
       >
         <div className="flex flex-col gap-2 p-2 w-60">
@@ -122,7 +127,7 @@ export const Docs = component(() => {
   return (
     <div className="flex  flex-col md:flex-row justify-start w-full text-xl">
       <Sidebar />
-      <MobileMenu className="visible md:invisible mb-4 " />
+      <MobileMenu className="visible md:invisible sticky top-0  mb-4 " />
 
       <div className="px-5 w-full">
         <RouterView />

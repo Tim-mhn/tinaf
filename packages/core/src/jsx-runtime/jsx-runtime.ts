@@ -160,7 +160,7 @@ type HtmlAttributes = Partial<
   {
     className: AddClassesArgs;
     // styles
-  } & Record<EventHandlerKey, () => void>
+  } & Record<EventHandlerKey, (e?: Event) => void>
 >;
 
 type InputHtmlAttributes = HtmlAttributes &

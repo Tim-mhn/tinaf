@@ -157,7 +157,7 @@ export const Button = component<{
   );
 });
 
-type EventHandler = (e: Event) => void;
+type EventHandler = (e?: Event) => void;
 
 export const DropdownMenu = component<{
   className?: string;
@@ -181,15 +181,15 @@ export const DropdownMenu = component<{
       {trigger({
         toggleMenu: (e) => {
           console.log('click called');
-          e.preventDefault();
-          e.stopPropagation();
+          e?.preventDefault();
+          e?.stopPropagation();
           toggleMenu();
         },
       })}
 
       <div
         className={{
-          'bg-gray-700 text-gray-200 py-2  absolute top-12 rounded-sm': true,
+          'bg-gray-600 text-gray-200 py-2  absolute top-12 rounded-sm': true,
           hidden: not(menuOpen),
         }}
       >

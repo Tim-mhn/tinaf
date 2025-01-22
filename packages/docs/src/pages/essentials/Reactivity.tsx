@@ -16,7 +16,12 @@ export const ReactivityPage = component(() => {
         To create a reactive value, use the <InlineCode>reactive</InlineCode>{' '}
         function{' '}
       </p>
-      <Code>const user = reactive("bob")</Code>
+      <Code>
+        {`import { reactive } from "tinaf/reactive"`}
+        <br />
+        <br />
+        const user = reactive("bob")
+      </Code>
       <p>
         To access its current value, use <InlineCode>.value</InlineCode>
       </p>
@@ -30,6 +35,9 @@ export const ReactivityPage = component(() => {
         function.{' '}
       </p>
       <Code>
+        {`import { reactive, computed } from "tinaf/reactive"`}
+        <br />
+        <br />
         const age = reactive(20)
         <br /> {`const isAdult = computed(() => age.value >= 18 )`}
       </Code>
@@ -56,6 +64,10 @@ export const ReactivityPage = component(() => {
       </p>
 
       <Code>
+        {`import { reactive, effect } from "tinaf/reactive"`}
+        <br />
+        <br />
+
         {`const mode = reactive<"light" | "dark">("dark")`}
         <br />
         {`effect(() => { console.log("mode was changed !"); }, [mode])`}
@@ -64,6 +76,10 @@ export const ReactivityPage = component(() => {
       <p>Finally, some helper functions exist for booleans and lists</p>
 
       <Code>
+        {`import { bool } from "tinaf/reactive"`}
+        <br />
+        <br />
+
         {`const [isOpen, toggle] = bool(false)`}
         <br />
         {`isOpen.value; // false`}
@@ -75,6 +91,10 @@ export const ReactivityPage = component(() => {
       </Code>
 
       <Code>
+        {`import { reactiveList } from "tinaf/reactive"`}
+        <br />
+        <br />
+
         {`const fruits = reactiveList(["banana", "apple"])`}
         <br />
         {`fruits.value; // ["banana", "apple"]`}

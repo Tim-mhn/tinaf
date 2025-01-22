@@ -10,6 +10,8 @@ import { ReactivityPage } from './pages/essentials/Reactivity';
 import { ComponentsDocPage } from './pages/essentials/ComponentsDoc.page';
 import { ForLoopsPage } from './pages/essentials/ForLoops.page';
 import { ConditionalRenderingPage } from './pages/essentials/ConditionalRendering.page';
+import { StylingPage } from './pages/essentials/Styling.page';
+import { RoutingPage } from './pages/essentials/Routing.page';
 
 const app = createApp(App);
 
@@ -53,11 +55,11 @@ const router = createRouter([
       },
       {
         path: '/styling',
-        component: IntroductionPage as PageComponent,
+        component: StylingPage as PageComponent,
       },
       {
         path: '/routing',
-        component: IntroductionPage as PageComponent,
+        component: RoutingPage as PageComponent,
       },
     ],
   },
