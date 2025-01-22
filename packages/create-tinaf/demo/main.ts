@@ -9,8 +9,6 @@ const router = createRouter([
     path: '/todos',
     component: TodoListPage,
   },
-  // keep this one at the end otherwise it will be matched by any route
-  // FIXME
   {
     path: '/',
     component: HomePage,

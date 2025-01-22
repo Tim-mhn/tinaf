@@ -4,6 +4,7 @@ import type { SimpleVComponent } from '../component/v-component';
 import { type ComponentFn } from '../component';
 import {
   a2,
+  br,
   button2,
   code,
   div2,
@@ -45,7 +46,7 @@ interface HTMLElementTags {
   // bdo: HtmlAttributes<HTMLElement>;
   // blockquote: BlockquoteHtmlAttributes<HTMLElement>;
   // body: HtmlAttributes<HTMLBodyElement>;
-  // br: HtmlAttributes<HTMLBRElement>;
+  br: HtmlAttributes;
   button: HtmlAttributes;
   // canvas: CanvasHtmlAttributes<HTMLCanvasElement>;
   // caption: HtmlAttributes<HTMLElement>;
@@ -188,6 +189,7 @@ const domComponentMap = {
   h6: h6,
   p: p2,
   code: code,
+  br: br,
 } as const;
 
 export const jsxComponent = (

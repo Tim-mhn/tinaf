@@ -1,5 +1,6 @@
 import {
   component,
+  For,
   getVComponentChildren,
   Show,
   Switch,
@@ -67,37 +68,56 @@ export const Radio = component<
     </div>
   );
 });
-/**
- *
- *
- * const Switch = component(() => {
- *
- *  const packageManager = ref("npm");
- *
- *
- *  return <div>
- *    <RadioGroup ref="packageManager">
- *    { (value, isActive) => {
- * return <Radio value="npm" activeClass="bg-x"> npm </Radio>
- *    <Radio value="yarn"> yarn </Radio>
- * }}
- *  </RadioGroup>
- *
- *  <CopyText > { packageManager === "npm" ? "npx create tinaf" : "yarn create-tinaf"} </CopyText>
- * </div>
- *
- *
- * const Radio = component<{ value: string, injections: RadioGroupInjections }>(() => {
- *   const { model } = injections;
- *
- *
- *
- *
- *
- *
- * })
- * })
- */
+
+function joinArr<T>(arr: T[], join: T) {
+  const newArr: T[] = [];
+
+  arr.forEach((el, index) => {
+    if (index > 0) newArr.push(join);
+    newArr.push(el);
+  });
+
+  return newArr;
+}
+
+export const Code = component<{ code: string; copyButton?: boolean }>(
+  ({ code, copyButton = true }) => {
+    console.log(code);
+
+    const c = computed(() => {
+      return joinArr(toValue(code).split('\n'), <br />);
+    });
+    const CodeWithLineBreaks = computed<string[]>(() => {
+      const c = toValue(code);
+      console.log(c.split('\n'));
+      return c.split('\n');
+    });
+    return (
+      <div className="flex gap-4 items-center">
+        <code className="bg-slate-800 p-3 rounded-sm">
+          <For each={CodeWithLineBreaks}>
+            {(el: string, index: number) => {
+              return (
+                <span>
+                  {el}
+                  <Show when={index > 0}>
+                    <br />
+                  </Show>
+                </span>
+              );
+            }}
+          </For>
+        </code>
+
+        <Show when={copyButton}>
+          <button onClick={() => navigator.clipboard.writeText(toValue(code))}>
+            Copy
+          </button>
+        </Show>
+      </div>
+    );
+  }
+);
 
 export const Link = component<{ href: string; color?: 'green' | 'white' }>(
   ({ href, color = 'white', children }) => {

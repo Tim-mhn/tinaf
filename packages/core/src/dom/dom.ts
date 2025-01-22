@@ -137,3 +137,9 @@ export const code = (args: CreateDom2Props) =>
     type: 'code',
     ...args,
   });
+
+export const br = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'br',
+    ...args,
+  });
