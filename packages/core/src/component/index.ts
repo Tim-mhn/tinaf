@@ -6,3 +6,4 @@ export { type VComponent } from './component';
 export { buildSwitchComponent } from './switch';
 export { onDestroy, onInit } from './lifecycle-hooks';
 export { Switch, Match } from './SimpleSwitch';
+export { isVComponent, getVComponentChildren } from './is-component';

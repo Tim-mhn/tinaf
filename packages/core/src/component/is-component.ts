@@ -12,3 +12,7 @@ export function isVComponent(
     cmp.__type === 'V_COMPONENT'
   );
 }
+
+export function getVComponentChildren(children: unknown[] = []) {
+  return children.filter(isVComponent);
+}

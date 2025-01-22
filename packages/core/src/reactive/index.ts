@@ -4,3 +4,4 @@ export * from './types';
 export * from './boolean';
 export * from './list';
 export { toReactiveProps } from './toReactiveProps';
+export { xequal, xif } from './utils';

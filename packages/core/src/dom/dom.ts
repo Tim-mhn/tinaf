@@ -89,3 +89,51 @@ export const span2 = (args: CreateDom2Props) =>
     type: 'span',
     ...args,
   });
+
+export const h1 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h1',
+    ...args,
+  });
+
+export const h2 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h2',
+    ...args,
+  });
+
+export const h3 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h3',
+    ...args,
+  });
+
+export const h4 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h4',
+    ...args,
+  });
+
+export const h5 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h5',
+    ...args,
+  });
+
+export const h6 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h6',
+    ...args,
+  });
+
+export const p2 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'p',
+    ...args,
+  });
+
+export const code = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'code',
+    ...args,
+  });

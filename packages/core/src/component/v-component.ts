@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { logMethod } from '../common/logger';
 import { mergeClasses } from '../dom/classes';
 import type {
   AddClassesArgs,
   ComponentChildren,
 } from '../dom/create-dom-element';
 import { type MaybeReactive } from '../reactive';
+import { fromPartial } from '../test-utils/from-partial';
 import { toArray, type MaybeArray } from '../utils/array';
 import { type TinafElement, type VComponent, type WithHtml } from './component';
 import { isVComponent } from './is-component';
@@ -14,13 +14,27 @@ import {
   popLastOnInitCallback,
 } from './lifecycle-hooks';
 
-export class SimpleVComponent<Props extends ComponentProps = NoProps>
-  implements VComponent
+export type Context = Record<string, unknown>;
+export type EmptyContext = Record<string, never>;
+export class SimpleVComponent<
+  Props extends ComponentProps = NoProps,
+  Ctx extends Context = EmptyContext
+> implements VComponent
 {
   constructor(
     private props: RenderFnParams<Props>,
-    public renderFn: (props: RenderFnParams<Props>) => TinafElement
+    public renderFn: (
+      props: RenderFnParams<Props>,
+      context: Ctx
+    ) => TinafElement
   ) {}
+
+  private context: Ctx = fromPartial<Ctx>({});
+
+  // Q: does it really make sense to add a generic to provide ?
+  provide<I extends Record<string, unknown>>(context: I) {
+    this.context = context as any;
+  }
 
   readonly __type = 'V_COMPONENT';
   readonly __subtype = 'V3';
@@ -46,7 +60,7 @@ export class SimpleVComponent<Props extends ComponentProps = NoProps>
 
   init(parent: WithHtml) {
     this.parent = parent;
-    this.child = this.renderFn(this.props);
+    this.child = this.renderFn(this.props, this.context);
 
     this._registerOnDestroyCallback();
 
@@ -110,9 +124,10 @@ const isPromise = (obj: unknown): obj is Promise<unknown> => {
   return !!obj && obj instanceof Promise;
 };
 
-export function component<Props extends ComponentProps = NoProps>(
-  renderFn: (p: RenderFnParams<Props>) => TinafElement
-) {
+export function component<
+  Props extends ComponentProps = NoProps,
+  Ctx extends Context = EmptyContext
+>(renderFn: (p: RenderFnParams<Props>, context: Ctx) => TinafElement) {
   return (extendedProps: RenderFnParams<Props & { className?: string }>) => {
     return new SimpleVComponent(extendedProps, renderFn);
   };
@@ -130,6 +145,8 @@ type RenderFnParams<Props extends object> = Props extends NoProps
       [K in keyof Omit<Props, 'children'>]: Props[K] extends (
         ...args: any[]
       ) => any
+        ? Props[K]
+        : K extends `on${string}`
         ? Props[K]
         : MaybeReactive<Props[K]>;
     };

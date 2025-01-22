@@ -33,7 +33,7 @@ export type EventHandlers = {
 };
 
 export type AddClassesArgs =
-  | MaybeArray<MaybeReactive<string>>
+  | MaybeArray<MaybeReactive<string | undefined>>
   | Record<string, MaybeReactive<boolean>>;
 
 export type ComponentChildren = (VComponent | MaybeReactive<PrimitiveType>)[];
