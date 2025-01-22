@@ -153,7 +153,7 @@ describe('VComponent', () => {
       const A = ComponentA({});
       const B = ComponentB({});
       const C = ComponentC({});
-      const D = ComponentD();
+      const D = ComponentD({});
 
       const parent = buildMockParent();
       A.init(parent);

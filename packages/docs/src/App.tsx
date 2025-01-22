@@ -12,7 +12,7 @@ const Header = component(() => {
       </RouterLink>
       <RouterLink
         classes="hover:underline underline-offset-4 cursor-pointer text-2xl"
-        to="/docs/introduction"
+        to="/docs"
       >
         Docs
       </RouterLink>
