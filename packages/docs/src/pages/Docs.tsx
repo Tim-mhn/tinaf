@@ -86,7 +86,7 @@ const groups: Array<{ section: string; items: Array<Link> }> = [
 
 const Sidebar = component(() => {
   return (
-    <div className="hidden md:flex w-94 p-16 h-full border-r border-gray-400 overflow-auto flex-col gap-8">
+    <div className="hidden md:flex w-96 py-16 px-8 h-full border-r border-gray-400 overflow-auto flex-col gap-8">
       <For each={groups} keyFunction={(g) => g.section}>
         {(g: (typeof groups)[number]) => (
           <Group section={g.section} items={g.items} />
@@ -122,7 +122,7 @@ export const Docs = component(() => {
   return (
     <div className="flex  flex-col md:flex-row justify-start w-full text-xl">
       <Sidebar />
-      <MobileMenu className="mb-4 " />
+      <MobileMenu className="visible md:invisible mb-4 " />
 
       <div className="px-5 w-full">
         <RouterView />

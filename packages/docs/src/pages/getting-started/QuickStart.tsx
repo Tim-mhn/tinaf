@@ -1,6 +1,6 @@
 import { component } from 'tinaf/component';
 import { DocPageLayout } from '../../layouts';
-import { Code, Divider, Radio, RadioGroup } from '../../components';
+import { Button, Code, Divider, Radio, RadioGroup } from '../../components';
 import { reactive, xequal, xif } from 'tinaf/reactive';
 
 export const QuickStartPage = component(() => {
@@ -78,6 +78,14 @@ export const QuickStartPage = component(() => {
 
         {"app.render('container');"}
       </Code>
+
+      <Button
+        className="w-full md:w-fit m-auto"
+        size="md"
+        href="/docs/components"
+      >
+        Create your first component
+      </Button>
     </DocPageLayout>
   );
 });

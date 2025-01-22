@@ -1,5 +1,5 @@
 import { component } from 'tinaf/component';
-import { Link } from '../../components';
+import { Button, Link } from '../../components';
 import { DocPageLayout } from '../../layouts';
 
 export const IntroductionPage = component(() => {
@@ -41,6 +41,14 @@ export const IntroductionPage = component(() => {
           Let's get started !
         </Link>
       </p>
+
+      <Button
+        className="w-full md:w-fit m-auto"
+        size="md"
+        href="/docs/quick-start"
+      >
+        Get started
+      </Button>
     </DocPageLayout>
   );
 });

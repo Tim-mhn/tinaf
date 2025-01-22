@@ -144,3 +144,15 @@ export const br = (args: CreateDom2Props) =>
     type: 'br',
     ...args,
   });
+
+export const i = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'i',
+    ...args,
+  });
+
+export const u = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'u',
+    ...args,
+  });

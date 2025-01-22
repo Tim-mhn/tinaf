@@ -14,12 +14,14 @@ import {
   h4,
   h5,
   h6,
+  i,
   img2,
   input2,
   li2,
   p2,
   span2,
   strong,
+  u,
   ul2,
 } from '../dom';
 import type {
@@ -82,7 +84,7 @@ interface HTMLElementTags {
   // hgroup: HtmlAttributes<HTMLElement>;
   // hr: HtmlAttributes<HTMLHRElement>;
   // html: HtmlAttributes<HTMLHtmlElement>;
-  // i: HtmlAttributes<HTMLElement>;
+  i: HtmlAttributes;
   // iframe: IframeHtmlAttributes<HTMLIFrameElement>;
   img: ImageHtmlAttributes;
   input: InputHtmlAttributes;
@@ -140,7 +142,7 @@ interface HTMLElementTags {
   // title: HtmlAttributes<HTMLTitleElement>;
   // tr: HtmlAttributes<HTMLTableRowElement>;
   // track: TrackHtmlAttributes<HTMLTrackElement>;
-  // u: HtmlAttributes<HTMLElement>;
+  u: HtmlAttributes;
   strong: HtmlAttributes;
   ul: HtmlAttributes;
   // var: HtmlAttributes<HTMLElement>;
@@ -190,6 +192,8 @@ const domComponentMap = {
   p: p2,
   code: code,
   br: br,
+  i: i,
+  u: u,
 } as const;
 
 export const jsxComponent = (

@@ -8,6 +8,8 @@ import { IntroductionPage } from './pages/getting-started/Introduction';
 import { QuickStartPage } from './pages/getting-started/QuickStart';
 import { ReactivityPage } from './pages/essentials/Reactivity';
 import { ComponentsDocPage } from './pages/essentials/ComponentsDoc.page';
+import { ForLoopsPage } from './pages/essentials/ForLoops.page';
+import { ConditionalRenderingPage } from './pages/essentials/ConditionalRendering.page';
 
 const app = createApp(App);
 
@@ -43,11 +45,11 @@ const router = createRouter([
       { path: '/reactivity', component: ReactivityPage as PageComponent },
       {
         path: '/for-loops',
-        component: IntroductionPage as PageComponent,
+        component: ForLoopsPage as PageComponent,
       },
       {
         path: '/conditional-rendering',
-        component: IntroductionPage as PageComponent,
+        component: ConditionalRenderingPage as PageComponent,
       },
       {
         path: '/styling',

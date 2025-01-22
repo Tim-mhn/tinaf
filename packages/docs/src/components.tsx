@@ -16,7 +16,7 @@ import {
   xif,
 } from 'tinaf/reactive';
 import { Component } from 'tinaf/render';
-import { RouterLink } from 'tinaf/router';
+import { injectRouter, RouterLink } from 'tinaf/router';
 export const Divider = component(() => {
   return <div className="w-full h-[1px] bg-gray-700"></div>;
 });
@@ -72,11 +72,15 @@ export const Radio = component<
 function trueish<T>(v: MaybeReactive<T>) {
   return computed(() => !!toValue(v));
 }
+
+export const InlineCode = component(({ children = [] }) => {
+  return <Code className="m-1 !inline">{...children}</Code>;
+});
 export const Code = component<{ copyCode?: string }>(
   ({ copyCode, children = [] }) => {
     return (
-      <div className="flex gap-4 items-center">
-        <code className="bg-slate-800 p-3 rounded-sm">{...children}</code>
+      <div className="flex text-sm md:text-lg gap-4 items-center">
+        <code className="bg-slate-800 p-2 rounded-sm">{...children}</code>
 
         <Show when={trueish(copyCode)}>
           <button
@@ -119,18 +123,39 @@ export const Link = component<{ href: string; color?: 'green' | 'white' }>(
   }
 );
 
-export const Button = component<{ onClick: () => void }>(
-  ({ onClick, children = [] }) => {
-    return (
-      <button
-        onClick={onClick}
-        className="w-fit bg-tm-500 hover:bg-tm-400 cursor-pointer text-3xl text-tm-950 rounded-md px-16 py-4"
-      >
-        {...children}
-      </button>
-    );
-  }
-);
+export const HighlightedText = component(({ children = [] }) => {
+  return <span className="text-tm-500">{...children}</span>;
+});
+
+export const Button = component<{
+  onClick?: () => void;
+  href?: string;
+  size?: 'lg' | 'md';
+}>(({ onClick, href, size = 'lg', children = [] }) => {
+  const router = injectRouter();
+
+  const onClickFn = () => {
+    const link = toValue(href);
+    if (link) {
+      return router.navigate(link);
+    }
+
+    onClick?.();
+  };
+  return (
+    <button
+      onClick={onClickFn}
+      className={{
+        'w-fit bg-tm-500 hover:bg-tm-400 cursor-pointer  text-tm-950 rounded-md px-16 py-4':
+          true,
+        'text-3xl': toValue(size) === 'lg',
+        'text-lg': toValue(size) === 'md',
+      }}
+    >
+      {...children}
+    </button>
+  );
+});
 
 type EventHandler = (e: Event) => void;
 
