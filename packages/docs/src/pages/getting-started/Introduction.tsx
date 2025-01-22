@@ -1,5 +1,5 @@
 import { component } from 'tinaf/component';
-import { Divider, Link } from '../../components';
+import { Link } from '../../components';
 import { DocPageLayout } from '../../layouts';
 
 export const IntroductionPage = component(() => {

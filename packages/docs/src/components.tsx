@@ -1,22 +1,13 @@
-import {
-  component,
-  For,
-  getVComponentChildren,
-  Show,
-  Switch,
-} from 'tinaf/component';
+import { component, getVComponentChildren, Show } from 'tinaf/component';
 import {
   computed,
-  isReactive,
   isSourceReactive,
   MaybeReactive,
-  Reactive,
   toValue,
   xequal,
   xif,
 } from 'tinaf/reactive';
 import { RouterLink } from 'tinaf/router';
-import { isVComponent } from '../../core/src/component/is-component';
 export const Divider = component(() => {
   return <div className="w-full h-[1px] bg-gray-700"></div>;
 });
@@ -69,25 +60,21 @@ export const Radio = component<
   );
 });
 
-function joinArr<T>(arr: T[], join: T) {
-  const newArr: T[] = [];
-
-  arr.forEach((el, index) => {
-    if (index > 0) newArr.push(join);
-    newArr.push(el);
-  });
-
-  return newArr;
+function trueish<T>(v: MaybeReactive<T>) {
+  return computed(() => !!toValue(v));
 }
-
-export const Code = component<{ copyButton?: boolean }>(
-  ({ copyButton = true, children = [] }) => {
+export const Code = component<{ copyCode?: string }>(
+  ({ copyCode, children = [] }) => {
     return (
       <div className="flex gap-4 items-center">
         <code className="bg-slate-800 p-3 rounded-sm">{...children}</code>
 
-        <Show when={copyButton}>
-          <button onClick={() => navigator.clipboard.writeText(toValue(code))}>
+        <Show when={trueish(copyCode)}>
+          <button
+            onClick={() =>
+              navigator.clipboard.writeText(toValue(copyCode) || '')
+            }
+          >
             Copy
           </button>
         </Show>
@@ -98,6 +85,8 @@ export const Code = component<{ copyButton?: boolean }>(
 
 export const Link = component<{ href: string; color?: 'green' | 'white' }>(
   ({ href, color = 'white', children }) => {
+    console.log({ href });
+    console.log({ color });
     const cls = computed(() =>
       [
         toValue(color) === 'green' ? 'text-tm-500 border-tm-500' : '',
@@ -105,18 +94,18 @@ export const Link = component<{ href: string; color?: 'green' | 'white' }>(
       ].join(' ')
     );
 
+    console.log(toValue(href).startsWith('http'));
     const isExternalLink = computed(() => toValue(href).startsWith('http'));
     return (
       <Show
         when={isExternalLink}
         fallback={
           <RouterLink className={cls} to={href}>
-            {' '}
             {children}
           </RouterLink>
         }
       >
-        <a className={cls} href={href as string}>
+        <a className={cls} href={toValue(href)}>
           {children}
         </a>
       </Show>

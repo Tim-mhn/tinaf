@@ -1,6 +1,5 @@
-import { component } from "tinaf/component";
-import { PageComponent } from "tinaf/router";
+import { component } from 'tinaf/component';
 
 export const ReactivityPage = component(() => {
-    return <div>Reactivity</div>
-}) 
+  return <div>Reactivity</div>;
+});

@@ -28,11 +28,14 @@ type CreateDom2Props = Partial<
   >
 >;
 
-export const a2 = (args: CreateDom2Props & { href: string }) =>
-  _createDomElement({
+export const a2 = (args: CreateDom2Props & { href: string }) => {
+  console.log('a2');
+  console.log(args);
+  return _createDomElement({
     type: 'a',
     ...args,
   });
+};
 
 export const div2 = (args: CreateDom2Props) =>
   _createDomElement({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { objectEntries, objectKeys } from '../utils/object';
 import { isReactive, toValue } from '../reactive/toValue';
@@ -52,7 +53,8 @@ export class VDomComponent<T extends TagName> implements VComponent {
     private children: ComponentChildren,
     private className?: AddClassesArgs,
     private styles?: AddStylesArgs,
-    private handlers?: EventHandlers
+    private handlers?: EventHandlers,
+    private otherAttributes: Record<string, unknown>
   ) {}
 
   private _html!: HTMLElementTagNameMap[T];
@@ -170,6 +172,15 @@ export class VDomComponent<T extends TagName> implements VComponent {
     if (this.className) addClassToElement(this.html, this.className);
     if (this.handlers) addEventListenersToElement(this.html, this.handlers);
     if (this.styles) addStylesToElement(this.html, this.styles);
+
+    // ugly solution to pass other attributes like href
+    // FIXME: this is not reactive
+    if (this.otherAttributes) {
+      objectEntries(this.otherAttributes).forEach(([key, value]) => {
+        // @ts-expect-error
+        this.html[key] = value;
+      });
+    }
     return this.html;
   }
 
@@ -191,7 +202,14 @@ export const _createDomElement = <T extends TagName>(
     doc: buildDomDocument(),
   }
 ): VDomComponent<T> => {
-  const { children = [], className, type, handlers, styles } = props;
+  const {
+    children = [],
+    className,
+    type,
+    handlers,
+    styles,
+    ...otherProps
+  } = props;
 
   const vdom = new VDomComponent(
     injections.doc,
@@ -199,7 +217,8 @@ export const _createDomElement = <T extends TagName>(
     children,
     className,
     styles,
-    handlers
+    handlers,
+    otherProps
   );
 
   return vdom;

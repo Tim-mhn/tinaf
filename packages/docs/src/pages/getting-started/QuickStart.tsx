@@ -1,4 +1,4 @@
-import { component, Match, Switch } from 'tinaf/component';
+import { component } from 'tinaf/component';
 import { DocPageLayout } from '../../layouts';
 import { Code, Divider, Radio, RadioGroup } from '../../components';
 import { reactive, xequal, xif } from 'tinaf/reactive';
@@ -11,15 +11,15 @@ export const QuickStartPage = component(() => {
       .xthen('npx create tinaf')
       .xelse('yarn create-tinaf');
 
-    return <Code> {starterCode} </Code>;
+    return <Code copyCode={starterCode}> {starterCode} </Code>;
   });
 
   const DevServerCode = component(() => {
-    const starterCode = xif(xequal(packageManager, 'npm'))
+    const startDevServer = xif(xequal(packageManager, 'npm'))
       .xthen('npm run dev')
       .xelse('yarn dev');
 
-    return <Code>{starterCode}</Code>;
+    return <Code copyCode={startDevServer}>{startDevServer}</Code>;
   });
   return (
     <DocPageLayout title="Quick start">
@@ -47,7 +47,7 @@ export const QuickStartPage = component(() => {
 
       <p>Here is what your entry file (main.ts) should look like</p>
 
-      <Code copyButton={false}>
+      <Code>
         {"import { createApp } from 'tinaf/render';"}
         <br />
         {"import { ROUTER_PROVIDER_KEY, createRouter } from 'tinaf/router';"}
@@ -81,26 +81,3 @@ export const QuickStartPage = component(() => {
     </DocPageLayout>
   );
 });
-
-const StarterProjectCode = `
-import { createApp } from 'tinaf/render';
-import { ROUTER_PROVIDER_KEY, createRouter } from 'tinaf/router';
-import { HomePage } from './src/Home/Home.page';
-import { TodoListPage } from './src/Todos/TodoList.page';
-import { App } from './src/App';
-
-const router = createRouter([
-  {
-    path: '/todos',
-    component: TodoListPage,
-  },
-  {
-    path: '/',
-    component: HomePage,
-  },
-]);
-
-const app = createApp(App).provide(ROUTER_PROVIDER_KEY, router);
-
-app.render('container');
-`;
