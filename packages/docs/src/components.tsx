@@ -80,34 +80,11 @@ function joinArr<T>(arr: T[], join: T) {
   return newArr;
 }
 
-export const Code = component<{ code: string; copyButton?: boolean }>(
-  ({ code, copyButton = true }) => {
-    console.log(code);
-
-    const c = computed(() => {
-      return joinArr(toValue(code).split('\n'), <br />);
-    });
-    const CodeWithLineBreaks = computed<string[]>(() => {
-      const c = toValue(code);
-      console.log(c.split('\n'));
-      return c.split('\n');
-    });
+export const Code = component<{ copyButton?: boolean }>(
+  ({ copyButton = true, children = [] }) => {
     return (
       <div className="flex gap-4 items-center">
-        <code className="bg-slate-800 p-3 rounded-sm">
-          <For each={CodeWithLineBreaks}>
-            {(el: string, index: number) => {
-              return (
-                <span>
-                  {el}
-                  <Show when={index > 0}>
-                    <br />
-                  </Show>
-                </span>
-              );
-            }}
-          </For>
-        </code>
+        <code className="bg-slate-800 p-3 rounded-sm">{...children}</code>
 
         <Show when={copyButton}>
           <button onClick={() => navigator.clipboard.writeText(toValue(code))}>
