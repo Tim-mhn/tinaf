@@ -1,5 +1,6 @@
 import { component, For } from 'tinaf/component';
 import { RouterLink, RouterView } from 'tinaf/router';
+import { Divider, DropdownMenu } from '../components';
 
 const Section = component(({ children }) => {
   return <div className="text-white text-lg">{children}</div>;
@@ -53,12 +54,31 @@ const groups: Array<{ section: string; items: Array<Link> }> = [
     section: 'Essentials',
     items: [
       {
-        label: 'Creating an application',
-        link: '/docs/create-application',
+        label: 'Components',
+        link: '/docs/components',
       },
       {
         label: ' Reactivity',
         link: '/docs/reactivity',
+      },
+      {
+        label: 'For loops',
+        link: '/docs/for-loops',
+      },
+
+      {
+        label: 'Conditional Rendering',
+        link: '/docs/conditional-rendering',
+      },
+
+      {
+        label: 'Styling',
+        link: '/docs/styling',
+      },
+
+      {
+        label: 'Routing',
+        link: '/docs/routing',
       },
     ],
   },
@@ -66,7 +86,7 @@ const groups: Array<{ section: string; items: Array<Link> }> = [
 
 const Sidebar = component(() => {
   return (
-    <div className="w-94 p-16 h-full border-r border-gray-400 overflow-auto flex flex-col gap-8">
+    <div className="hidden md:flex w-94 p-16 h-full border-r border-gray-400 overflow-auto flex-col gap-8">
       <For each={groups} keyFunction={(g) => g.section}>
         {(g: (typeof groups)[number]) => (
           <Group section={g.section} items={g.items} />
@@ -75,10 +95,35 @@ const Sidebar = component(() => {
     </div>
   );
 });
+
+const MobileMenu = component(() => {
+  return (
+    <div>
+      <DropdownMenu
+        className="py-2 text-gray-400"
+        trigger={({ toggleMenu }) => (
+          <button onClick={(e: Event) => toggleMenu(e)}>Menu</button>
+        )}
+      >
+        <div className="flex flex-col gap-2 p-2 w-60">
+          <For each={groups} keyFunction={(g) => g.section}>
+            {(g: (typeof groups)[number]) => (
+              <Group section={g.section} items={g.items} />
+            )}
+          </For>
+        </div>
+      </DropdownMenu>
+      <Divider />
+    </div>
+  );
+});
+
 export const Docs = component(() => {
   return (
-    <div className="flex flex-row justify-start w-full text-xl">
+    <div className="flex  flex-col md:flex-row justify-start w-full text-xl">
       <Sidebar />
+      <MobileMenu className="mb-4 " />
+
       <div className="px-5 w-full">
         <RouterView />
       </div>

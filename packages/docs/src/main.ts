@@ -7,7 +7,7 @@ import { Docs } from './pages/Docs';
 import { IntroductionPage } from './pages/getting-started/Introduction';
 import { QuickStartPage } from './pages/getting-started/QuickStart';
 import { ReactivityPage } from './pages/essentials/Reactivity';
-import { CreateApplicationPage } from './pages/essentials/CreateApplication';
+import { ComponentsDocPage } from './pages/essentials/ComponentsDoc.page';
 
 const app = createApp(App);
 
@@ -37,10 +37,26 @@ const router = createRouter([
         component: QuickStartPage as PageComponent,
       },
       {
-        path: '/create-application',
-        component: CreateApplicationPage as PageComponent,
+        path: '/components',
+        component: ComponentsDocPage as PageComponent,
       },
       { path: '/reactivity', component: ReactivityPage as PageComponent },
+      {
+        path: '/for-loops',
+        component: IntroductionPage as PageComponent,
+      },
+      {
+        path: '/conditional-rendering',
+        component: IntroductionPage as PageComponent,
+      },
+      {
+        path: '/styling',
+        component: IntroductionPage as PageComponent,
+      },
+      {
+        path: '/routing',
+        component: IntroductionPage as PageComponent,
+      },
     ],
   },
   {

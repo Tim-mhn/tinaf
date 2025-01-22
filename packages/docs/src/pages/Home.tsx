@@ -55,7 +55,7 @@ const MainCaption = component(() => {
   return (
     <div className="flex flex-col gap-32">
       <div className="mx-auto justify-center items-center flex flex-col gap-4 text-9xl c">
-        <div> This Is Not A Framework </div>
+        <div className="text-center"> This Is Not A Framework </div>
         <div className="text-5xl font-extralight"> T.I.N.A.F. </div>
       </div>
       <div className="text-center text-tm-300 text-2xl   mx-auto max-w-7xl">

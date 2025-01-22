@@ -21,7 +21,7 @@ const Header = component(() => {
 });
 export const App = component(() => {
   return (
-    <div className="flex flex-col gap-20 h-screen items-center  w-screen overflow-auto pb-8 bg-neutral-900 text-slate-50">
+    <div className="flex flex-col gap-2 md:gap-20 h-screen items-center  w-screen overflow-auto pb-8 bg-neutral-900 text-slate-50">
       <Header />
       <RouterView />
     </div>

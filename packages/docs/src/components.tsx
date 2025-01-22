@@ -1,12 +1,21 @@
-import { component, getVComponentChildren, Show } from 'tinaf/component';
 import {
+  component,
+  getVComponentChildren,
+  onDestroy,
+  onInit,
+  Show,
+} from 'tinaf/component';
+import {
+  bool,
   computed,
   isSourceReactive,
   MaybeReactive,
+  not,
   toValue,
   xequal,
   xif,
 } from 'tinaf/reactive';
+import { Component } from 'tinaf/render';
 import { RouterLink } from 'tinaf/router';
 export const Divider = component(() => {
   return <div className="w-full h-[1px] bg-gray-700"></div>;
@@ -122,3 +131,45 @@ export const Button = component<{ onClick: () => void }>(
     );
   }
 );
+
+type EventHandler = (e: Event) => void;
+
+export const DropdownMenu = component<{
+  className?: string;
+  trigger: (params: { toggleMenu: EventHandler }) => Component;
+}>(({ trigger, className, children = [] }) => {
+  const [menuOpen, toggleMenu] = bool(false);
+
+  const closeMenu = () => {
+    menuOpen.update(false);
+  };
+  onInit(() => {
+    window.addEventListener('click', closeMenu);
+  });
+
+  onDestroy(() => {
+    window.removeEventListener('click', closeMenu);
+  });
+
+  return (
+    <div className={['relative px-5', className]}>
+      {trigger({
+        toggleMenu: (e) => {
+          console.log('click called');
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMenu();
+        },
+      })}
+
+      <div
+        className={{
+          'bg-gray-700 text-gray-200 py-2  absolute top-12 rounded-sm': true,
+          hidden: not(menuOpen),
+        }}
+      >
+        {...children}
+      </div>
+    </div>
+  );
+});

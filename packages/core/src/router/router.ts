@@ -98,8 +98,6 @@ export class Router {
     let routes: RouterConfig = this.config;
     let currentDepth = 0;
 
-    console.groupEnd();
-
     let component: Maybe<PageComponent> = null;
     while (currentDepth <= depth) {
       const { route, match, matchingPath } = buildMatchingRoute(routes, _path);
@@ -190,7 +188,7 @@ export class Router {
 
       _path = _path.replace(matchingPath, '');
 
-      routes = route.children || [];
+      routes = 'children' in route && route.children ? route.children : [];
       _route = route;
       currentDepth += 1;
     }
