@@ -220,8 +220,6 @@ describe('VComponent', () => {
     );
 
     const Cmp = component(() => {
-      console.log('cmp mounted');
-
       return (
         <Parent>
           <Child />

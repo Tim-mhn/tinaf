@@ -16,9 +16,18 @@ app.use(queryClientProvider);
 
 const router = createRouter([
   {
+    path: '/foo',
+    redirect: '/',
+  },
+  {
     path: '/docs',
+    redirect: '/docs/introduction',
     component: Docs as PageComponent,
     children: [
+      {
+        path: '/bar',
+        redirect: '/introduction',
+      },
       {
         path: '/introduction',
         component: IntroductionPage as PageComponent,

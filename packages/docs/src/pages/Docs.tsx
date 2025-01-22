@@ -1,5 +1,5 @@
 import { component, For } from 'tinaf/component';
-import { RouterLink, RouterView } from 'tinaf/router';
+import { Router, RouterLink, RouterView } from 'tinaf/router';
 
 const Section = component(({ children }) => {
   return <div className="text-white text-lg">{children}</div>;
@@ -71,6 +71,14 @@ const Sidebar = component(() => {
           <Group section={g.section} items={g.items} />
         )}
       </For>
+
+      <RouterLink to="/foo">to /foo (should redirect to /)</RouterLink>
+      <RouterLink to="/docs/bar">
+        to /docs/bar (should redirect to /docs/introduction)
+      </RouterLink>
+      <RouterLink to="/docs">
+        to /docs (should redirect to /docs/introduction)
+      </RouterLink>
     </div>
   );
 });

@@ -115,7 +115,6 @@ class ForLoopComponent<T> implements VComponent {
   }
 
   init(parent: WithHtml) {
-    console.group(`<For>.init`);
     this.parent = parent;
 
     if (!isReactive(this.items)) return;
@@ -161,8 +160,6 @@ class ForLoopComponent<T> implements VComponent {
     });
 
     this.sub.add(updateUiSub);
-
-    console.groupEnd();
   }
 
   destroy(): void {

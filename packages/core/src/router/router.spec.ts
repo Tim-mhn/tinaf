@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from 'vitest';
 import { CurrentLocation, Router, RouterConfig } from './router';
 import { fromPartial } from '../test-utils/from-partial';
@@ -8,12 +9,13 @@ import {
   buildMockHistory,
   buildTestRouter,
 } from './test-utils';
+import { buildMockComponent } from '../test-utils/component.mock';
 
 describe('Router', () => {
   describe('getComponentForPath', () => {
     it('returns the right component with simple paths', () => {
-      const Home = () => 'home';
-      const About = () => 'about';
+      const Home = buildMockComponent('Home');
+      const About = buildMockComponent('About');
 
       const router = buildTestRouter([
         { path: '/home', component: Home },
@@ -25,8 +27,8 @@ describe('Router', () => {
     });
 
     it('returns the right component with a dynamic path', () => {
-      const Home = () => 'home';
-      const Product = () => 'Product';
+      const Home = buildMockComponent('Home');
+      const Product = buildMockComponent('Product');
 
       const router = buildTestRouter([
         { path: '/home', component: Home },
@@ -38,11 +40,11 @@ describe('Router', () => {
 
     describe('nested paths', () => {
       it('finds the correct component for a depth 0 path', () => {
-        const Home = () => 'home';
-        const Dashboard = () => 'dasboard';
+        const Home = buildMockComponent('Home');
+        const Dashboard = buildMockComponent('Dashboard');
 
-        const Favorites = () => 'favorites';
-        const Orders = () => 'orders';
+        const Favorites = buildMockComponent('Favorites');
+        const Orders = buildMockComponent('Orders');
 
         const router = buildTestRouter([
           { path: '/home', component: Home },
@@ -67,13 +69,13 @@ describe('Router', () => {
       });
 
       it('finds the correct component for a depth 1 path', () => {
-        const Home = () => 'home';
-        const Dashboard = () => 'dasboard';
+        const Home = buildMockComponent('Home');
+        const Dashboard = buildMockComponent('Dashboard');
 
-        const Favorites = () => 'favorites';
-        const Orders = () => 'orders';
+        const Favorites = buildMockComponent('Favorites');
+        const Orders = buildMockComponent('Orders');
 
-        const OrderPage = () => 'Order';
+        const OrderPage = buildMockComponent('Order');
 
         const router = buildTestRouter([
           { path: '/home', component: Home },
@@ -110,13 +112,13 @@ describe('Router', () => {
       });
 
       it('finds the correct component for a depth 2 path', () => {
-        const Home = () => 'home';
-        const Dashboard = () => 'dasboard';
+        const Home = buildMockComponent('Home');
+        const Dashboard = buildMockComponent('Dashboard');
 
-        const Favorites = () => 'favorites';
-        const Orders = () => 'orders';
+        const Favorites = buildMockComponent('Favorites');
+        const Orders = buildMockComponent('Orders');
 
-        const OrderPage = () => 'Order';
+        const OrderPage = buildMockComponent('Order');
 
         const router = buildTestRouter([
           { path: '/home', component: Home },
@@ -153,15 +155,12 @@ describe('Router', () => {
       });
 
       it('finds the correct component for a nested path with a dynamic param,', () => {
-        const Home = () => 'home';
-        const Dashboard = () => 'dasboard';
-
-        const Favorites = () => 'favorites';
-        const Orders = () => 'orders';
-
-        const OrderPage = () => 'Order';
-
-        const OrderDetails = () => 'Details';
+        const Home = buildMockComponent('Home');
+        const Dashboard = buildMockComponent('Dashboard');
+        const Favorites = buildMockComponent('Favorites');
+        const Orders = buildMockComponent('Orders');
+        const OrderPage = buildMockComponent('Order');
+        const OrderDetails = buildMockComponent('OrderDetails');
 
         const router = buildTestRouter([
           { path: '/home', component: Home },
@@ -210,6 +209,93 @@ describe('Router', () => {
         expect(shouldBeOrderPage).toEqual(OrderPage);
         expect(shouldBeDetails).toEqual(OrderDetails);
       });
+
+      describe('re-directions', () => {
+        it('allows simple re-directs', () => {
+          const Home = () => 'home' as any;
+          const router = buildTestRouter([
+            {
+              path: '/home',
+              component: Home,
+            },
+            {
+              path: '/',
+              redirect: '/home',
+            },
+          ]);
+
+          expect(router.getComponentForPath('/')).toBe(Home);
+        });
+
+        it('allows nested re-directs', () => {
+          const Home = buildMockComponent('Home');
+          const A = buildMockComponent('A');
+          const B = buildMockComponent('B');
+          const router = buildTestRouter(
+            [
+              {
+                path: '/home',
+                component: Home,
+                children: [
+                  {
+                    path: '/a',
+                    component: A,
+                  },
+                  {
+                    path: '/b',
+                    component: B,
+                  },
+                  {
+                    path: '/c',
+                    redirect: '/a',
+                  },
+                ],
+              },
+            ],
+            { initialPath: '/home/c' }
+          );
+
+          vi.spyOn(router, 'navigate');
+
+          const comp = router.getComponentForPath('/home/c', { depth: 1 });
+
+          expect(comp).toBe(A);
+          expect(router.navigate).toHaveBeenCalledWith('/home/a');
+        });
+
+        it('allows re-directs on layout routes', () => {
+          const Home = buildMockComponent('Home');
+          const A = buildMockComponent('A');
+          const B = buildMockComponent('B');
+          const router = buildTestRouter(
+            [
+              {
+                path: '/home',
+                component: Home,
+                redirect: '/home/a',
+                children: [
+                  {
+                    path: '/a',
+                    component: A,
+                  },
+                  {
+                    path: '/b',
+                    component: B,
+                  },
+                ],
+              },
+            ],
+            { initialPath: '/home' }
+          );
+
+          vi.spyOn(router, 'navigate');
+
+          const comp = router.getComponentForPath('/home', { depth: 1 });
+
+          expect(comp).toBe(A);
+          expect(router.navigate).toHaveBeenCalledWith('/home/a');
+        });
+      });
     });
   });
 
@@ -239,7 +325,7 @@ describe('Router', () => {
       return { router, navigate };
     }
     it('returns the current route with the correct dynamic param', async () => {
-      const Home = () => 'home';
+      const Home = buildMockComponent('Home');
 
       const Product = () => 'Product';
 
@@ -259,7 +345,7 @@ describe('Router', () => {
     });
 
     it('returns the current route with the correct dynamic param when using nested paths', async () => {
-      const Home = () => 'home';
+      const Home = buildMockComponent('Home');
 
       const ProductPageContainer = () => 'ProductPageContainer';
       const ProductPage = () => 'ProductPage';
@@ -289,7 +375,7 @@ describe('Router', () => {
     });
 
     it('returns the current route with the correct dynamic param when using nested paths, more complex', async () => {
-      const Home = () => 'home';
+      const Home = buildMockComponent('Home');
 
       const ProductPage = () => 'ProductPage';
 

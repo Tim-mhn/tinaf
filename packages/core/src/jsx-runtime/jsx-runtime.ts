@@ -210,7 +210,6 @@ export const jsxComponent = (
 
     if (!domComponent) throw new Error('Component not found');
 
-    console.log(props);
     return domComponent({
       ...props,
       children: _children,

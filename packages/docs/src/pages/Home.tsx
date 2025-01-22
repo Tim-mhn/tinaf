@@ -1,7 +1,6 @@
 import { component } from 'tinaf/component';
 import { Button, Divider, Link } from '../components';
-
-
+import { injectRouter, RouterLink } from 'tinaf/router';
 
 const SupportedFeatures = component(() => {
   return (
@@ -22,19 +21,35 @@ const SupportedFeatures = component(() => {
 });
 
 const InspiredBy = component(() => {
-    return (
-      <div className="flex flex-col gap-4 px-8">
-        <div className="text-5xl  text-accent">Inspired by</div>
-  
-        <ul className="list-disc px-4 text-2xl">
-          <li>JSX: <Link href="https://react.dev/">Reactjs</Link>  & <Link href="https://www.solidjs.com/"></Link> 
-            Solid</li>
-          <li> Reactivity System: <Link color="green" href="https://vuejs.org/"> Vue</Link> & <Link href="https://www.rxjs.dev">RxJS</Link></li>
-          <li>Server State: <Link color="green" href="https://tanstack.com/">TanStack Query</Link></li>
-        </ul>
-      </div>
-    );
-  });
+  return (
+    <div className="flex flex-col gap-4 px-8">
+      <div className="text-5xl  text-accent">Inspired by</div>
+
+      <ul className="list-disc px-4 text-2xl">
+        <li>
+          JSX: <Link href="https://react.dev/">Reactjs</Link> &{' '}
+          <Link href="https://www.solidjs.com/"></Link>
+          Solid
+        </li>
+        <li>
+          {' '}
+          Reactivity System:{' '}
+          <Link color="green" href="https://vuejs.org/">
+            {' '}
+            Vue
+          </Link>{' '}
+          & <Link href="https://www.rxjs.dev">RxJS</Link>
+        </li>
+        <li>
+          Server State:{' '}
+          <Link color="green" href="https://tanstack.com/">
+            TanStack Query
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+});
 
 const MainCaption = component(() => {
   return (
@@ -46,38 +61,35 @@ const MainCaption = component(() => {
       <div className="text-center text-tm-300 text-2xl   mx-auto max-w-7xl">
         A fun attempt to build a mini front-end library with&nbsp;
         <Link href="https://docs.solidjs.com/advanced-concepts/fine-grained-reactivity">
-        
           fine-grained reactivity
         </Link>{' '}
         and{' '}
         <Link href="https://react.dev/learn/writing-markup-with-jsx">JSX</Link>
       </div>
-
-
     </div>
   );
 });
 
-
-
-
 export const Home = component(() => {
+  const router = injectRouter();
+
   return (
     <div className="flex flex-col gap-16">
       <MainCaption />
 
       <div className="flex flex-col gap-16">
-      <Divider />
-      <div className="flex justify-center items-center">
-        <Button onClick={() => ({})}>Get started</Button>
-      </div>
+        <Divider />
+        <div className="flex justify-center items-center">
+          <Button onClick={() => router.navigate('/docs/introduction')}>
+            Get started
+          </Button>
+        </div>
 
-      <Divider />
-      <div className="flex gap-16">
-      <SupportedFeatures />
-      <InspiredBy />
-      </div>
-      
+        <Divider />
+        <div className="flex gap-16">
+          <SupportedFeatures />
+          <InspiredBy />
+        </div>
       </div>
     </div>
   );

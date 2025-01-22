@@ -85,8 +85,6 @@ export const Code = component<{ copyCode?: string }>(
 
 export const Link = component<{ href: string; color?: 'green' | 'white' }>(
   ({ href, color = 'white', children }) => {
-    console.log({ href });
-    console.log({ color });
     const cls = computed(() =>
       [
         toValue(color) === 'green' ? 'text-tm-500 border-tm-500' : '',
@@ -94,7 +92,6 @@ export const Link = component<{ href: string; color?: 'green' | 'white' }>(
       ].join(' ')
     );
 
-    console.log(toValue(href).startsWith('http'));
     const isExternalLink = computed(() => toValue(href).startsWith('http'));
     return (
       <Show
@@ -114,13 +111,13 @@ export const Link = component<{ href: string; color?: 'green' | 'white' }>(
 );
 
 export const Button = component<{ onClick: () => void }>(
-  ({ onClick, children }) => {
+  ({ onClick, children = [] }) => {
     return (
       <button
         onClick={onClick}
         className="w-fit bg-tm-500 hover:bg-tm-400 cursor-pointer text-3xl text-tm-950 rounded-md px-16 py-4"
       >
-        {children}
+        {...children}
       </button>
     );
   }
