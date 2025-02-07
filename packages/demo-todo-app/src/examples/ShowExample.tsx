@@ -1,4 +1,3 @@
-import { useInterval } from "tinaf/common-hooks";
 import { component, Show } from "tinaf/component";
 import { bool } from "tinaf/reactive";
 

@@ -9,18 +9,18 @@ function setup({ list }: { list: ReturnType<typeof reactiveList<string>> }) {
   const renderFn = vi.fn((item: string) => item);
 
   const TestComponent = component(() => {
-    return <For each={list} keyFunction={i => i}>{renderFn}</For>;
+    return (
+      <For each={list} keyFunction={(i) => i}>
+        {renderFn}
+      </For>
+    );
   });
-
-
 
   let cmpChildren: ReturnType<typeof fakeMount>['children'];
   const mount = () => {
-
-    const { children } = fakeMount(TestComponent)
+    const { children } = fakeMount(TestComponent);
 
     cmpChildren = children;
-
   };
 
   const hasChildren = (children: any[]) => {
@@ -61,16 +61,8 @@ describe('<For />', () => {
 
     hasChildren(['b']);
 
-    items.update(['a', 'b', 'c'])
+    items.update(['a', 'b', 'c']);
 
     hasChildren(['a', 'b', 'c']);
-
-    // items.update([ 'c'])
-
-
-    // hasChildren(['c'])
-
-
-
   });
 });

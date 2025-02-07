@@ -42,7 +42,6 @@ export const RouterView = component(() => {
   const switchComponentBasedOnRoute = buildSwitchComponent(
     routePattern,
     (_routePattern) => {
-      console.log({ routePattern: _routePattern });
       const path = router.route.value.path;
 
       const pathComponent = router.getComponentForPath(path, {

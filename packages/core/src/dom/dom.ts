@@ -28,6 +28,13 @@ type CreateDom2Props = Partial<
   >
 >;
 
+export const a2 = (args: CreateDom2Props & { href: string }) => {
+  return _createDomElement({
+    type: 'a',
+    ...args,
+  });
+};
+
 export const div2 = (args: CreateDom2Props) =>
   _createDomElement({
     type: 'div',
@@ -37,6 +44,12 @@ export const div2 = (args: CreateDom2Props) =>
 export const button2 = (args: CreateDom2Props) =>
   _createDomElement({
     type: 'button',
+    ...args,
+  });
+
+export const strong = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'strong',
     ...args,
   });
 
@@ -75,5 +88,77 @@ export const ul2 = (args: CreateDom2Props) =>
 export const span2 = (args: CreateDom2Props) =>
   _createDomElement({
     type: 'span',
+    ...args,
+  });
+
+export const h1 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h1',
+    ...args,
+  });
+
+export const h2 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h2',
+    ...args,
+  });
+
+export const h3 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h3',
+    ...args,
+  });
+
+export const h4 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h4',
+    ...args,
+  });
+
+export const h5 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h5',
+    ...args,
+  });
+
+export const h6 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'h6',
+    ...args,
+  });
+
+export const p2 = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'p',
+    ...args,
+  });
+
+export const code = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'code',
+    ...args,
+  });
+
+export const br = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'br',
+    ...args,
+  });
+
+export const i = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'i',
+    ...args,
+  });
+
+export const u = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'u',
+    ...args,
+  });
+
+export const pre = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'pre',
     ...args,
   });

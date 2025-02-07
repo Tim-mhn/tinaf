@@ -1,7 +1,7 @@
 import { type MaybeArray, toArray } from '../utils/array';
 import { objectKeys } from '../utils/object';
-import { Reactive, type ReactiveValue } from './reactive';
-import { isReactive } from './toValue';
+import { computed, Reactive, type ReactiveValue } from './reactive';
+import { isReactive, toValue } from './toValue';
 import type { MaybeReactive, MaybeReactiveProps } from './types';
 
 export function getReactiveElements<T>(
@@ -28,3 +28,29 @@ export function getReactiveElementsFromObject<T extends object>(
 
   return reactiveElements;
 }
+
+export function xequal<A, B extends A>(
+  a: MaybeReactive<A>,
+  b: MaybeReactive<B>
+) {
+  return computed(() => toValue(a) === toValue(b));
+}
+
+export function xif(condition: MaybeReactive<boolean>) {
+  function xthen<T>(trueValue: MaybeReactive<T>) {
+    function xelse(falseValue: MaybeReactive<T>) {
+      return computed(() =>
+        toValue(condition) ? toValue(trueValue) : toValue(falseValue)
+      );
+    }
+
+    return { xelse };
+  }
+
+  return { xthen };
+}
+
+/**
+ *
+ * const cls = if(equal(value, activeClass)).then(activeClass).else("");
+ */

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { reactive } from './reactive';
-import { getReactiveElementsFromObject } from './utils';
+import { getReactiveElementsFromObject, xequal, xif } from './utils';
 import { objectKeys } from '../utils/object';
 
 describe('getReactiveElementsFromObject', () => {
@@ -23,4 +23,12 @@ describe('getReactiveElementsFromObject', () => {
     expect(reactiveElements.bar.value).toBe(2);
     expect(reactiveElements.baz.value).toBe('baz');
   });
+});
+
+it('xif', () => {
+  const user = reactive('bob');
+
+  const allowed = xif(xequal(user, 'bob')).xthen('valid').xelse('invalid');
+
+  expect(allowed.value).toEqual('valid');
 });

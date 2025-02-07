@@ -6,11 +6,15 @@ import type { Maybe } from '../utils/types';
 export type PageComponent = (maybeChildren: {
   children?: ComponentChildren[];
 }) => VComponent;
-export type RouterConfig = Array<{
-  path: string;
-  component: PageComponent;
-  children?: RouterConfig;
-}>;
+export type RouterConfig = Array<
+  | {
+      path: string;
+      component: PageComponent;
+      children?: RouterConfig;
+      redirect?: string;
+    }
+  | { path: string; redirect: string }
+>;
 
 export interface RouteChangeHandler {
   publishRouteChange(): void;
@@ -68,7 +72,7 @@ export class Router {
 
       fullPathPattern += route.path;
       path = path.replace(matchingPath, '');
-      routes = route.children || [];
+      routes = 'children' in route ? route.children || [] : [];
     }
 
     return fullPathPattern;
@@ -89,7 +93,7 @@ export class Router {
     });
   }
 
-  getComponentForPath(path: string, { depth = 0 } = {}) {
+  getComponentForPath(path: string, { depth = 0 } = {}): Maybe<PageComponent> {
     let _path = path;
     let routes: RouterConfig = this.config;
     let currentDepth = 0;
@@ -106,6 +110,29 @@ export class Router {
       }
 
       _path = _path.replace(matchingPath, '');
+
+      if ('redirect' in route && route.redirect) {
+        // _path === '' --> the path has totally be consumed, we can redirect now
+        // no component on route --> we ended up on a route that has no component attached to it, we need to perform the redirection
+        const shouldRedirect = !('component' in route) || _path === '';
+        if (shouldRedirect) {
+          const newRoute = this.route.value.path.replace(
+            matchingPath,
+            route.redirect
+          );
+
+          this.navigate(newRoute);
+          return this.getComponentForPath(newRoute, { depth });
+        }
+      }
+
+      if (!('component' in route)) {
+        console.warn(
+          `[Router] Ended up on a route ${route.path} that only has a redirect and no components attached to it. However, the redirect was not performed `
+        );
+        return;
+      }
+
       component = route.component;
 
       routes = route.children || [];
@@ -120,7 +147,6 @@ export class Router {
     const UNUSED_PARAM = '';
     this._history.pushState({}, UNUSED_PARAM, url);
     this._routeChangerHandler.publishRouteChange();
-    console.log('navigating ...');
   }
 
   private _findDynamicParams(pattern: string, route: string) {
@@ -162,7 +188,7 @@ export class Router {
 
       _path = _path.replace(matchingPath, '');
 
-      routes = route.children || [];
+      routes = 'children' in route && route.children ? route.children : [];
       _route = route;
       currentDepth += 1;
     }

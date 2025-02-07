@@ -1,5 +1,6 @@
 import type { AddClassesArgs } from '../dom/create-dom-element';
 import { type MaybeArray } from '../utils/array';
+import type { EmptyContext, Context } from './v-component';
 
 export type WithHtml = {
   html: HTMLElement;
@@ -15,6 +16,8 @@ export interface VComponent {
   addClass(args?: AddClassesArgs): VComponent;
   destroy?(): void;
   parent: WithHtml;
+  // Q: does it really make sense to add a generic to provide ?
+  provide?<Ctx extends Context = EmptyContext>(ctx: Ctx): void;
 }
 
 export type TinafElement = HTML | VComponent;

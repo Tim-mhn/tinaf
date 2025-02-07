@@ -13,7 +13,7 @@ import { logger } from '../common';
 class ForLoopComponent<T> implements VComponent {
   constructor(
     private items: MaybeReactive<T[]>,
-    private renderFn: (item: T) => TinafElement,
+    private renderFn: (item: T, index: number) => TinafElement,
     private keyFunction: (item: T) => string | number
   ) {}
 
@@ -27,7 +27,8 @@ class ForLoopComponent<T> implements VComponent {
 
   private _renderChildHtmlAndInit(
     value: T,
-    parent: WithHtml
+    parent: WithHtml,
+    index: number
   ):
     | {
         html: MaybeArray<HTML>;
@@ -35,7 +36,7 @@ class ForLoopComponent<T> implements VComponent {
         key: string | number;
       }
     | { html: MaybeArray<HTML>; vnode: null; key: string | number } {
-    const child = this.renderFn(value);
+    const child = this.renderFn(value, index);
     if (isVComponent(child)) {
       (child as any as SimpleVComponent).init(parent);
       return {
@@ -53,7 +54,9 @@ class ForLoopComponent<T> implements VComponent {
 
   private _renderChildrenAndInit() {
     const htmlElementsAndVNodes = toValue(this.items)
-      .map((item) => this._renderChildHtmlAndInit(item, this.parent))
+      .map((item, index) =>
+        this._renderChildHtmlAndInit(item, this.parent, index)
+      )
       .flat();
 
     const newHtml = htmlElementsAndVNodes.map(({ html }) => html).flat();
@@ -112,7 +115,6 @@ class ForLoopComponent<T> implements VComponent {
   }
 
   init(parent: WithHtml) {
-    console.group(`<For>.init`);
     this.parent = parent;
 
     if (!isReactive(this.items)) return;
@@ -142,7 +144,11 @@ class ForLoopComponent<T> implements VComponent {
         .sort((a, b) => b.index - a.index);
 
       childrenToAdd.forEach(({ value, index: childIndex }) => {
-        const { html } = this._renderChildHtmlAndInit(value, this.parent);
+        const { html } = this._renderChildHtmlAndInit(
+          value,
+          this.parent,
+          childIndex
+        );
 
         toArray(html).forEach((childHtml, index) =>
           parent.html.insertBefore(
@@ -154,8 +160,6 @@ class ForLoopComponent<T> implements VComponent {
     });
 
     this.sub.add(updateUiSub);
-
-    console.groupEnd();
   }
 
   destroy(): void {
@@ -170,7 +174,7 @@ class ForLoopComponent<T> implements VComponent {
 
 const forLoop = <T>(
   items: MaybeReactive<T[]>,
-  renderFn: (item: T) => TinafElement,
+  renderFn: (item: T, index?: number) => TinafElement,
   keyFunction: (item: T) => string | number = (item) => JSON.stringify(item)
 ) => new ForLoopComponent(items, renderFn, keyFunction);
 // TODO: <For> is an interface for the forLoop component. Maybe we could drop entirely forLoop

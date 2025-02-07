@@ -2,7 +2,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { SimpleVComponent } from '../component/v-component';
 import { type ComponentFn } from '../component';
-import { button2, div2, img2, input2, li2, span2, ul2 } from '../dom';
+import {
+  a2,
+  br,
+  button2,
+  code,
+  div2,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  i,
+  img2,
+  input2,
+  li2,
+  p2,
+  pre,
+  span2,
+  strong,
+  u,
+  ul2,
+} from '../dom';
 import type {
   AddClassesArgs,
   ComponentChildren,
@@ -14,118 +36,119 @@ import { extractEventHandlers } from './utils';
 import type { HTMLInputElementOptions } from '../dom/input';
 
 interface HTMLElementTags {
-  // a: AnchorHTMLAttributes<HTMLAnchorElement>;
-  // abbr: HTMLAttributes<HTMLElement>;
-  // address: HTMLAttributes<HTMLElement>;
-  // area: AreaHTMLAttributes<HTMLAreaElement>;
-  // article: HTMLAttributes<HTMLElement>;
-  // aside: HTMLAttributes<HTMLElement>;
-  // audio: AudioHTMLAttributes<HTMLAudioElement>;
-  // b: HTMLAttributes<HTMLElement>;
-  // base: BaseHTMLAttributes<HTMLBaseElement>;
-  // bdi: HTMLAttributes<HTMLElement>;
-  // bdo: HTMLAttributes<HTMLElement>;
-  // blockquote: BlockquoteHTMLAttributes<HTMLElement>;
-  // body: HTMLAttributes<HTMLBodyElement>;
-  // br: HTMLAttributes<HTMLBRElement>;
+  a: AnchorHtmlAttributes;
+  // abbr: HtmlAttributes<HTMLElement>;
+  // address: HtmlAttributes<HTMLElement>;
+  // area: AreaHtmlAttributes<HTMLAreaElement>;
+  // article: HtmlAttributes<HTMLElement>;
+  // aside: HtmlAttributes<HTMLElement>;
+  // audio: AudioHtmlAttributes<HTMLAudioElement>;
+  // b: HtmlAttributes<HTMLElement>;
+  // base: BaseHtmlAttributes<HTMLBaseElement>;
+  // bdi: HtmlAttributes<HTMLElement>;
+  // bdo: HtmlAttributes<HTMLElement>;
+  // blockquote: BlockquoteHtmlAttributes<HTMLElement>;
+  // body: HtmlAttributes<HTMLBodyElement>;
+  br: HtmlAttributes;
   button: HtmlAttributes;
-  // canvas: CanvasHTMLAttributes<HTMLCanvasElement>;
-  // caption: HTMLAttributes<HTMLElement>;
-  // cite: HTMLAttributes<HTMLElement>;
-  // code: HTMLAttributes<HTMLElement>;
-  // col: ColHTMLAttributes<HTMLTableColElement>;
-  // colgroup: ColgroupHTMLAttributes<HTMLTableColElement>;
-  // data: DataHTMLAttributes<HTMLElement>;
-  // datalist: HTMLAttributes<HTMLDataListElement>;
-  // dd: HTMLAttributes<HTMLElement>;
-  // del: HTMLAttributes<HTMLElement>;
+  // canvas: CanvasHtmlAttributes<HTMLCanvasElement>;
+  // caption: HtmlAttributes<HTMLElement>;
+  // cite: HtmlAttributes<HTMLElement>;
+  code: HtmlAttributes;
+  // col: ColHtmlAttributes<HTMLTableColElement>;
+  // colgroup: ColgroupHtmlAttributes<HTMLTableColElement>;
+  // data: DataHtmlAttributes<HTMLElement>;
+  // datalist: HtmlAttributes<HTMLDataListElement>;
+  // dd: HtmlAttributes<HTMLElement>;
+  // del: HtmlAttributes<HTMLElement>;
   // details: DetailsHtmlAttributes<HTMLDetailsElement>;
-  // dfn: HTMLAttributes<HTMLElement>;
+  // dfn: HtmlAttributes<HTMLElement>;
   // dialog: DialogHtmlAttributes<HTMLDialogElement>;
   div: HtmlAttributes;
-  // dl: HTMLAttributes<HTMLDListElement>;
-  // dt: HTMLAttributes<HTMLElement>;
-  // em: HTMLAttributes<HTMLElement>;
-  // embed: EmbedHTMLAttributes<HTMLEmbedElement>;
-  // fieldset: FieldsetHTMLAttributes<HTMLFieldSetElement>;
-  // figcaption: HTMLAttributes<HTMLElement>;
-  // figure: HTMLAttributes<HTMLElement>;
-  // footer: HTMLAttributes<HTMLElement>;
-  // form: FormHTMLAttributes<HTMLFormElement>;
-  // h1: HTMLAttributes<HTMLHeadingElement>;
-  // h2: HTMLAttributes<HTMLHeadingElement>;
-  // h3: HTMLAttributes<HTMLHeadingElement>;
-  // h4: HTMLAttributes<HTMLHeadingElement>;
-  // h5: HTMLAttributes<HTMLHeadingElement>;
-  // h6: HTMLAttributes<HTMLHeadingElement>;
-  // head: HTMLAttributes<HTMLHeadElement>;
-  // header: HTMLAttributes<HTMLElement>;
-  // hgroup: HTMLAttributes<HTMLElement>;
-  // hr: HTMLAttributes<HTMLHRElement>;
-  // html: HTMLAttributes<HTMLHtmlElement>;
-  // i: HTMLAttributes<HTMLElement>;
-  // iframe: IframeHTMLAttributes<HTMLIFrameElement>;
+  // dl: HtmlAttributes<HTMLDListElement>;
+  // dt: HtmlAttributes<HTMLElement>;
+  // em: HtmlAttributes<HTMLElement>;
+  // embed: EmbedHtmlAttributes<HTMLEmbedElement>;
+  // fieldset: FieldsetHtmlAttributes<HTMLFieldSetElement>;
+  // figcaption: HtmlAttributes<HTMLElement>;
+  // figure: HtmlAttributes<HTMLElement>;
+  // footer: HtmlAttributes<HTMLElement>;
+  // form: FormHtmlAttributes<HTMLFormElement>;
+  h1: HtmlAttributes;
+  h2: HtmlAttributes;
+  h3: HtmlAttributes;
+  h4: HtmlAttributes;
+  h5: HtmlAttributes;
+  h6: HtmlAttributes;
+  // head: HtmlAttributes<HTMLHeadElement>;
+  // header: HtmlAttributes<HTMLElement>;
+  // hgroup: HtmlAttributes<HTMLElement>;
+  // hr: HtmlAttributes<HTMLHRElement>;
+  // html: HtmlAttributes<HTMLHtmlElement>;
+  i: HtmlAttributes;
+  // iframe: IframeHtmlAttributes<HTMLIFrameElement>;
   img: ImageHtmlAttributes;
   input: InputHtmlAttributes;
-  // ins: InsHTMLAttributes<HTMLModElement>;
-  // kbd: HTMLAttributes<HTMLElement>;
-  // label: LabelHTMLAttributes<HTMLLabelElement>;
-  // legend: HTMLAttributes<HTMLLegendElement>;
+  // ins: InsHtmlAttributes<HTMLModElement>;
+  // kbd: HtmlAttributes<HTMLElement>;
+  // label: LabelHtmlAttributes<HTMLLabelElement>;
+  // legend: HtmlAttributes<HTMLLegendElement>;
   li: HtmlAttributes;
-  // link: LinkHTMLAttributes<HTMLLinkElement>;
-  // main: HTMLAttributes<HTMLElement>;
-  // map: MapHTMLAttributes<HTMLMapElement>;
-  // mark: HTMLAttributes<HTMLElement>;
-  // menu: MenuHTMLAttributes<HTMLElement>;
-  // meta: MetaHTMLAttributes<HTMLMetaElement>;
-  // meter: MeterHTMLAttributes<HTMLElement>;
-  // nav: HTMLAttributes<HTMLElement>;
-  // noscript: HTMLAttributes<HTMLElement>;
-  // object: ObjectHTMLAttributes<HTMLObjectElement>;
-  // ol: OlHTMLAttributes<HTMLOListElement>;
-  // optgroup: OptgroupHTMLAttributes<HTMLOptGroupElement>;
-  // option: OptionHTMLAttributes<HTMLOptionElement>;
-  // output: OutputHTMLAttributes<HTMLElement>;
-  // p: HTMLAttributes<HTMLParagraphElement>;
-  // picture: HTMLAttributes<HTMLElement>;
-  // pre: HTMLAttributes<HTMLPreElement>;
-  // progress: ProgressHTMLAttributes<HTMLProgressElement>;
-  // q: QuoteHTMLAttributes<HTMLQuoteElement>;
-  // rp: HTMLAttributes<HTMLElement>;
-  // rt: HTMLAttributes<HTMLElement>;
-  // ruby: HTMLAttributes<HTMLElement>;
-  // s: HTMLAttributes<HTMLElement>;
-  // samp: HTMLAttributes<HTMLElement>;
-  // script: ScriptHTMLAttributes<HTMLScriptElement>;
-  // search: HTMLAttributes<HTMLElement>;
-  // section: HTMLAttributes<HTMLElement>;
-  // select: SelectHTMLAttributes<HTMLSelectElement>;
+  // link: LinkHtmlAttributes<HTMLLinkElement>;
+  // main: HtmlAttributes<HTMLElement>;
+  // map: MapHtmlAttributes<HTMLMapElement>;
+  // mark: HtmlAttributes<HTMLElement>;
+  // menu: MenuHtmlAttributes<HTMLElement>;
+  // meta: MetaHtmlAttributes<HTMLMetaElement>;
+  // meter: MeterHtmlAttributes<HTMLElement>;
+  // nav: HtmlAttributes<HTMLElement>;
+  // noscript: HtmlAttributes<HTMLElement>;
+  // object: ObjectHtmlAttributes<HTMLObjectElement>;
+  // ol: OlHtmlAttributes<HTMLOListElement>;
+  // optgroup: OptgroupHtmlAttributes<HTMLOptGroupElement>;
+  // option: OptionHtmlAttributes<HTMLOptionElement>;
+  // output: OutputHtmlAttributes<HTMLElement>;
+  p: HtmlAttributes;
+  // picture: HtmlAttributes<HTMLElement>;
+  pre: HtmlAttributes;
+  // progress: ProgressHtmlAttributes<HTMLProgressElement>;
+  // q: QuoteHtmlAttributes<HTMLQuoteElement>;
+  // rp: HtmlAttributes<HTMLElement>;
+  // rt: HtmlAttributes<HTMLElement>;
+  // ruby: HtmlAttributes<HTMLElement>;
+  // s: HtmlAttributes<HTMLElement>;
+  // samp: HtmlAttributes<HTMLElement>;
+  // script: ScriptHtmlAttributes<HTMLScriptElement>;
+  // search: HtmlAttributes<HTMLElement>;
+  // section: HtmlAttributes<HTMLElement>;
+  // select: SelectHtmlAttributes<HTMLSelectElement>;
   // slot: HTMLSlotElementAttributes;
-  // small: HTMLAttributes<HTMLElement>;
-  // source: SourceHTMLAttributes<HTMLSourceElement>;
+  // small: HtmlAttributes<HTMLElement>;
+  // source: SourceHtmlAttributes<HTMLSourceElement>;
   span: HtmlAttributes;
-  // strong: HTMLAttributes<HTMLElement>;
-  // style: StyleHTMLAttributes<HTMLStyleElement>;
-  // sub: HTMLAttributes<HTMLElement>;
-  // summary: HTMLAttributes<HTMLElement>;
-  // sup: HTMLAttributes<HTMLElement>;
-  // table: HTMLAttributes<HTMLTableElement>;
-  // tbody: HTMLAttributes<HTMLTableSectionElement>;
-  // td: TdHTMLAttributes<HTMLTableCellElement>;
-  // template: TemplateHTMLAttributes<HTMLTemplateElement>;
-  // textarea: TextareaHTMLAttributes<HTMLTextAreaElement>;
-  // tfoot: HTMLAttributes<HTMLTableSectionElement>;
-  // th: ThHTMLAttributes<HTMLTableCellElement>;
-  // thead: HTMLAttributes<HTMLTableSectionElement>;
-  // time: TimeHTMLAttributes<HTMLElement>;
-  // title: HTMLAttributes<HTMLTitleElement>;
-  // tr: HTMLAttributes<HTMLTableRowElement>;
-  // track: TrackHTMLAttributes<HTMLTrackElement>;
-  // u: HTMLAttributes<HTMLElement>;
+  // strong: HtmlAttributes<HTMLElement>;
+  // style: StyleHtmlAttributes<HTMLStyleElement>;
+  // sub: HtmlAttributes<HTMLElement>;
+  // summary: HtmlAttributes<HTMLElement>;
+  // sup: HtmlAttributes<HTMLElement>;
+  // table: HtmlAttributes<HTMLTableElement>;
+  // tbody: HtmlAttributes<HTMLTableSectionElement>;
+  // td: TdHtmlAttributes<HTMLTableCellElement>;
+  // template: TemplateHtmlAttributes<HTMLTemplateElement>;
+  // textarea: TextareaHtmlAttributes<HTMLTextAreaElement>;
+  // tfoot: HtmlAttributes<HTMLTableSectionElement>;
+  // th: ThHtmlAttributes<HTMLTableCellElement>;
+  // thead: HtmlAttributes<HTMLTableSectionElement>;
+  // time: TimeHtmlAttributes<HTMLElement>;
+  // title: HtmlAttributes<HTMLTitleElement>;
+  // tr: HtmlAttributes<HTMLTableRowElement>;
+  // track: TrackHtmlAttributes<HTMLTrackElement>;
+  u: HtmlAttributes;
+  strong: HtmlAttributes;
   ul: HtmlAttributes;
-  // var: HTMLAttributes<HTMLElement>;
-  // video: VideoHTMLAttributes<HTMLVideoElement>;
-  // wbr: HTMLAttributes<HTMLElement>;
+  // var: HtmlAttributes<HTMLElement>;
+  // video: VideoHtmlAttributes<HTMLVideoElement>;
+  // wbr: HtmlAttributes<HTMLElement>;
 }
 
 declare global {
@@ -138,7 +161,7 @@ type HtmlAttributes = Partial<
   {
     className: AddClassesArgs;
     // styles
-  } & Record<EventHandlerKey, () => void>
+  } & Record<EventHandlerKey, (e?: Event) => void>
 >;
 
 type InputHtmlAttributes = HtmlAttributes &
@@ -149,7 +172,10 @@ type InputHtmlAttributes = HtmlAttributes &
 
 type ImageHtmlAttributes = HtmlAttributes & Parameters<typeof img2>[0];
 
+type AnchorHtmlAttributes = HtmlAttributes & Parameters<typeof a2>[0];
+
 const domComponentMap = {
+  a: a2,
   div: div2,
   button: button2,
   input: input2,
@@ -157,6 +183,19 @@ const domComponentMap = {
   li: li2,
   ul: ul2,
   span: span2,
+  strong: strong,
+  h1: h1,
+  h2: h2,
+  h3: h3,
+  h4: h4,
+  h5: h5,
+  h6: h6,
+  p: p2,
+  code: code,
+  br: br,
+  i: i,
+  u: u,
+  pre: pre,
 } as const;
 
 export const jsxComponent = (

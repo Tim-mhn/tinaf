@@ -20,7 +20,7 @@ function buildPlaceholderComment() {
 // TODO: refactor this to use switchComponent
 class ConditionallyRenderedComponent implements VComponent {
   constructor(
-    private condition: MaybeReactive<boolean>,
+    private condition: MaybeReactive<boolean | undefined | null>,
     private children: TinafElement[] = [],
     private fallback?: VComponent // TODO: handle list of children  for fallback
   ) {}
