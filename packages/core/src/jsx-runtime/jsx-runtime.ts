@@ -19,6 +19,7 @@ import {
   input2,
   li2,
   p2,
+  pre,
   span2,
   strong,
   u,
@@ -109,7 +110,7 @@ interface HTMLElementTags {
   // output: OutputHtmlAttributes<HTMLElement>;
   p: HtmlAttributes;
   // picture: HtmlAttributes<HTMLElement>;
-  // pre: HtmlAttributes<HTMLPreElement>;
+  pre: HtmlAttributes;
   // progress: ProgressHtmlAttributes<HTMLProgressElement>;
   // q: QuoteHtmlAttributes<HTMLQuoteElement>;
   // rp: HtmlAttributes<HTMLElement>;
@@ -194,6 +195,7 @@ const domComponentMap = {
   br: br,
   i: i,
   u: u,
+  pre: pre,
 } as const;
 
 export const jsxComponent = (

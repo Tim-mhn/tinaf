@@ -96,6 +96,14 @@ export const Code = component<{ copyCode?: string }>(
   }
 );
 
+export const TsxCode = component<{ code: string }>(({ code }) => {
+  return (
+    <pre>
+      <code className="language-typescript">{code}</code>
+    </pre>
+  );
+});
+
 export const Link = component<{ href: string; color?: 'green' | 'white' }>(
   ({ href, color = 'white', children }) => {
     const cls = computed(() =>

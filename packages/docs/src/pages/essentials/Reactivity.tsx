@@ -1,6 +1,6 @@
 import { component } from 'tinaf/component';
 import { DocPageLayout } from '../../layouts';
-import { Button, Code, HighlightedText, InlineCode } from '../../components';
+import { Button, HighlightedText, InlineCode, TsxCode } from '../../components';
 
 export const ReactivityPage = component(() => {
   return (
@@ -16,31 +16,36 @@ export const ReactivityPage = component(() => {
         To create a reactive value, use the <InlineCode>reactive</InlineCode>{' '}
         function{' '}
       </p>
-      <Code>
-        {`import { reactive } from "tinaf/reactive"`}
-        <br />
-        <br />
-        const user = reactive("bob")
-      </Code>
+
+      <TsxCode
+        code={`import { reactive } from "tinaf/reactive"
+
+const user = reactive("bob");
+`}
+      />
+
       <p>
         To access its current value, use <InlineCode>.value</InlineCode>
       </p>
-      <Code>
-        const user = reactive("bob")
-        <br /> console.log(user.value); // "bob"
-      </Code>
+
+      <TsxCode
+        code={`const user = reactive("bob");
+console.log(user.value); // "bob"`}
+      />
+
       <p>
         You can <HighlightedText>derive</HighlightedText> reactive values from
         another reactive value using the <InlineCode>computed</InlineCode>
         function.{' '}
       </p>
-      <Code>
-        {`import { reactive, computed } from "tinaf/reactive"`}
-        <br />
-        <br />
-        const age = reactive(20)
-        <br /> {`const isAdult = computed(() => age.value >= 18 )`}
-      </Code>
+
+      <TsxCode
+        code={`import { reactive, computed } from "tinaf/reactive" 
+
+const age = reactive(20);
+const isAdult = computed(() => age.value >= 18);
+`}
+      />
       <p>
         Note that the values are never computed initially, only when they are
         needed in the DOM
@@ -51,11 +56,12 @@ export const ReactivityPage = component(() => {
         <InlineCode>computed</InlineCode> values as these are{' '}
         <HighlightedText>read-only</HighlightedText>
       </p>
-      <Code>
-        {`const mode = reactive<"light" | "dark">("dark")`}
-        <br />
-        mode.update("light")
-      </Code>
+
+      <TsxCode
+        code={`const mode = reactive<"light" | "dark">("dark");
+mode.update("light")`}
+      />
+
       <p>
         If you need to run a side-effect whenever one or multiple reactive
         values changes, you can use the <InlineCode>effect</InlineCode>function.
@@ -63,47 +69,38 @@ export const ReactivityPage = component(() => {
         watch
       </p>
 
-      <Code>
-        {`import { reactive, effect } from "tinaf/reactive"`}
-        <br />
-        <br />
+      <TsxCode
+        code={`import { reactive, effect } from "tinaf/reactive"
 
-        {`const mode = reactive<"light" | "dark">("dark")`}
-        <br />
-        {`effect(() => { console.log("mode was changed !"); }, [mode])`}
-      </Code>
+const mode = reactive<"light" | "dark">("dark");
+
+effect(() => {
+  console.log("mode was changed !");
+}, [mode])`}
+      />
 
       <p>Finally, some helper functions exist for booleans and lists</p>
 
-      <Code>
-        {`import { bool } from "tinaf/reactive"`}
-        <br />
-        <br />
+      <TsxCode
+        code={`import { bool } from "tinaf/reactive";
 
-        {`const [isOpen, toggle] = bool(false)`}
-        <br />
-        {`isOpen.value; // false`}
-        <br />
-        {`toggle(); `}
-        <br />
-        {`isOpen.value; // true`}
-        <br />
-      </Code>
+const [isOpen, toggle] = bool(false);
+isOpen.value; // false
 
-      <Code>
-        {`import { reactiveList } from "tinaf/reactive"`}
-        <br />
-        <br />
+toggle();
+isOpen.value; // true `}
+      />
 
-        {`const fruits = reactiveList(["banana", "apple"])`}
-        <br />
-        {`fruits.value; // ["banana", "apple"]`}
-        <br />
-        {`fruits.add("kiwi"); `}
-        <br />
-        {`fruits.value; // ["banana", "apple", "kiwi"]`}
-        <br />
-      </Code>
+      <TsxCode
+        code={`import { reactiveList } from "tinaf/reactive";
+
+const fruits = reactiveList(["banana, apple"]);
+
+fruits.value; // ["banana", "apple"]
+fruits.add("kiwi");
+
+fruits.value; // ["banana", "apple", "kiwi"]`}
+      />
 
       <Button
         className="w-full md:w-fit m-auto"

@@ -1,6 +1,6 @@
 import { component } from 'tinaf/component';
 import { DocPageLayout } from '../../layouts';
-import { Button, Code, HighlightedText, InlineCode } from '../../components';
+import { Button, HighlightedText, InlineCode, TsxCode } from '../../components';
 
 export const ConditionalRenderingPage = component(() => {
   return (
@@ -26,80 +26,67 @@ export const ConditionalRenderingPage = component(() => {
         <InlineCode>{`<Show />`}</InlineCode>
       </p>
 
-      <Code>
-        {`const Cmp = component(() => {`}
-        <br />
+      <TsxCode
+        code={`const Cmp = component(() => {
+  const [show, toggle] = bool(true);
+  
+  return <div>
+    <Show when={show}>
+      <div> this is shown when "show" is true </div>
+    </Show>
 
-        {`const  [show, toggle] = bool(true)`}
-        <br />
-
-        {`return <div> 
-            <Show when={show} >
-                <div> this is shown when "show" is true
-        </Show>
-
-        <button onClick={toggle} > toggle </button>
-
-        </div>`}
-      </Code>
+    <button onClick={toggle}> click to toggle </button>
+  </div>
+})`}
+      />
 
       <p>
         You can also pass a fallback, which is shown when the condition is false
       </p>
 
-      <Code>
-        {`const Cmp = component(() => {`}
-        <br />
+      <TsxCode
+        code={`const Cmp = component(() => {
+  const [show, toggle] = bool(true);
+  
+  return <div>
+    <Show when={show} fallback={<span> this is a fallback </span>}>
+      <div> this is shown when "show" is true </div>
+    </Show>
 
-        {`const  [show, toggle] = bool(true)`}
-        <br />
-
-        {`return <div> 
-            <Show when={show} fallback={<span>this is a fallback </span>} >
-                <div> this is shown when "show" is true
-        </Show>
-
-        <button onClick={toggle} > toggle </button>
-
-        </div>`}
-      </Code>
+    <button onClick={toggle}> click to toggle </button>
+  </div>
+})`}
+      />
 
       <p>
         If you want to do a mapping between values and components, use the{' '}
         <InlineCode>{`<Switch />`}</InlineCode> component
       </p>
 
-      <Code>
-        {`
-          
-const Cmp = component(() => { `}
-        <br />
-        {`const condition = reactive<"a" | "b" | "c">("a")`}
-        <br /> <br />
-        {`return   <Switch condition={condition}>`}
-        <br />
-        {`<Match when="a">`}
-        <br />
-        {`  <div>a</div>`}
-        <br />
-        {` </Match>`}
-        <br />
-        {` <Match when="b">`}
-        <br />
-        {`  <div>b</div>`}
-        <br />
-        {` </Match>`}
-        <br />
-        {` <Match when="c">`}
-        <br />
-        {`   <div>c</div>`}
-        <br />
-        {`  </Match>`}
-        <br />
-        {` </Switch>`}
-        <br />
-        {`  })`}
-      </Code>
+      <TsxCode
+        code={`import { Switch, component } from "tinaf/component"
+
+const Cmp = component(() => {
+
+  const condition = reactive<"a" | "b" | "c">("a");
+  
+  return <Switch condition={condition}>
+
+    <Match when="a">
+      <div> a </div>
+    </Match>
+    
+    <Match when="b">
+        <div> b </div>
+    </Match>
+    
+    <Match when="c">
+        <div> c </div>
+    </Match>
+    
+  </Switch>
+})`}
+      />
 
       <Button className="w-full md:w-fit m-auto" size="md" href="/docs/styling">
         Learn about styling

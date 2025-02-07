@@ -1,6 +1,6 @@
 import { component } from 'tinaf/component';
 import { DocPageLayout } from '../../layouts';
-import { Button, Code, InlineCode } from '../../components';
+import { Button, InlineCode, TsxCode } from '../../components';
 
 export const ForLoopsPage = component(() => {
   return (
@@ -11,39 +11,26 @@ export const ForLoopsPage = component(() => {
         component of the same name!
       </p>
 
-      <Code>
-        // ShoppingList.tsx
-        <br />
-        {`import { For } from "tinaf/component"`}
-        <br />
-        <br />
-        {`type ShoppingItem = { label: string; quantity: number }`}
-        <br />
-        <br />
-        {` 
+      <TsxCode
+        code={`// ShoppingList.tsx
+import { For, component } from "tinaf/component"
 
-        
-        
-        const ShoppingList = component(() => {
-           const items = reactiveList<ShoppingItem>([{ label: "banana", quantity: 10 }, { label: "cereals", quantity: 1} ,  { label: "eggs", quantity: 12 }])
+type ShoppingItem = { label: string; quantity: number };
 
-
-           `}
-        <br />
-        <br />
-        {` return <For each={items} keyFunction{(i) => i.label}> `}
-        <br />
-        {`
-                { (item: ShoppingItem) => <div> 
-                 {{ item.quantity}} - {{ item.label}}
-                </div>
-                }
-           </For>`}
-        <br />
-        {`})
-
-        `}
-      </Code>
+const ShoppingList = component(() => {
+  const items = reactiveList<ShoppingItem>([
+    { label:  "banana", quantity: 10 }, 
+    { label: "cereals", quantity: 2 }, 
+    { label: "eggs", quantity: 12 }
+  ])
+   
+  return <For each={items} keyFunction={(i) => i.label}>
+    { (item: ShoppingItem) => 
+      <div> { item.quantity} x { item.label }} </div>
+    }
+  </For>
+`}
+      />
 
       <p>
         Note that we pass the list of items to the <InlineCode>each</InlineCode>{' '}
@@ -55,13 +42,6 @@ export const ForLoopsPage = component(() => {
         when the list is updated and avoid unnecessary re-rendering. This is
         equivalent to Vue/React's <InlineCode>key</InlineCode> or Angular{' '}
         <InlineCode>keyFor</InlineCode>
-      </p>
-
-      <p>
-        To achieve this in Tinaf, you can use the{' '}
-        <InlineCode>{`<Show />`}</InlineCode>
-        or the <InlineCode>{`<When />`}</InlineCode> components, depending on
-        your use case
       </p>
 
       <Button

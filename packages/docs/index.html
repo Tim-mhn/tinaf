@@ -6,10 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
     <link rel="stylesheet" href="./src/styles.css">
-
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dark.min.css">
+<script type="module">
+import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
+console.log(hljs)
+</script>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+
+
+    <script type="module">
+      import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+        console.log('loaded')
+  setTimeout(() => {
+    document.querySelectorAll('pre code').forEach((el) => {
+    console.log(el)
+    hljs.highlightElement(el);
+  });
+}, 50)
+})
+    </script>
+
+    
+
   </body>
 </html>

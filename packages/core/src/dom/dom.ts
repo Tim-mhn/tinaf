@@ -156,3 +156,9 @@ export const u = (args: CreateDom2Props) =>
     type: 'u',
     ...args,
   });
+
+export const pre = (args: CreateDom2Props) =>
+  _createDomElement({
+    type: 'pre',
+    ...args,
+  });
